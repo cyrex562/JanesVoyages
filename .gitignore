@@ -1,0 +1,13 @@
+.pyc
+.idea
+.bak
+codeStyleSettings.xml
+encodings.xml
+.iml
+misc.xml
+modules.xml
+.name
+scopes
+vcs.xml
+workspace.xml
+scope_settings.xml

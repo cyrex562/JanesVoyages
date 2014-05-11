@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<script type=text/javascript src="{{
+  url_for('static', filename='js/main.js') }}"></script>
+<div id="header">
+    <h1>Jane's Voyages</h1>
+    <div id="status-bar">[STATUS BAR]</div>
+</div>
+<div id="content">
+    <div id="content-left"></div>
+    <div id="content-center"></div>
+    <div id="content-right"></div>
+</div>
+<div id="footer"></div>
+{% endblock %}
