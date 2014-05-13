@@ -1,3 +1,23 @@
 body {
     font-family: Verdana, Arial, sans-serif;
 }
+
+#voyages-list-section {
+    background: dimgray;
+    float: left;
+    width: 40%;
+}
+
+#voyages-forms-section {
+    background: darkgray;
+    margin-left: 40%;
+}
+
+#voyages-list-menu {
+    float: left;
+    width: 97px
+}
+
+#voyages-list-container {
+    margin-left: 97px;
+}

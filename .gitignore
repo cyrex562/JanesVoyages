@@ -1,9 +1,9 @@
-.pyc
+*.pyc
 .idea
-.bak
+*.bak
 codeStyleSettings.xml
 encodings.xml
-.iml
+*.iml
 misc.xml
 modules.xml
 .name

@@ -1,8 +1,8 @@
 ###############################################################################
-# @file
-# @brief
-# @author
-# @copyright
+# @file models.py
+# @brief data model objects definition
+# @author Josh Madden
+# @copyright Fifth Column Group 2014
 ###############################################################################
 ###############################################################################
 # IMPORTS
@@ -16,12 +16,9 @@ from sqlalchemy.dialects.mysql import \
         TINYBLOB, TINYINT, TINYTEXT, VARBINARY, VARCHAR, YEAR
 
 
-
 ###############################################################################
 # DEFINES
 ###############################################################################
-ROLE_USER = 0
-ROLE_ADMIN = 1
 
 
 ###############################################################################
@@ -59,7 +56,8 @@ class Trade(db.Model):
     trade_id = db.Column(INTEGER, primary_key=True)
     trade_name = db.Column(VARCHAR(255), index=True)
     trade_notes = db.Column(LONGTEXT)
-    trade_waypoint_id = db.Column(db.Integer, db.ForeignKey('waypoint.waypoint_id'))
+    trade_waypoint_id = db.Column(db.Integer,
+                                  db.ForeignKey('waypoint.waypoint_id'))
     items = db.relationship('Item', lazy='dynamic')
 
 

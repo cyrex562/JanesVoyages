@@ -10,7 +10,10 @@
 ################################################################################
 import uuid
 from flask import jsonify, render_template, request, session
+import jsonpickle
 from app import app
+import models
+import model_ops
 
 ################################################################################
 # GLOBAL
@@ -27,20 +30,38 @@ from app import app
 ##
 #
 #######################################
+def set_session_id(session):
+    result = ''
+    if 'session_id' in session:
+        result = session['session_id']
+    else:
+        result = uuid.uuid4().hex()
+        session['session_id'] = result
+    return result
+
+
 @app.route('/server_request', methods=['GET', 'POST'])
 def handle_server_request():
     result_msg = 'success'
     result_data = 'no data'
     if request.method == "POST":
-        if 'session_id' in session:
-            session_id = session['session_id']
-        else:
-            session_id = uuid.uuid4().hex
-            session['session_id'] = session_id
-
+        session_id = set_session_id(session)
         request_obj = request.get_json()
         request_obj['session_id'] = session_id
     response = jsonify(message=result_msg, data=result_data)
+    return response
+
+@app.route('/get_voyages_List', methods=['GET', 'POST'])
+def retrieve_voyages_list():
+    result_msg = 'success'
+    data = {}
+    if request.method == "POST":
+        session_id = set_session_id(session)
+        request_obj = request.get_json()
+        request_obj['session_id'] = session_id
+        voyages = model_ops.get_all_voyages()
+        data = voyages
+    response = jsonpickle.encode({'message': result_msg, 'data': data})
     return response
 
 
