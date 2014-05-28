@@ -17,7 +17,7 @@ import model_ops
 
 ################################################################################
 # GLOBAL
-# ################################################################################
+#################################################################################
 # app = Flask(__name__)
 # app.debug = True
 # app.secret_key = os.urandom(24)
@@ -51,7 +51,7 @@ def handle_server_request():
     response = jsonify(message=result_msg, data=result_data)
     return response
 
-@app.route('/get_voyages_List', methods=['GET', 'POST'])
+@app.route('/get_voyages_list', methods=['GET', 'POST'])
 def retrieve_voyages_list():
     result_msg = 'success'
     data = {}
@@ -64,6 +64,13 @@ def retrieve_voyages_list():
     response = jsonpickle.encode({'message': result_msg, 'data': data})
     return response
 
+@app.route('/create_voyage', methods=['GET', 'POST'])
+def create_voyage():
+    if request.method == "POST":
+        request_obj = request.get_json()
+        print "request_obj: {0}".format(request_obj)
+    response = jsonify(message="success", data="")
+    return response
 
 #######################################
 ##

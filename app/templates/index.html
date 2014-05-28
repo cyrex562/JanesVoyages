@@ -10,115 +10,142 @@
     <div id="content">
         <div id="voyages-list-section">
             <div id="voyages-list-menu">
-                <button id="select-all-voyages">select all</button>
+                <button id="select-all-voyages-btn" class="side_button">
+                    select all</button>
                 <br>
-                <button id="deselect-all-voyages">deselect all</button>
+                <button id="deselect-all-voyages-btn" class="side_button">
+                    deselect all</button>
                 <br>
-                <button id="create-voyage">create</button>
+                <button id="create-voyage-btn" class="side_button">
+                    create voyage </button>
                 <br>
-                <button id="delete-voyage">delete</button>
+                <button id="delete-voyage-btn" class="side_button">
+                    delete voyage</button>
                 <br>
             </div>
             <div id="voyages-list-container">
-               <label for="voyages-list">voyages</label>
-               <select id="voyages-list"></select>
+                <label for="voyages-list">voyages</label>
+                <select id="voyages-list"></select>
             </div>
         </div>
-        <div id="voyages-forms-section">
-            <fieldset>
-                <legend>voyage</legend>
-                <label>id</label>
-                <span id="voyage-id">[voyage-id]</span>
+        <div id="forms-section">
+            <div id="voyage-form">
+                <label>voyage id</label>
+                <span id="voyage-id"></span>
                 <br>
-                <label for="voyage-name">name</label>
+
+                <label for="voyage-name">voyage name</label>
                 <input type="text" id="voyage-name">
                 <br>
-                <fieldset>
-                    <legend>ship</legend>
-                    <label for="ship-name">name</label>
-                    <input type="text" id="ship-name">
-                    <label for="ship-captain">captain</label>
-                    <input type="text" id="ship-captain">
-                    <label for="ship-flag">flag</label>
-                    <input type="text" id="ship-flag">
-                    <br>
-                    <label for="ship-notes">notes</label>
-                    <textarea rows="5" id="ship-notes"></textarea>
-                    <br>
-                    <button id="save-ship-btn">save</button>
-                </fieldset>
+
+                <label for="voyage-notes">voyage notes</label>
+                <textarea id="voyage-notes" rows="5"></textarea>
                 <br>
-                <label for="voyage-waypoints-select">waypoints</label>
-                <select id="voyage-waypoints-select"></select>
-                <br>
-                <button id="add-waypoint-btn">add</button>
-                <button id="delete-waypoint-btn">delete</button>
-                <br>
-                <label for="voyage-notes">notes</label>
-                <textarea rows="10" id="voyage-notes"></textarea>
-                <br>
-                <button id="save-voyage-btn">save</button>
-            </fieldset>
-            <fieldset id="waypoint-fieldset">
-                <legend>waypoint</legend>
-                <label for="waypoint-id">id</label>
-                <span id="waypoint-id">[waypoint-id]</span>
-                <br>
-                <label for="waypoint-type">type</label>
-                <input type="text" id="waypoint-type">
-                <label for="waypoint-name">name</label>
-                <input type="text" id="waypoint-name">
-                <label for="waypoint-location">location</label>
-                <input type="text" id="waypoint-location">
-                <label for="waypoint-start-date">start date</label>
-                <input type="text" id="waypoint-start-date">
-                <label for="waypoint-end-date">end date</label>
-                <input type="text" id="waypoint-end-date">
-                <br>
-                <label for="waypoint-trades-select">trades</label>
-                <select id="waypoint-trades-select"></select>
-                <br>
-                <button id="add-waypoint-btn">add</button>
-                <button id="delete-waypoint-btn">delete</button>
-                <br>
-                <label for="waypoint-notes">notes</label>
-                <textarea rows="5" id="waypoint-notes"></textarea>
-                <br>
-                <button id="save-waypoint-btn">save</button>
-            </fieldset>
-            <fieldset>
-                <legend>trade</legend>
-                <label for="trade-id">id</label>
-                <span id="trade-id">[trade-id]</span>
-                <br>
-                <label for="trade-name">name</label>
-                <input type="text" id="trade-name">
-                <br>
-                <label for="trade-items-list">items</label>
-                <select id="trade-items-list"></select>
-                <br>
-                <button id="add-item-btn">add</button>
-                <button id="delete-item-btn">delete</button>
-                <br>
-                <label for="trade-notes">notes</label>
-                <textarea rows="5" id="trade-notes"></textarea>
-                <br>
-                <button id="save-trade-btn">save</button>
-            </fieldset>
-            <fieldset>
-                <legend>item</legend>
-                <label for="item-description">description</label>
-                <input type="text" id="item-description">
-                <label for="item-quantity">quantity</label>
-                <input type="text" id="item-quantity">
-                <label for="bought/sold">bought_sold</label>
-                <input type="radio" name="bought/sold" id="item-bought-radio"
-                       value="bought">
-                <input type="radio" name="bought/sold" id="item-sold-radio"
-                       value="sold">
-                <button id="save-item-btn">save</button>
-            </fieldset>
+
+                <button id="save-voyage-btn">save voyage</button>
+                <button id="cancel-voyage-btn">cancel</button>
+                <button id="reset-voyage-form-btn">reset form</button>
+            </div>
         </div>
+
+
+
+{#        <div id="voyages-forms-section">#}
+{#            <fieldset>#}
+{#                <legend>voyage</legend>#}
+{#                <label>id</label>#}
+{#                <span id="voyage-id">[voyage-id]</span>#}
+{#                <br>#}
+{#                <label for="voyage-name">name</label>#}
+{#                <input type="text" id="voyage-name">#}
+{#                <label for="voyage-notes">notes</label>#}
+{#                <textarea rows="10" id="voyage-notes"></textarea>#}
+{#                <br>#}
+{#                <button id="save-voyage-btn">save</button>#}
+{#                <br>#}
+{#                <fieldset>#}
+{#                    <legend>ship</legend>#}
+{#                    <label for="ship-name">name</label>#}
+{#                    <input type="text" id="ship-name">#}
+{#                    <label for="ship-captain">captain</label>#}
+{#                    <input type="text" id="ship-captain">#}
+{#                    <label for="ship-flag">flag</label>#}
+{#                    <input type="text" id="ship-flag">#}
+{#                    <br>#}
+{#                    <label for="ship-notes">notes</label>#}
+{#                    <textarea rows="5" id="ship-notes"></textarea>#}
+{#                    <br>#}
+{#                    <button id="save-ship-btn">save</button>#}
+{#                </fieldset>#}
+{#                <br>#}
+{#                <label for="voyage-waypoints-select">waypoints</label>#}
+{#                <select id="voyage-waypoints-select"></select>#}
+{#                <br>#}
+{#                <button id="add-waypoint-btn">add</button>#}
+{#                <button id="delete-waypoint-btn">delete</button>#}
+{#                <br>#}
+
+{#            </fieldset>#}
+{#            <fieldset id="waypoint-fieldset">#}
+{#                <legend>waypoint</legend>#}
+{#                <label for="waypoint-id">id</label>#}
+{#                <span id="waypoint-id">[waypoint-id]</span>#}
+{#                <br>#}
+{#                <label for="waypoint-type">type</label>#}
+{#                <input type="text" id="waypoint-type">#}
+{#                <label for="waypoint-name">name</label>#}
+{#                <input type="text" id="waypoint-name">#}
+{#                <label for="waypoint-location">location</label>#}
+{#                <input type="text" id="waypoint-location">#}
+{#                <label for="waypoint-start-date">start date</label>#}
+{#                <input type="text" id="waypoint-start-date">#}
+{#                <label for="waypoint-end-date">end date</label>#}
+{#                <input type="text" id="waypoint-end-date">#}
+{#                <br>#}
+{#                <label for="waypoint-trades-select">trades</label>#}
+{#                <select id="waypoint-trades-select"></select>#}
+{#                <br>#}
+{#                <button id="add-waypoint-btn">add</button>#}
+{#                <button id="delete-waypoint-btn">delete</button>#}
+{#                <br>#}
+{#                <label for="waypoint-notes">notes</label>#}
+{#                <textarea rows="5" id="waypoint-notes"></textarea>#}
+{#                <br>#}
+{#                <button id="save-waypoint-btn">save</button>#}
+{#            </fieldset>#}
+{#            <fieldset>#}
+{#                <legend>trade</legend>#}
+{#                <label for="trade-id">id</label>#}
+{#                <span id="trade-id">[trade-id]</span>#}
+{#                <br>#}
+{#                <label for="trade-name">name</label>#}
+{#                <input type="text" id="trade-name">#}
+{#                <br>#}
+{#                <label for="trade-items-list">items</label>#}
+{#                <select id="trade-items-list"></select>#}
+{#                <br>#}
+{#                <button id="add-item-btn">add</button>#}
+{#                <button id="delete-item-btn">delete</button>#}
+{#                <br>#}
+{#                <label for="trade-notes">notes</label>#}
+{#                <textarea rows="5" id="trade-notes"></textarea>#}
+{#                <br>#}
+{#                <button id="save-trade-btn">save</button>#}
+{#            </fieldset>#}
+{#            <fieldset>#}
+{#                <legend>item</legend>#}
+{#                <label for="item-description">description</label>#}
+{#                <input type="text" id="item-description">#}
+{#                <label for="item-quantity">quantity</label>#}
+{#                <input type="text" id="item-quantity">#}
+{#                <label for="bought/sold">bought_sold</label>#}
+{#                <input type="radio" name="bought/sold" id="item-bought-radio"#}
+{#                       value="bought">#}
+{#                <input type="radio" name="bought/sold" id="item-sold-radio"#}
+{#                       value="sold">#}
+{#                <button id="save-item-btn">save</button>#}
+{#            </fieldset>#}
+{#        </div>#}
     </div>
     <div id="footer"></div>
 {% endblock %}

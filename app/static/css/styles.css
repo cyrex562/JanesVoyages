@@ -1,5 +1,6 @@
 body {
     font-family: Verdana, Arial, sans-serif;
+    font-size: 14px;
 }
 
 #voyages-list-section {
@@ -15,9 +16,18 @@ body {
 
 #voyages-list-menu {
     float: left;
-    width: 97px
+    width: 9em;
 }
 
 #voyages-list-container {
-    margin-left: 97px;
+    margin-left: 9em;
+}
+
+.side_button {
+    width: 9em;
+}
+
+#forms-section {
+    margin-left: 40%;
+    border: solid black thin;
 }
