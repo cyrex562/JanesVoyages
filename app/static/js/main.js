@@ -47,15 +47,15 @@ function send_request(action, request_data, callback)
 function update_voyages_list_cb(response)
 {
     console.log("update_voyages_list_cb()");
-    voyages = response.data.voyages;
+    var voyages = response.data.voyages;
     var voyages_list = $("#voyages-list");
     voyages_list.empty();
     for (var i = 0; i < voyages.length; i++) {
         var voyage_list_option = '<option value="[voyage_id]">([voyage_id]) [voyage_name]</option>';
-        voyage_list_option = voyage_list_option.replaceAll(/\[voyage_id\]/g,
-            voyages_list[i].voyage_id);
+        voyage_list_option = voyage_list_option.replace(/\[voyage_id\]/g,
+            voyages[i].voyage_id);
         voyage_list_option = voyage_list_option.replace(/\[voyage_name\]/g,
-            voyages_list[i].voyage_name);
+            voyages[i].voyage_name);
         voyages_list.append(voyage_list_option);
     }
 }
@@ -121,12 +121,12 @@ function set_status_bar(msg) {
  * @brief handle response to create voyage request
  *************************************/
 function request_create_voyage_cb(response) {
-    var response_json = JSON.parse(response);
-    var message = response_json.message;
-    var data = response_json.data;
-    set_status_bar(message);
-    // TODO: take action based on message
-    // TODO: update voyages list
+    console.log("request_create_voyage_cb");
+    set_status_bar(response.message);
+    if (response.message === 'success') {
+        console.log('create voyage success');
+        update_voyages_list()
+    }
 }
 
 /**************************************
@@ -134,7 +134,33 @@ function request_create_voyage_cb(response) {
  * @brief send a request to the server to create a voyage
  *************************************/
 function request_create_voyage() {
+    console.log("request_create_voyage");
     send_request("create_voyage", current_voyage, request_create_voyage_cb);
+}
+
+/**************************************
+ *//**
+ * @brief process updsate request response
+ *************************************/
+function request_update_voyage_cb(response) {
+    console.log("request_create_voyage_cb");
+    var response_json = JSON.parse(response);
+    var message = response_json.message;
+    set_status_bar(message);
+    if (message === 'success') {
+        console.log('create voyage success');
+    }
+    // TODO: take action based on message
+    // TODO: update voyages list
+}
+
+/**************************************
+ *//**
+ * @brief send a request to the server to update a voyage
+ *************************************/
+function request_update_voyage() {
+    console.log("request_update_voyage");
+    send_request("update_voyage", current_voyage, request_update_voyage_cb);
 }
 
 /**************************************

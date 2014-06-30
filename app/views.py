@@ -30,13 +30,13 @@ import model_ops
 ##
 #
 #######################################
-def set_session_id(session):
+def set_session_id(in_session):
     result = ''
-    if 'session_id' in session:
-        result = session['session_id']
+    if 'session_id' in in_session:
+        result = in_session['session_id']
     else:
-        result = uuid.uuid4().hex()
-        session['session_id'] = result
+        result = uuid.uuid4().hex
+        in_session['session_id'] = result
     return result
 
 
@@ -51,6 +51,11 @@ def handle_server_request():
     response = jsonify(message=result_msg, data=result_data)
     return response
 
+
+#######################################
+##
+# @brief get a list of voyages
+#######################################
 @app.route('/get_voyages_list', methods=['GET', 'POST'])
 def retrieve_voyages_list():
     result_msg = 'success'
@@ -59,18 +64,33 @@ def retrieve_voyages_list():
         session_id = set_session_id(session)
         request_obj = request.get_json()
         request_obj['session_id'] = session_id
-        voyages = model_ops.get_all_voyages()
-        data = voyages
-    response = jsonpickle.encode({'message': result_msg, 'data': data})
+        voyage_query = model_ops.get_all_voyages()
+        voyages = []
+        for v in voyage_query:
+            voyages.append({'voyage_id': v.voyage_id,
+                            'voyage_name': v.voyage_name,
+                            'voyage_notes': v.voyage_notes})
+        response = jsonify(message=result_msg,
+                           data={'voyages': voyages})
     return response
 
+
+#######################################
+##
+# @brief create a new voyage row
+#######################################
 @app.route('/create_voyage', methods=['GET', 'POST'])
 def create_voyage():
     if request.method == "POST":
-        request_obj = request.get_json()
-        print "request_obj: {0}".format(request_obj)
+        request_json = request.get_json()
+        print "request_obj: {0}".format(request_json)
+        json_params = request_json['params']
+        voyage = models.Voyage(voyage_name=json_params['voyage_name'],
+                               voyage_notes=json_params['voyage_notes'])
+        model_ops.add_voyage(voyage)
     response = jsonify(message="success", data="")
     return response
+
 
 #######################################
 ##
