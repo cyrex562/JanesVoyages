@@ -1,33 +1,18 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
 body {
-    font-family: Verdana, Arial, sans-serif;
+    font-family: Helvetica,serif;
     font-size: 14px;
+    background: #ffffff;
 }
 
-#voyages-list-section {
-    background: dimgray;
-    float: left;
-    width: 40%;
+#header {
+    background: #8dc771;
 }
 
-#voyages-forms-section {
-    background: darkgray;
-    margin-left: 40%;
-}
-
-#voyages-list-menu {
-    float: left;
-    width: 9em;
-}
-
-#voyages-list-container {
-    margin-left: 9em;
-}
-
-.side_button {
-    width: 9em;
-}
-
-#forms-section {
-    margin-left: 40%;
-    border: solid black thin;
+#footer {
+    background: #86b2aa;
 }

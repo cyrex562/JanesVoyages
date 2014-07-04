@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <div id="content">
+        <div id="voyage-list">
+            <div id="table-menu-div" class="btn-group">
+                 <button id="select-all-voyages-btn" class="btn">
+                    select all</button>
+                <button id="deselect-all-voyages-btn" class="btn">
+                    deselect all</button>
+                <button id="create-voyage-btn" class="btn">
+                    create voyage </button>
+                <button id="delete-voyage-btn" class="btn">
+                    delete voyage</button>
+            </div>
+            <table class="table">
+                <tr id="voyage-list-hdr-row">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Ship</th>
+                    <th>Waypoints</th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

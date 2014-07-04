@@ -39,6 +39,39 @@ function send_request(action, request_data, callback)
 
 /**************************************
  *//**
+ * @brief stuff always done when an AJAX request response is received.
+ *************************************/
+function process_response() {
+
+}
+
+/**************************************
+ *//**
+ * @brief generate a row for a voyage
+ *************************************/
+function gen_voyage_row(voyage) {
+    var row = '<tr>' +
+        '<td><input type="checkbox" ' +
+        'id="select-row-[VOYAGE_ID]" value="[VOYAGE_ID]"></td>' +
+        '<td><input type="text" ' +
+        'id="voyage-name-[VOYAGE_ID]" value="[VOYAGE_NAME]"></td>' +
+        '<td><textarea id="voyage-notes-[VOYAGE_ID]">[VOYAGE_NOTES]' +
+        '</textarea></td>' +
+        '<td><span>[VOYAGE_SHIP]</span></td>' +
+        '<td>[VOYAGE_WAYPOINTS]</td>' +
+        '<td><button id="expand-row-btn-[VOYAGE_ID] class="btn">...</button>' +
+        '</td>' +
+        '</tr>';
+    row = row.replace(/\[VOYAGE_ID\]/g, voyage.voyage_id);
+    row = row.replace(/\[VOYAGE_NAME\]/g, voyage.voyage_name);
+    row = row.replace(/\[VOYAGE_NOTES]/g, voyage.voyage_notes);
+    // TODO: handle ship
+    // TODO: handle waypoint
+    return row;
+}
+
+/**************************************
+ *//**
  * @brief callback for update voyages list request
  * expects voyages list in the format
  * { message: "", data: { voyages: [ { voyage_id: 'voyage_id',
@@ -46,17 +79,15 @@ function send_request(action, request_data, callback)
  *************************************/
 function update_voyages_list_cb(response)
 {
+    process_response();
     console.log("update_voyages_list_cb()");
     var voyages = response.data.voyages;
     var voyages_list = $("#voyages-list");
-    voyages_list.empty();
+    var hdr_row = $('#voyage-list-hdr-row');
+    hdr_row.nextAll().remove();
     for (var i = 0; i < voyages.length; i++) {
-        var voyage_list_option = '<option value="[voyage_id]">([voyage_id]) [voyage_name]</option>';
-        voyage_list_option = voyage_list_option.replace(/\[voyage_id\]/g,
-            voyages[i].voyage_id);
-        voyage_list_option = voyage_list_option.replace(/\[voyage_name\]/g,
-            voyages[i].voyage_name);
-        voyages_list.append(voyage_list_option);
+        var voyage_row = gen_voyage_row(voyages[i]);
+        voyages_list.append(voyage_row);
     }
 }
 
@@ -64,10 +95,10 @@ function update_voyages_list_cb(response)
  *//**
  * @brief request update to voyages list
  *************************************/
-function update_voyages_list()
+function update_voyage_list()
 {
-    console.log("update_voyages_list()");
-    send_request("get_voyages_list", {}, update_voyages_list_cb);
+    console.log("update_voyage_list()");
+    send_request("get_voyages", {}, update_voyages_list_cb);
 }
 
 /**************************************
@@ -125,7 +156,7 @@ function request_create_voyage_cb(response) {
     set_status_bar(response.message);
     if (response.message === 'success') {
         console.log('create voyage success');
-        update_voyages_list()
+        update_voyage_list()
     }
 }
 
@@ -183,23 +214,7 @@ function save_voyage_form_btn_click() {
  *************************************/
 $(document).ready(function()
 {
-    $("#voyage-form").hide();
-
-    $("#create-voyage-btn")
-        .button()
-        .click(create_voyage_btn_click);
-
-    $("#cancel-voyage-btn")
-        .button()
-        .click(cancel_voyage_btn_click);
-
-    $("#reset-voyage-form-btn")
-        .button()
-        .click(reset_voyage_form_btn_click);
-
-    $("#save-voyage-btn")
-        .button()
-        .click(save_voyage_form_btn_click);
+    update_voyage_list();
 });
 
 /*******************************************************************************

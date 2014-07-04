@@ -9,7 +9,7 @@
 # IMPORTS
 ################################################################################
 import uuid
-from flask import jsonify, render_template, request, session
+from flask import jsonify, render_template, request, session, redirect, url_for
 import jsonpickle
 from app import app
 import models
@@ -56,14 +56,11 @@ def handle_server_request():
 ##
 # @brief get a list of voyages
 #######################################
-@app.route('/get_voyages_list', methods=['GET', 'POST'])
+@app.route('/get_voyages', methods=['GET', 'POST'])
 def retrieve_voyages_list():
     result_msg = 'success'
-    data = {}
+    response = ''
     if request.method == "POST":
-        session_id = set_session_id(session)
-        request_obj = request.get_json()
-        request_obj['session_id'] = session_id
         voyage_query = model_ops.get_all_voyages()
         voyages = []
         for v in voyage_query:
@@ -96,9 +93,18 @@ def create_voyage():
 ##
 #
 #######################################
+@app.route('/voyages')
+def route_voyages():
+    return render_template('voyages.html')
+
+#######################################
+##
+#
+#######################################
 @app.route('/')
-def hello_world():
-    return render_template('index.html')
+def route_default():
+    return redirect(url_for('route_voyages'))
+
 
 
 #######################################
