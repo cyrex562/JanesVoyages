@@ -10,14 +10,15 @@
 ################################################################################
 import uuid
 from flask import jsonify, render_template, request, session, redirect, url_for
-import jsonpickle
+
 from app import app
 import models
 import model_ops
 
+
 ################################################################################
 # GLOBAL
-#################################################################################
+################################################################################
 # app = Flask(__name__)
 # app.debug = True
 # app.secret_key = os.urandom(24)
@@ -31,7 +32,6 @@ import model_ops
 #
 #######################################
 def set_session_id(in_session):
-    result = ''
     if 'session_id' in in_session:
         result = in_session['session_id']
     else:
@@ -82,8 +82,8 @@ def create_voyage():
         request_json = request.get_json()
         print "request_obj: {0}".format(request_json)
         json_params = request_json['params']
-        voyage = models.Voyage(voyage_name=json_params['voyage_name'],
-                               voyage_notes=json_params['voyage_notes'])
+        voyage = models.Voyage(voyage_name=json_params['new_voyage_name'],
+                               voyage_notes=json_params['new_voyage_notes'])
         model_ops.add_voyage(voyage)
     response = jsonify(message="success", data="")
     return response
@@ -91,15 +91,56 @@ def create_voyage():
 
 #######################################
 ##
-#
+# @brief update a voyage
+#######################################
+@app.route('/update_voyage', methods=['GET', 'POST'])
+def update_voyage():
+    if request.method == "POST":
+        request_json = request.get_json()
+        json_params = request_json['params']
+        voyage = models.Voyage(voyage_id=json_params['updated_voyage_id'],
+                               voyage_name=json_params['updated_voyage_name'],
+                               voyage_notes=json_params['updated_voyage_notes'])
+        model_ops.update_voyage(voyage)
+    response = jsonify(message="success", data="")
+    return response
+
+
+#######################################
+##
+# @brief delete voyages by id
+#######################################
+@app.route('/delete_voyages_by_id', methods=['POST'])
+def delete_voyages_by_id():
+    request_json = request.get_json()
+    json_params = request_json['params']
+    voyages_to_delete_ids = json_params['voyages_to_delete_ids']
+    model_ops.delete_voyages_by_id(voyages_to_delete_ids)
+    return jsonify(message="success", data='')
+
+#######################################
+##
+# @brief create a new voyage row
+#######################################
+@app.route('/get_all_voyage_ids', methods=['GET', 'POST'])
+def get_all_voyage_ids():
+    voyage_ids = model_ops.get_all_voyage_ids()
+    response = jsonify(message="success", data={'voyage_ids': voyage_ids})
+    return response
+
+
+#######################################
+##
+# @brief route handler for voyages page
 #######################################
 @app.route('/voyages')
 def route_voyages():
     return render_template('voyages.html')
 
+
 #######################################
 ##
-#
+# @brief default route handler
 #######################################
 @app.route('/')
 def route_default():
