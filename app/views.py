@@ -1,5 +1,5 @@
-################################################################################
-##
+# ###############################################################################
+# #
 # @file views.py
 # @brief flask web app main script file for Janes Voyages Web App (JVAP)
 # @author Josh Madden <cyrex562@gmail.com>
@@ -19,17 +19,12 @@ import model_ops
 ################################################################################
 # GLOBAL
 ################################################################################
-# app = Flask(__name__)
-# app.debug = True
-# app.secret_key = os.urandom(24)
-
-
 ################################################################################
 # FUNCTIONS
 ################################################################################
 #######################################
 ##
-#
+# @brief set the session id
 #######################################
 def set_session_id(in_session):
     if 'session_id' in in_session:
@@ -40,52 +35,108 @@ def set_session_id(in_session):
     return result
 
 
-@app.route('/server_request', methods=['GET', 'POST'])
+#######################################
+##
+# @brief handle a general server request
+#######################################
+@app.route('/server_request', methods=['POST'])
 def handle_server_request():
     result_msg = 'success'
     result_data = 'no data'
-    if request.method == "POST":
-        session_id = set_session_id(session)
-        request_obj = request.get_json()
-        request_obj['session_id'] = session_id
-    response = jsonify(message=result_msg, data=result_data)
-    return response
+    session_id = set_session_id(session)
+    request_obj = request.get_json()
+    request_obj['session_id'] = session_id
+    return jsonify(message=result_msg, data=result_data)
 
 
 #######################################
 ##
 # @brief get a list of voyages
 #######################################
-@app.route('/get_voyages', methods=['GET', 'POST'])
+@app.route('/get_voyages', methods=['POST'])
 def retrieve_voyages_list():
     result_msg = 'success'
-    response = ''
-    if request.method == "POST":
-        voyage_query = model_ops.get_all_voyages()
-        voyages = []
-        for v in voyage_query:
-            voyages.append({'voyage_id': v.voyage_id,
-                            'voyage_name': v.voyage_name,
-                            'voyage_notes': v.voyage_notes})
-        response = jsonify(message=result_msg,
-                           data={'voyages': voyages})
-    return response
+    voyage_query = model_ops.get_all_voyages()
+    voyages = []
+    for v in voyage_query:
+        waypoints = []
+        for w in v.waypoints:
+            trades = []
+            for t in w.trades:
+                items = []
+                for i in t.items:
+                    items.append({'item_id': i.item_id,
+                                  'item_description': i.item_description,
+                                  'item_quantity': i.item_quantity,
+                                  'bought_sold': i.bought_sold})
+                trades.append({'trade_id': t.trade_id,
+                               'trade_name': t.trade_name,
+                               'trade_notes': t.trade_notes,
+                               'items': items})
+            waypoints.append({'waypoint_id': w.waypoint_id,
+                              'waypoint_name': w.waypoint_name,
+                              'waypoint_type': w.waypoint_type,
+                              'waypoint_location': w.waypoint_location,
+                              'waypoint_notes': w.waypoint_notes,
+                              'start_date': w.start_date,
+                              'end_date': w.end_date,
+                              'trades': trades})
+        voyages.append({'voyage_id': v.voyage_id,
+                        'voyage_name': v.voyage_name,
+                        'voyage_notes': v.voyage_notes,
+                        'waypoints': waypoints})
+    return jsonify(message=result_msg, data={'voyages': voyages})
+
+
+#######################################
+##
+# @brief get a list of ships
+#######################################
+@app.route('/get_ships', methods=['POST'])
+def retreive_ships():
+    result_msg = 'success'
+    ships_query = model_ops.get_all_ships()
+    ships = []
+    for s in ships_query:
+        ships.append({'ship_id': s.ship_id,
+                      'ship_name': s.ship_name,
+                      'ship_captain': s.ship_captain,
+                      'ship_flag': s.ship_flag,
+                      'ship_voyage_id': s.ship_voyage_id,
+                      'ship_notes': s.ship_notes})
+    return jsonify(message=result_msg, data={'ships': ships})
 
 
 #######################################
 ##
 # @brief create a new voyage row
 #######################################
-@app.route('/create_voyage', methods=['GET', 'POST'])
+@app.route('/create_voyage', methods=['POST'])
 def create_voyage():
-    if request.method == "POST":
-        request_json = request.get_json()
-        print "request_obj: {0}".format(request_json)
-        json_params = request_json['params']
-        voyage = models.Voyage(voyage_name=json_params['new_voyage_name'],
-                               voyage_notes=json_params['new_voyage_notes'])
-        model_ops.add_voyage(voyage)
-    response = jsonify(message="success", data="")
+    request_json = request.get_json()
+    print "request_obj: {0}".format(request_json)
+    json_params = request_json['params']
+    voyage = models.Voyage(voyage_name=json_params['new_voyage_name'],
+                           voyage_notes=json_params['new_voyage_notes'])
+    model_ops.add_voyage(voyage)
+    return jsonify(message="success", data="")
+
+
+#######################################
+##
+# @brief create a new ship row
+#######################################
+@app.route('/create_ship', methods=['POST'])
+def create_ship():
+    request_json = request.get_json()
+    print "request obj {0}".format(request_json)
+    json_params = request_json['params']
+    ship = models.Ship(ship_name=json_params['ship_name'],
+                       ship_captain=json_params['ship_captain'],
+                       ship_flag=json_params['ship_flag'],
+                       ship_notes=json_params['ship_notes'])
+    model_ops.add_ship(ship)
+    response = jsonify(message="succes", data="")
     return response
 
 
@@ -93,15 +144,32 @@ def create_voyage():
 ##
 # @brief update a voyage
 #######################################
-@app.route('/update_voyage', methods=['GET', 'POST'])
+@app.route('/update_voyage', methods=['POST'])
 def update_voyage():
-    if request.method == "POST":
-        request_json = request.get_json()
-        json_params = request_json['params']
-        voyage = models.Voyage(voyage_id=json_params['updated_voyage_id'],
-                               voyage_name=json_params['updated_voyage_name'],
-                               voyage_notes=json_params['updated_voyage_notes'])
-        model_ops.update_voyage(voyage)
+    request_json = request.get_json()
+    json_params = request_json['params']
+    voyage = models.Voyage(voyage_id=json_params['updated_voyage_id'],
+                           voyage_name=json_params['updated_voyage_name'],
+                           voyage_notes=json_params['updated_voyage_notes'])
+    model_ops.update_voyage(voyage)
+    response = jsonify(message="success", data="")
+    return response
+
+
+#######################################
+##
+# @brief update a ship
+#######################################
+@app.route('/update_ship', methods=['POST'])
+def update_ship():
+    request_json = request.get_json()
+    json_params = request_json['params']
+    ship = models.Ship(ship_id=json_params['updated_ship_id'],
+                       ship_name=json_params['updated_ship_name'],
+                       ship_captain=json_params['updated_ship_captain'],
+                       ship_flag=json_params['updated_ship_flag'],
+                       ship_notes=json_params['updated_ship_notes'])
+    model_ops.update_ship(ship)
     response = jsonify(message="success", data="")
     return response
 
@@ -118,15 +186,38 @@ def delete_voyages_by_id():
     model_ops.delete_voyages_by_id(voyages_to_delete_ids)
     return jsonify(message="success", data='')
 
+
+#######################################
+##
+# @brief delete ships by id
+#######################################
+@app.route('/delete_ships_by_id', methods=['POST'])
+def delete_ships_by_id():
+    request_json = request.get_json()
+    json_params = request_json['params']
+    ships_to_delete_ids = json_params['ships_to_delete_ids']
+    model_ops.delete_ships_by_id(ships_to_delete_ids)
+    return jsonify(message="success", data="")
+
+
 #######################################
 ##
 # @brief create a new voyage row
 #######################################
-@app.route('/get_all_voyage_ids', methods=['GET', 'POST'])
+@app.route('/get_all_voyage_ids', methods=['POST'])
 def get_all_voyage_ids():
     voyage_ids = model_ops.get_all_voyage_ids()
-    response = jsonify(message="success", data={'voyage_ids': voyage_ids})
-    return response
+    return jsonify(message="success", data={'voyage_ids': voyage_ids})
+
+
+#######################################
+##
+# @brief get all ship ids
+#######################################
+@app.route('/get_all_ship_ids', methods=['POST'])
+def get_all_ship_ids():
+    ship_ids = model_ops.get_all_ship_ids()
+    return jsonify(message="succes", data={'ship_ids': ship_ids})
 
 
 #######################################
@@ -140,27 +231,29 @@ def route_voyages():
 
 #######################################
 ##
+# @brief route handler for ships page
+#######################################
+@app.route('/ships')
+def route_ships():
+    return render_template('ships.html')
+
+
+#######################################
+##
+# @brief route handler for ships page
+#######################################
+@app.route('/waypoints')
+def route_waypoints():
+    return render_template('waypoints.html')
+
+
+#######################################
+##
 # @brief default route handler
 #######################################
 @app.route('/')
 def route_default():
     return redirect(url_for('route_voyages'))
-
-
-
-#######################################
-##
-#
-#######################################
-# def run_server():
-#     app.run()
-
-
-################################################################################
-# ENTRY POINT
-################################################################################
-# if __name__ == '__main__':
-#     run_server()
 
 ################################################################################
 # END OF FILE

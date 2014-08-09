@@ -34,7 +34,8 @@ def add_voyage(voyage):
 
 
 def update_voyage(in_voyage):
-    voyage = models.Voyage.query.filter_by(voyage_id=in_voyage.voyage_id).first()
+    voyage = models.Voyage.query.filter_by(voyage_id=in_voyage.voyage_id)\
+        .first()
     voyage.voyage_name = in_voyage.voyage_name
     voyage.voyage_notes = in_voyage.voyage_notes
     db.session.commit()
@@ -54,6 +55,7 @@ def delete_voyages_by_id(voyage_ids):
 
 def get_all_voyages():
     return models.Voyage.query.all()
+
 
 def get_all_voyage_ids():
     voyages = models.Voyage.query.all()
@@ -78,8 +80,23 @@ def delete_ship(ship):
     db.session.commit()
 
 
+def delete_ships_by_id(ship_ids):
+    for s in ship_ids:
+        ship = models.Ship.query.filter_by(ship_id=s).first()
+        db.session.delete(ship)
+    db.session.commit()
+
+
 def get_all_ships():
     return db.session.query(models.Ship)
+
+
+def get_all_ship_ids():
+    ships = models.Ship.query.all()
+    result = []
+    for s in ships:
+        result.append(s.ship_id)
+    return result
 
 
 def add_waypoint(waypoint):
