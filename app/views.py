@@ -1,5 +1,5 @@
-# ###############################################################################
-# #
+################################################################################
+##
 # @file views.py
 # @brief flask web app main script file for Janes Voyages Web App (JVAP)
 # @author Josh Madden <cyrex562@gmail.com>
@@ -109,6 +109,32 @@ def retreive_ships():
 
 #######################################
 ##
+# @brief get a list of waypoints
+#######################################
+@app.route('/get_waypoints', methods=['POST'])
+def retrieve_waypoints():
+    result_msg = 'success'
+    waypoints_query = model_ops.get_all_waypoints()
+    waypoints = []
+    for w in waypoints_query:
+        waypoints.append({
+            'waypoint_id': w.waypoint_id,
+            'waypoint_name': w.waypoint_name,
+            'waypoint_type': w.waypoint_type,
+            'waypoint_location': w.waypoint_location,
+            'start_date': w.start_date,
+            'end_date': w.end_date,
+            'waypoint_notes': w.waypoint_notes,
+            'waypoint_voyage_id': w.waypoint_voyage_id
+        })
+    return jsonify(message=result_msg, data={'waypoints': waypoints})
+
+# TODO: create a method to get a list of trades
+# TODO: create a method to get a list of items
+
+
+#######################################
+##
 # @brief create a new voyage row
 #######################################
 @app.route('/create_voyage', methods=['POST'])
@@ -142,6 +168,26 @@ def create_ship():
 
 #######################################
 ##
+# @brief create a new waypoint row
+#######################################
+@app.route('/create_waypoint', methods=['POST'])
+def create_waypoint():
+    request_json = request.get_json()
+    print "request obj {0}".format(request_json)
+    json_params = request_json['params']
+    waypoint = models.Waypoint(waypoint_name=json_params['waypoint_name'],
+                               waypoint_type=json_params['waypoint_type'],
+                               waypoint_location=json_params[
+                                   'waypoint_location'],
+                               waypoint_notes=json_params['waypoint_notes'],
+                               start_date=json_params['waypoint_start_date'],
+                               end_date=json_params['waypoint_end_date'])
+    model_ops.add_waypoint(waypoint)
+    return jsonify(message="success", data="")
+
+
+#######################################
+##
 # @brief update a voyage
 #######################################
 @app.route('/update_voyage', methods=['POST'])
@@ -170,8 +216,29 @@ def update_ship():
                        ship_flag=json_params['updated_ship_flag'],
                        ship_notes=json_params['updated_ship_notes'])
     model_ops.update_ship(ship)
-    response = jsonify(message="success", data="")
-    return response
+    return jsonify(message="success", data="")
+
+
+#######################################
+##
+# @brief update a waypoint
+#######################################
+@app.route('/update_waypoint', methods=['POST'])
+def update_waypoint():
+    request_json = request.get_json()
+    json_params = request_json['params']
+    waypoint = models.Waypoint(waypoint_id=json_params['updated_waypoint_id'],
+        waypoint_name=json_params['updated_waypoint_name'],
+        waypoint_type=json_params['updated_waypoint_type'],
+        waypoint_location=json_params['updated_waypoint_location'],
+        waypoint_notes=json_params['updated_waypoint_notes'],
+        start_date=json_params['updated_waypoint_start_date'],
+        end_date=json_params['updated_waypoint_end_date'])
+    model_ops.update_waypoint(waypoint)
+    return jsonify(message="success", data='')
+
+# TODO: write method to handle updating trades
+# TODO: write method to handle updating items
 
 
 #######################################
@@ -202,6 +269,21 @@ def delete_ships_by_id():
 
 #######################################
 ##
+# @brief delete waypoints by id
+#######################################
+@app.route('/delete_waypoints_by_id', methods=['POST'])
+def delete_waypoints_by_id():
+    json_params = request.get_json()['params']
+    waypoints_to_delete_ids = json_params['waypoints_to_delete_ids']
+    model_ops.delete_waypoints_by_id(waypoints_to_delete_ids)
+    return jsonify(message="succes", data="")
+
+# TODO: write method to handle deleting trades
+# TODO: write method to handle deleting items
+
+
+#######################################
+##
 # @brief create a new voyage row
 #######################################
 @app.route('/get_all_voyage_ids', methods=['POST'])
@@ -218,6 +300,19 @@ def get_all_voyage_ids():
 def get_all_ship_ids():
     ship_ids = model_ops.get_all_ship_ids()
     return jsonify(message="succes", data={'ship_ids': ship_ids})
+
+
+#######################################
+##
+# @brief get all waypoint ids
+#######################################
+@app.route('/get_all_waypoint_ids', methods=['POST'])
+def get_all_waypoint_ids():
+    waypoint_ids = model_ops.get_all_waypoint_ids()
+    return jsonify(message="success", data={'waypoint_ids': waypoint_ids})
+
+# TODO: write method to handle retrieving all trade ids
+# TODO: write method to handle retireiving all item ids
 
 
 #######################################

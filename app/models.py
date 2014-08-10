@@ -11,14 +11,13 @@ from app import db
 from sqlalchemy.dialects.postgresql import *
 
 
-###############################################################################
-# DEFINES
-###############################################################################
-
-
-###############################################################################
+################################################################################
 # CLASSES
-###############################################################################
+################################################################################
+#######################################
+##
+# @class Voyage object
+#######################################
 class Voyage(db.Model):
     voyage_id = db.Column(INTEGER, primary_key=True)
     voyage_name = db.Column(VARCHAR(255), index=True)
@@ -27,16 +26,23 @@ class Voyage(db.Model):
     ships = db.relationship('Ship', lazy='dynamic')
 
 
+#######################################
+##
+# @class Ship object
+#######################################
 class Ship(db.Model):
     ship_id = db.Column(INTEGER, primary_key=True)
     ship_name = db.Column(VARCHAR(255), index=True)
     ship_captain = db.Column(VARCHAR(255), index=True)
     ship_flag = db.Column(VARCHAR(255), index=True)
     ship_notes = db.Column(TEXT)
-    ship_voyage_id = db.Column(db.Integer,
-                               db.ForeignKey('voyage.voyage_id'))
+    ship_voyage_id = db.Column(db.Integer, db.ForeignKey('voyage.voyage_id'))
 
 
+#######################################
+##
+# @class Waypoint object
+#######################################
 class Waypoint(db.Model):
     waypoint_id = db.Column(INTEGER, primary_key=True)
     waypoint_name = db.Column(VARCHAR(255), index=True)
@@ -49,6 +55,10 @@ class Waypoint(db.Model):
     trades = db.relationship('Trade', lazy='dynamic')
 
 
+#######################################
+##
+# @class Trade object
+#######################################
 class Trade(db.Model):
     trade_id = db.Column(INTEGER, primary_key=True)
     trade_name = db.Column(VARCHAR(255), index=True)
@@ -58,27 +68,16 @@ class Trade(db.Model):
     items = db.relationship('Item', lazy='dynamic')
 
 
+#######################################
+##
+# @class Item object
+#######################################
 class Item(db.Model):
     item_id = db.Column(INTEGER, primary_key=True)
     item_description = db.Column(TEXT)
     item_quantity = db.Column(INTEGER)
     bought_sold = db.Column(BOOLEAN)
     item_trade_id = db.Column(INTEGER, db.ForeignKey('trade.trade_id'))
-
-
-###############################################################################
-# GLOBALS
-###############################################################################
-
-
-###############################################################################
-# FUNCTIONS
-###############################################################################
-
-
-###############################################################################
-# ENTRY POINT
-###############################################################################
 
 
 ###############################################################################

@@ -8,7 +8,7 @@ function save_ship_row_cb(response)
 {
     process_response(response);
     update_ship_list();
-    set_status_bar(response.msg);
+    set_ships_status_bar(response.msg);
 }
 
 /**************************************
@@ -23,9 +23,13 @@ function save_ship_row()
     var updated_ship_id = ship_id;
     var updated_ship_name = $('#ship-name-' + ship_id).val();
     var updated_ship_notes = $('#ship-notes-' + ship_id).val();
+    var updated_ship_captain = $('#ship-captain-' + ship_id).val();
+    var updated_ship_flag = $('#ship-flag-' + ship_id).val();
     var data = { updated_ship_id: updated_ship_id,
         updated_ship_name: updated_ship_name,
-        updated_ship_notes: updated_ship_notes};
+        updated_ship_notes: updated_ship_notes,
+        updated_ship_captain: updated_ship_captain,
+        updated_ship_flag: updated_ship_flag};
     send_request('update_ship', data, save_ship_row_cb);
 }
 
@@ -74,17 +78,18 @@ function gen_ship_row(ship)
 {
     var row = '<tr><td><input type="checkbox" id="select-row-[SHIP_ID]" ' +
         'value="[SHIP_ID]" class="select-ship-row"></td>' +
-        '<td><input type="text" id="ship-name-new" value="[SHIP_NAME]" ' +
+        '<td><input type="text" id="ship-name-[SHIP_ID]" value="[SHIP_NAME]" ' +
         'placeholder="ship name"></td>' +
-        '<td><input type="text" id="ship-captain-new" value="[SHIP_CAPTAIN]" ' +
+        '<td><input type="text" id="ship-captain-[SHIP_ID]" ' +
+        'value="[SHIP_CAPTAIN]" ' +
         'placeholder="ship captain"></td>' +
-        '<td><input type="text" id="ship-flag-new" value="[SHIP_FLAG]" ' +
+        '<td><input type="text" id="ship-flag-[SHIP_ID]" value="[SHIP_FLAG]" ' +
         'placeholder="ship flag"></td>' +
-        '<td><textarea id="ship-notes-new">[SHIP_NOTES]</textarea></td>' +
+        '<td><textarea id="ship-notes-[SHIP_ID]">[SHIP_NOTES]</textarea></td>' +
         '<td>[VOYAGE]</td>' +
-        '<td><button id="expand-row-btn-new" class="btn">' +
+        '<td><button id="expand-row-btn-[SHIP_ID]" class="btn">' +
         '<span class="glyphicon glyphicon-collapse-down"></span></button>' +
-        '<button id="save-row-new-btn" class="btn">' +
+        '<button id="save-row-btn-[SHIP_ID]" value="[SHIP_ID]" class="btn">' +
         '<span class="glyphicon glyphicon-floppy-save"></span></button></td>' +
         '</tr>';
 
@@ -105,7 +110,7 @@ function select_all_ships_cb(response)
 {
     process_response(response);
     var msg = response.message;
-    set_status_bar(msg);
+    set_ships_status_bar(msg);
     selected_ship_ids = response.data.ship_ids;
     for (var i = 0; i < selected_ship_ids.length; i++) {
        $('#select-row-'+selected_ship_ids[i]).prop('checked', true);

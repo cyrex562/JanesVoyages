@@ -236,8 +236,10 @@ function gen_new_voyage_row()
         '<td><span>[VOYAGE_SHIP]</span></td>' +
         '<td>[VOYAGE_WAYPOINTS]</td>' +
         '<td>' +
-        '<button id="expand-row-btn-new" class="btn"><span class="glyphicon glyphicon-collapse-down"></span></button>' +
-        '<button id="save-row-new-btn" class="btn"><span class="glyphicon glyphicon-floppy-save"></span></button>' +
+        '<button id="expand-row-btn-new" class="btn"><span class="glyphicon ' +
+        'glyphicon-collapse-down"></span></button>' +
+        '<button id="save-row-new-btn" class="btn"><span class="glyphicon ' +
+        'glyphicon-floppy-save"></span></button>' +
         '</td>' +
         '</tr>';
 }
