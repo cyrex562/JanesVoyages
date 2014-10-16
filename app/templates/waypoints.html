@@ -2,63 +2,115 @@
 {% block body %}
     <script type=text/javascript
             src="{{ url_for('static', filename='js/waypoints.js') }}"></script>
-<!-- confirm delete ship modal -->
-<div class="modal fade" id="confirm-delete-waypoint-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">Modal title</h4>
+    <!-- confirm delete ship modal -->
+    <div class="modal fade" id="confirm-delete-waypoint-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete selected waypoints?
+                        This operation cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            data-dismiss="modal"
+                            id="confirm-delete-waypoint-btn">Confirm
+                    </button>
+                </div>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete selected waypoints?
-                    This operation cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                        data-dismiss="modal">Cancel
-                </button>
-                <button type="button" class="btn btn-primary"
-                        data-dismiss="modal"
-                        id="confirm-delete-waypoint-btn">Confirm
-                </button>
-            </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
-<!-- content -->
-<div id="content">
-    <div id="waypoint-list-outer">
-        <div id="table-menu-div" class="btn-group">
-            <button id="select-all-waypoints-btn" class="btn">
-                select all
-            </button>
-            <button id="deselect-all-waypoints-btn" class="btn">
-                deselect all
-            </button>
-            <button id="delete-waypoint-btn" class="btn">
-                delete selected
-            </button>
+    <!-- content -->
+    <div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-voyage-select">
+                        Voyage
+                    </label>
+                    <select class="form-control"
+                            id="waypoint-voyage-select">
+                    </select>
+                </div>
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-name">
+                        Name
+                    </label>
+                    <input type="text" class="form-control"
+                           id="waypoint-name" placeholder="Name">
+                </div>
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-type">
+                        Type
+                    </label>
+                    <select class="form-control"
+                            id="waypoint-type">
+                    </select>
+                </div>
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-location">
+                        Name
+                    </label>
+                    <input type="text" class="form-control"
+                           id="waypoint-location" placeholder="Location">
+                </div>
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-start-date">
+                        Start Date
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="start date"
+                           id="waypoint-start-date">
+                </div>
+                <div class="col-xs-1">
+                    <label class="sr-only" for="waypoint-end-date">
+                        End Date
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="end date" id="waypoint-end-date">
+                </div>
+                <div class="col-xs-2">
+                    [TRADE]
+                </div>
+                <div class="col-xs-2">
+                    <label class="sr-only"
+                           for="waypoint-notes">Notes</label>
+                    <textarea id="waypoint-notes"
+                              placeholder="notes"></textarea>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-default" id="add-waypoint-btn">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </div>
         </div>
-        <table class="table" id="waypoint-list">
-            <tr id="waypoint-list-hdr-row">
-                <th><span class="glyphicon glyphicon-ok"></span></th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Location</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Notes</th>
-                <th>Trades</th>
-                <th>Voyage</th>
-                <th></th>
-            </tr>
-        </table>
+        <div id="waypoint-list-outer">
+            <table class="table" id="waypoint-list">
+                <tr id="waypoint-list-hdr-row">
+                    <th><span class="glyphicon glyphicon-ok"></span></th>
+                    <th>Voyage</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Trade</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
 {% endblock %}

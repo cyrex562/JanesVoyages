@@ -140,29 +140,35 @@ function voyage_select_change()
  *************************************/
 function gen_voyage_row(voyage)
 {
-    var row = '<tr>' +
-        '<td><input type="checkbox" ' +
-        'id="select-row-[VOYAGE_ID]" value="[VOYAGE_ID]" ' +
-        'class="select-voyage-row"></td>' +
-        '<td><input type="text" ' +
-        'id="voyage-name-[VOYAGE_ID]" value="[VOYAGE_NAME]"></td>' +
-        '<td><textarea id="voyage-notes-[VOYAGE_ID]">[VOYAGE_NOTES]' +
-        '</textarea></td>' +
-        '<td>' +
-        '<span>[SHIP_NAME]</span>' +
-        '<button id="edit-ship-btn-[VOYAGE_ID]" value="[VOYAGE_ID]">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        '</button>' +
-        '</td>' +
-        '<td>[VOYAGE_WAYPOINTS]</td>' +
-        '<td>' +
-            '<button id="expand-row-btn-[VOYAGE_ID]" class="btn">' +
-        '<span class="glyphicon glyphicon-collapse-down"></span></button>' +
-            '<button id="save-row-btn-[VOYAGE_ID]" ' +
-        'class="btn" value="[VOYAGE_ID]"><span ' +
-        'class="glyphicon glyphicon-floppy-save"></span></button>' +
-        '</td>' +
-        '</tr>';
+    var row = '<tr>\
+        <td>\
+            <div class=checkbox>\
+                <label>\
+                <input type="checkbox" id="select-row-[VOYAGE_ID]" value="[VOYAGE_ID]" class="select-voyage-row">\
+                </label>\
+            </div>\
+        </td>\
+        <td>\
+            <input class="form-control" type="text" id="voyage-name-[VOYAGE_ID]" value="[VOYAGE_NAME]">\
+        </td>\
+        <td>\
+            <textarea class="form-control" id="voyage-notes-[VOYAGE_ID]">[VOYAGE_NOTES]</textarea>\
+        </td>\
+        <td>\
+            <span>[SHIP_NAME]</span>\
+            <button class="btn" id="edit-ship-btn-[VOYAGE_ID]" value="[VOYAGE_ID]">\
+                <span class="glyphicon glyphicon-pencil"></span>\
+            </button>\
+        </td>\
+        <td>[VOYAGE_WAYPOINTS]</td>\
+        <td>\
+            <button id="expand-row-btn-[VOYAGE_ID]" class="btn">\
+        <span class="glyphicon glyphicon-collapse-down"></span></button>\
+            <button id="save-row-btn-[VOYAGE_ID]" class="btn" value="[VOYAGE_ID]">\
+                <span class="glyphicon glyphicon-floppy-save"></span>\
+            </button>\
+        </td>\
+        </tr>';
     row = row.replace(/\[VOYAGE_ID\]/g, voyage.voyage_id);
     row = row.replace(/\[VOYAGE_NAME\]/g, voyage.voyage_name);
     row = row.replace(/\[VOYAGE_NOTES]/g, voyage.voyage_notes);
@@ -220,28 +226,6 @@ function save_new_voyage_row()
         new_voyage_notes: new_voyage_notes
     };
     send_request('create_voyage', data, save_new_voyage_row_cb);
-}
-
-/**************************************
- *//**
- * @brief generate a row for creating voyages
- *************************************/
-function gen_new_voyage_row()
-{
-    return '<tr>' +
-        '<td></td>' +
-        '<td><input type="text" ' +
-        'id="voyage-name-new" value="" placeholder="voyage name"></td>' +
-        '<td><textarea id="voyage-notes-new"></textarea></td>' +
-        '<td><span>[VOYAGE_SHIP]</span></td>' +
-        '<td>[VOYAGE_WAYPOINTS]</td>' +
-        '<td>' +
-        '<button id="expand-row-btn-new" class="btn"><span class="glyphicon ' +
-        'glyphicon-collapse-down"></span></button>' +
-        '<button id="save-row-new-btn" class="btn"><span class="glyphicon ' +
-        'glyphicon-floppy-save"></span></button>' +
-        '</td>' +
-        '</tr>';
 }
 
 /**************************************

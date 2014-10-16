@@ -9,8 +9,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span><span
-                            class="sr-only">Close</span></button>
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span></button>
                     <h4 class="modal-title">Modal title</h4>
                 </div>
                 <div class="modal-body">
@@ -32,98 +32,53 @@
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!-- ship modal -->
-{#    <div class="modal fade" id="confirm-delete-modal">#}
-{#        <div class="modal-dialog">#}
-{#            <div class="modal-content">#}
-{#                <div class="modal-header">#}
-{#                    <button type="button" class="close" data-dismiss="modal">#}
-{#                        <span aria-hidden="true">&times;</span><span#}
-{#                            class="sr-only">Close</span></button>#}
-{#                    <h4 class="modal-title">Ship info</h4>#}
-{#                </div>#}
-{#                <div class="modal-body">#}
-{#                    <div>#}
-{#                        <div class="form-group">#}
-{#                            <label for="ship-select">associated ship</label>#}
-{#                            <select id="ship-select"></select>#}
-{#                            <button id="add-ship-btn" class="btn"><span#}
-{#                                    class="glyphicon glyphicon-plus"></span>#}
-{#                            </button>#}
-{#                            <button id="edit-ship-btn" class="btn">#}
-{#                                <span class="glyphicon glyphicon-pencil"></span>#}
-{#                            </button>#}
-{#                            <button id="remove-ship-btn" class="btn">#}
-{#                                <span class="glyphicon glyphicon-remove"></span>#}
-{#                            </button>#}
-{#                        </div>#}
-{#                        <div id="ship-form">#}
-{#                            <fieldset>#}
-{#                                <input type="hidden" id="ship-form-action">#}
-{#                                <input type="hidden" id="ship-id">#}
-{#                                <legend>Ship</legend>#}
-{#                                <div class="form-group">#}
-{#                                    <label for="ship-name-input">Name</label>#}
-{#                                    <input type="text" id="ship-name-input"#}
-{#                                           placeholder="ship name">#}
-{#                                </div>#}
-{#                                <div class="form-group">#}
-{#                                    <label for="ship-flag-input">Flag</label>#}
-{#                                    <input type="text" id="ship-flag-input"#}
-{#                                           placeholder="ship flag">#}
-{#                                </div>#}
-{#                                <div class="form-group">#}
-{#                                    <label for="ship-captain-input">Captain#}
-{#                                    </label>#}
-{#                                    <input type="text" id="ship-captain-input"#}
-{#                                           placeholder="ship captain">#}
-{#                                </div>#}
-{#                                <div class="form-group">#}
-{#                                    <label for="ship-notes-textarea">Notes</label>#}
-{#                                    <textarea id="ship-notes-textarea">#}
-{#                                    </textarea>#}
-{#                                </div>#}
-{#                            </fieldset>#}
-{#                        </div>#}
-{##}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="modal-footer">#}
-{#                    <button type="button" class="btn btn-default"#}
-{#                            data-dismiss="modal">Cancel#}
-{#                    </button>#}
-{#                    <button type="button" class="btn btn-primary"#}
-{#                            data-dismiss="modal"#}
-{#                            id="confirm-delete-voyage-btn">Confirm#}
-{#                    </button>#}
-{#                </div>#}
-{#            </div>#}
-{#            <!-- /.modal-content -->#}
-{#        </div>#}
-{#        <!-- /.modal-dialog -->#}
-{#    </div><!-- /.modal -->#}
-
     <!-- content -->
     <div id="content">
-        <div id="voyage-list-outer">
-            <div id="table-menu-div" class="btn-group">
-                 <button id="select-all-voyages-btn" class="btn">
-                    select all</button>
-                <button id="deselect-all-voyages-btn" class="btn">
-                    deselect all</button>
-                <button id="delete-voyage-btn" class="btn">
-                    delete selected</button>
-            </div>
-            <table class="table" id="voyage-list">
-                <tr id="voyage-list-hdr-row">
-                    <th><span class="glyphicon glyphicon-ok"></span></th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Ship</th>
-                    <th>Waypoints</th>
-                    <th></th>
-                </tr>
-            </table>
+        <!-- add voyage form -->
+        <div class="form-inline">
+            <fieldset>
+                <div class="form-group">
+                    <label for="voyage-name-new">
+                        Voyage Name
+                    </label>
+                    <input type="text" class="form-control"
+                           id="voyage-name-new" placeholder="voyage name">
+                </div>
+                <div class="form-group">
+                    <label for="voyage-notes-new">Voyage Notes</label>
+                    <textarea class="form-control" id="voyage-notes-new"
+                            placeholder="voyage notes">
+                    </textarea>
+                </div>
+                <button class="btn btn-default" id="save-row-new-btn">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </fieldset>
         </div>
+        <!-- voyage operations button group ->
+
+        <!-- voyage table -->
+        <div id="table-menu-div" class="btn-group">
+            <button id="delete-voyage-btn" class="btn">
+                delete selected
+            </button>
+        </div>
+        <table class="table table-striped" id="voyage-list">
+            <tr id="voyage-list-hdr-row">
+                <th>
+                    <div class="checkbox">
+                        <label>
+                            <input id="select-all-voygaes-cbx"
+                                   type="checkbox">
+                        </label>
+                    </div>
+                </th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Ship</th>
+                <th>Waypoints</th>
+                <th></th>
+            </tr>
+        </table>
     </div>
 {% endblock %}
