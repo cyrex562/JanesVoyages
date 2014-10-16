@@ -46,6 +46,12 @@ function process_response(response)
     console.log('response: %s', response);
 }
 
+function set_status_bar(level, message) {
+    var status_bar = $('#status-bar');
+    status_bar.empty();
+    status_bar.append('<div class="alert-dismissible alert alert-' + level + '"><p>message</p></div>')
+}
+
 /*******************************************************************************
  * END OF FILE
  ******************************************************************************/

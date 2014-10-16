@@ -79,61 +79,6 @@ function voyage_select_change()
     console.log('selected voyage ids after: "%s"', selected_voyage_ids);
 }
 
-//function clear_ship_form() {
-//    $('#ship-name-input').val('');
-//    $('#ship-flag-input').val('');
-//    $('#ship-captain-input').val('');
-//    $('#ship-notes-textarea').val('');
-//}
-//
-//function get_ship_by_id() {
-//    var ship = '';
-//    send_request('get_ship_by_id', {}, function() {
-//       process_response(response);
-//       set_status_bar(response.msg);
-//       ship = response.data.ship;
-//    });
-//    return ship;
-//}
-
-//function edit_ship() {
-//    $('#ship-form-action').val('edit');
-//    // populate ship form
-//    var ship_id = $(this).val();
-//    var ship = get_ship_by_id();
-//    $('#ship-name-input').val(ship.ship_name);
-//    $('#ship-flag-input').val(ship.ship_flag);
-//    $('#ship-captain-input').val(ship.ship_captain);
-//    $('#ship-notes-textarea').val(ship.ship_notes);
-//    $('#ship-id').val(ship_id);
-//}
-//
-//function delete_ship() {
-//
-//}
-//
-//function create_ship() {
-//    $('#ship-form-action').val('create');
-//}
-//
-//function save_ship() {
-//    var form_action = $('#ship-form-action').val();
-//    var request_action =  '';
-//    var in_data = {};
-//    if (form_action === 'create') {
-//
-//    } else if (form_action === 'edit') {
-//        in_data = {
-//            ship_id: $('#ship-id').val(),
-//            ship_name: $('#ship-name-input').val(),
-//            ship_captain: $('#ship-captain-input').val(),
-//            ship_notes: $('#ship-notes-textarea').val()
-//        };
-//        send_request(request_action, in_data)
-//    }
-//}
-
-
 /**************************************
  *//**
  * @brief generate a row for a voyage
@@ -263,17 +208,6 @@ function update_voyage_list()
 {
     console.log("update_voyage_list()");
     send_request("get_voyages", {}, update_voyages_list_cb);
-}
-
-/**************************************
- *//**
- * @brief set the status bar text field.
- *************************************/
-function set_voyages_status_bar(msg)
-{
-    var status_bar = $("#status-bar");
-    status_bar.empty();
-    status_bar.append('<span>' + msg + '</span');
 }
 
 /**************************************

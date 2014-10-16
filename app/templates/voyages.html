@@ -37,6 +37,7 @@
         <!-- add voyage form -->
         <div class="form-inline">
             <fieldset>
+                <legend>Add Voyage</legend>
                 <div class="form-group">
                     <label for="voyage-name-new">
                         Voyage Name
@@ -47,7 +48,7 @@
                 <div class="form-group">
                     <label for="voyage-notes-new">Voyage Notes</label>
                     <textarea class="form-control" id="voyage-notes-new"
-                            placeholder="voyage notes">
+                              placeholder="voyage notes">
                     </textarea>
                 </div>
                 <button class="btn btn-default" id="save-row-new-btn">
@@ -55,30 +56,30 @@
                 </button>
             </fieldset>
         </div>
-        <!-- voyage operations button group ->
-
-        <!-- voyage table -->
-        <div id="table-menu-div" class="btn-group">
-            <button id="delete-voyage-btn" class="btn">
-                delete selected
-            </button>
-        </div>
-        <table class="table table-striped" id="voyage-list">
-            <tr id="voyage-list-hdr-row">
-                <th>
-                    <div class="checkbox">
-                        <label>
-                            <input id="select-all-voygaes-cbx"
-                                   type="checkbox">
-                        </label>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-1">
+                    <div id="table-menu-div" class="btn-group-vertical">
+                        <button id="delete-voyage-btn" class="btn">
+                            delete selected
+                        </button>
                     </div>
-                </th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Ship</th>
-                <th>Waypoints</th>
-                <th></th>
-            </tr>
-        </table>
+                </div>
+                <div class="col-xs-11">
+                    <table class="table table-striped" id="voyage-list">
+                        <tr id="voyage-list-hdr-row">
+                            <th>
+                                <input id="select-all-voygaes-cbx"
+                                       type="checkbox">
+                            </th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Ship</th>
+                            <th>Waypoints</th>
+                            <th></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
     </div>
 {% endblock %}
