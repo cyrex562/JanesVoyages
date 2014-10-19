@@ -64,7 +64,6 @@ function voy_id_in_sel_ids(voy_id)
  *************************************/
 function voyage_select_change()
 {
-//    var raw_id = $(this).id;
     var voyage_id = $(this).val();
     console.log('voyage select toggled');
     console.log('selected voyage ids before: "%s"', selected_voyage_ids);
@@ -79,33 +78,44 @@ function voyage_select_change()
     console.log('selected voyage ids after: "%s"', selected_voyage_ids);
 }
 
-/**************************************
- *//**
+/**
  * @brief generate a row for a voyage
- *************************************/
+ */
 function gen_voyage_row(voyage)
 {
     var row = '<tr>\
         <td>\
             <div class=checkbox>\
                 <label>\
-                <input type="checkbox" id="select-row-[VOYAGE_ID]" value="[VOYAGE_ID]" class="select-voyage-row">\
+                <input type="checkbox" id="select-row-[VOYAGE_ID]" \
+                    value="[VOYAGE_ID]" class="select-voyage-row">\
                 </label>\
             </div>\
         </td>\
         <td>\
-            <input class="form-control" type="text" id="voyage-name-[VOYAGE_ID]" value="[VOYAGE_NAME]">\
+            <input class="form-control" type="text" \
+                id="voyage-name-[VOYAGE_ID]" value="[VOYAGE_NAME]">\
         </td>\
         <td>\
-            <textarea class="form-control" id="voyage-notes-[VOYAGE_ID]">[VOYAGE_NOTES]</textarea>\
+            <textarea class="form-control" id="voyage-notes-[VOYAGE_ID]">\
+                [VOYAGE_NOTES]</textarea>\
         </td>\
         <td>\
+            <input id="ship-id-[VOYAGE_ID]" type="hidden" value="[SHIP_ID]" \
+                name="ship-id-[VOYAGE_ID]"/>\
             <span>[SHIP_NAME]</span>\
-            <button class="btn" id="edit-ship-btn-[VOYAGE_ID]" value="[VOYAGE_ID]">\
+            <button class="btn btn-default" id="set-ship-btn-[VOYAGE_ID]" \
+                value="[VOYAGE_ID]">\
                 <span class="glyphicon glyphicon-pencil"></span>\
             </button>\
         </td>\
-        <td>[VOYAGE_WAYPOINTS]</td>\
+        <td>\
+            <span>[WAYPOINTS]</span>\
+            <button class="btn btn-default" id="set-waypoint-btn-[VOYAGE_ID]" \
+                value="[VOYAGE_ID]">\
+                <span class="glyphicon glyphicon-pencil"></span>\
+            </button>\
+        </td>\
         <td>\
             <button id="expand-row-btn-[VOYAGE_ID]" class="btn">\
         <span class="glyphicon glyphicon-collapse-down"></span></button>\
@@ -122,10 +132,18 @@ function gen_voyage_row(voyage)
     return row;
 }
 
-/**************************************
- *//**
- * @brief process response from server containing voyage ids. add them all to the selection list and then toggle the state of all checkboxes to checked.
- *************************************/
+function set_waypoint() {
+    console.log('set waypoint()');
+}
+
+function set_ship() {
+    console.log('set ship()');
+}
+
+/**
+ * @brief process response from server containing voyage ids. add them all to
+ * the selection list and then toggle the state of all checkboxes to checked.
+ */
 function select_all_voyages_cb(response)
 {
     process_response(response);
@@ -137,29 +155,27 @@ function select_all_voyages_cb(response)
     }
 }
 
-/**************************************
- *//**
+/**
  * @brief select all voyages; send a request for all voyage ids to the server.
- *************************************/
+ */
 function select_all_voyages()
 {
+    console.log('selecting all voyages');
     send_request('get_all_voyage_ids', {}, select_all_voyages_cb);
 }
 
-/**************************************
- *//**
+/**
  * @brief save new row behavior
- *************************************/
+ */
 function save_new_voyage_row_cb(response)
 {
     process_response(response);
     update_voyage_list();
 }
 
-/**************************************
- *//**
+/**
  * @brief save new row behavior
- *************************************/
+ */
 function save_new_voyage_row()
 {
     console.log('save new row button clicked');
@@ -173,13 +189,12 @@ function save_new_voyage_row()
     send_request('create_voyage', data, save_new_voyage_row_cb);
 }
 
-/**************************************
- *//**
+/**
  * @brief callback for update voyages list request
  * expects voyages list in the format
  * { message: "", data: { voyages: [ { voyage_id: 'voyage_id',
  *  voyage_name: 'voyage_name' } ] }
- *************************************/
+ */
 function update_voyages_list_cb(response)
 {
     process_response();
@@ -194,48 +209,44 @@ function update_voyages_list_cb(response)
         var voyage_id = voyages[i].voyage_id;
         $('#save-row-btn-'+voyage_id).click(save_voyage_row);
         $('#select-row-'+voyage_id).click(voyage_select_change);
+        $('#set-ship-btn-'+voyage_id).click(set_ship);
+        $('#set-waypoint-btn='+voyage_id).click(set_waypoint);
     }
-    var new_voy_row = gen_new_voyage_row();
-    voyages_list.append(new_voy_row);
     $('#save-row-new-btn').click(save_new_voyage_row);
 }
 
-/**************************************
- *//**
+/**
  * @brief request update to voyages list
- *************************************/
+ */
 function update_voyage_list()
 {
     console.log("update_voyage_list()");
     send_request("get_voyages", {}, update_voyages_list_cb);
 }
 
-/**************************************
- *//**
+/**
  * @brief deselect all selected voyages
- *************************************/
+ */
 function deselect_all_voyages()
 {
-    console.log('deselect_all_voyages');
+    console.log('deselecting all voyages');
     console.log('selected voyage ids before: "%s"', selected_voyage_ids);
     selected_voyage_ids = [];
     $('.select-voyage-row').prop('checked', false);
     console.log('selected voyage ids after: "%s"', selected_voyage_ids);
 }
 
-/**************************************
- *//**
+/**
  * @brief confirm deleting voyages
- *************************************/
+ */
 function confirm_delete_voyages()
 {
     $('#confirm-delete-voyage-modal').modal();
 }
 
-/**************************************
- *//**
+/**
  * @brief delete voyages callback
- *************************************/
+ */
 function delete_voyages_cb(response)
 {
     process_response(response);
@@ -243,27 +254,31 @@ function delete_voyages_cb(response)
     deselect_all_voyages();
 }
 
-/**************************************
- *//**
+/**
  * @brief delete selected voyages
- *************************************/
+ */
 function delete_voyages()
 {
     var in_data = {voyages_to_delete_ids: selected_voyage_ids};
     send_request('delete_voyages_by_id', in_data, delete_voyages_cb);
 }
 
-/**************************************
- *//**
+/**
  * @brief set up the client-side UI and other freatures.
- *************************************/
+ */
 $(document).ready(function()
 {
     update_voyage_list();
-    $('#select-all-voyages-btn').click(select_all_voyages);
-    $('#deselect-all-voyages-btn').click(deselect_all_voyages);
     $('#delete-voyage-btn').click(confirm_delete_voyages);
     $('#confirm-delete-voyage-btn').click(delete_voyages);
+    $('#select-all-voygaes-cbx').change(function() {
+       console.log('select/deselect voyages checkbox clicked');
+       if ($(this).is(':checked')) {
+           select_all_voyages();
+       } else {
+           deselect_all_voyages();
+       }
+    });
 });
 
 /*******************************************************************************

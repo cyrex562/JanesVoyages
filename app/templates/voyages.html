@@ -36,32 +36,33 @@
     <div id="content">
         <!-- add voyage form -->
         <div class="form-inline">
-            <fieldset>
-                <legend>Add Voyage</legend>
-                <div class="form-group">
-                    <label for="voyage-name-new">
-                        Voyage Name
-                    </label>
-                    <input type="text" class="form-control"
-                           id="voyage-name-new" placeholder="voyage name">
-                </div>
-                <div class="form-group">
-                    <label for="voyage-notes-new">Voyage Notes</label>
-                    <textarea class="form-control" id="voyage-notes-new"
-                              placeholder="voyage notes">
-                    </textarea>
-                </div>
-                <button class="btn btn-default" id="save-row-new-btn">
-                    <span class="glyphicon glyphicon-plus"></span>
+            <legend>Add Voyage</legend>
+            <div class="form-group">
+                <label for="voyage-name-new">
+                    Voyage Name
+                </label>
+                <input type="text" class="form-control"
+                       id="voyage-name-new" placeholder="voyage name">
+            </div>
+            <div class="form-group">
+                <label for="voyage-notes-new">Voyage Notes</label>
+                <textarea class="form-control" id="voyage-notes-new"
+                          placeholder="voyage notes">
+                </textarea>
+            </div>
+            <button class="btn btn-default" id="save-row-new-btn">
+                <span class="glyphicon glyphicon-plus"></span>
                 </button>
-            </fieldset>
         </div>
         <div class="container-fluid">
+            <legend>Voyages</legend>
             <div class="row">
                 <div class="col-xs-1">
                     <div id="table-menu-div" class="btn-group-vertical">
-                        <button id="delete-voyage-btn" class="btn">
-                            delete selected
+                        <button id="delete-voyage-btn" class="btn"
+                                data-toggle="tooltip" data-placement="right"
+                                title="delete selected voyage">
+                            <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </div>
                 </div>
@@ -70,7 +71,10 @@
                         <tr id="voyage-list-hdr-row">
                             <th>
                                 <input id="select-all-voygaes-cbx"
-                                       type="checkbox">
+                                       type="checkbox"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Select all voyages">
                             </th>
                             <th>Name</th>
                             <th>Description</th>
@@ -81,5 +85,6 @@
                     </table>
                 </div>
             </div>
+        </div>
     </div>
 {% endblock %}
