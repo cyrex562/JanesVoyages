@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/voyages.js') }}"></script>
+
+    <!-- confirm delete voyage modal -->
+    <div class="modal fade" id="confirm-delete-voyage-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete selected voyages?
+                        This operation cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            data-dismiss="modal"
+                            id="confirm-delete-voyage-btn">Confirm
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- content -->
+    <div id="content">
+        <!-- add voyage form -->
+        <div class="form-inline">
+            <legend>Add Voyage</legend>
+            <div class="form-group">
+                <label for="voyage-name-new">
+                    Voyage Name
+                </label>
+                <input type="text" class="form-control"
+                       id="voyage-name-new" placeholder="voyage name">
+            </div>
+            <div class="form-group">
+                <label for="voyage-notes-new">Voyage Notes</label>
+                <textarea class="form-control" id="voyage-notes-new"
+                          placeholder="voyage notes">
+                </textarea>
+            </div>
+            <button class="btn btn-default" id="save-row-new-btn">
+                <span class="glyphicon glyphicon-plus"></span>
+                </button>
+        </div>
+        <div class="container-fluid">
+            <legend>Voyages</legend>
+            <div class="row">
+                <div class="col-xs-1">
+                    <div id="table-menu-div" class="btn-group-vertical">
+                        <button id="delete-voyage-btn" class="btn"
+                                data-toggle="tooltip" data-placement="right"
+                                title="delete selected voyage">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-xs-11">
+                    <table class="table table-striped" id="voyage-list">
+                        <tr id="voyage-list-hdr-row">
+                            <th>
+                                <input id="select-all-voygaes-cbx"
+                                       type="checkbox"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Select all voyages">
+                            </th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Ship</th>
+                            <th>Waypoints</th>
+                            <th></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

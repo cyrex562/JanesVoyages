@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/voyages.js') }}"></script>
+    <form role="form" action="voyages2" method="post">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-3">
+                    <label>Voyage Name<input type="text" class="form-control"
+                                             name="voyage_name"></label>
+                    <label>Voyage Notes<textarea
+                            name="voyage_notes"></textarea></label>
+                    <button type="submit" class="btn btn-default btn-lg">Add
+                        Voyage</button>
+                </div>
+                <div class="col-xs-3">
+                    <label>Ship Name<input type="text" class="form-control"
+                                           name="ship_name"></label>
+                    <label>Ship Captain<input type="text" class="form-control"
+                                              name="ship_captain"></label>
+                    <label>Ship Flag<input type="text" class="form-control"
+                                           name="ship_flag"></label>
+                </div>
+                <div class="col-xs-3">
+                    <p><span>From Date [TODO]</span><span>To Date [TODO]</span>
+                    </p>
+                    <label>Waypoints<select
+                            name="waypoints"
+                            class="form-control"></select></label>
+                    <label>Waypoint Name<input type="text"
+                                               name="waypoint_name"
+                                               class="form-control"></label>
+                    <label>Waypoint Type<select
+                            name="waypoint_type"
+                            class="form-control"></select></label>
+                    <label>Start Date<input type="text"
+                                            name="waypoint_start_date"
+                                            class="form-control"></label>
+                    <label>End Date<input type="text"
+                                            name="waypoint_end_date"
+                                            class="form-control"></label>
+                    <label>Location<input type="text"
+                                          class="form-control"></label>
+
+                    <div class="btn-group-vertical btn-group-sm" role="group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="add_waypoint">Add
+                            Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="modify_waypoint">Modify Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="remove_waypoint">Remove
+                            Waypoint
+                        </button>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label>Trades<select name="trades"
+                                             class="form-control"></select></label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            Bought/Sold
+                            <input type="checkbox" name="bought_sold"
+                                   class="form-control">
+                        </label>
+                    </div>
+                    <label>
+                        Item<input type="text" name="item" class="form-control">
+                    </label>
+                    <label>
+                        Quantity
+                        <input type="number" name="quantity"
+                               class="form-control">
+                    </label>
+
+                    <div class="btn-group-vertical btn-group-sm" role="group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="add_item">
+                            Add Item
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="modify_item">
+                            Modify Item
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="remove_item">
+                            Remove Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Voyage ID</th>
+                <th>Voyage Name</th>
+                <th>Ship</th>
+                <th>Waypoints</th>
+                <th>Trades</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- todo: for loop iterate over voyage documents -->
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
