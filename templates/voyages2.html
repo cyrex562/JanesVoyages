@@ -2,112 +2,143 @@
 {% block body %}
     <script type=text/javascript
             src="{{ url_for('static', filename='js/voyages2.js') }}"></script>
-    <form role="form" action="voyages2" method="post">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-3">
-                    <fieldset id="voyage_info_sub_form">
-                        <label>Voyage Name<input type="text"
-                                                 class="form-control"
-                                                 name="voyage_name"></label>
-                        <label>Voyage Notes<textarea
-                                name="voyage_notes"></textarea></label>
-                    </fieldset>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="btn-group">
+                    <button class="btn btn-default" id="add_voyage_btn">
+                        Add Voyage
+                    </button>
+                    <button class="btn btn-default" id="modify_voyage_btn">
+                        Modify Voyage
+                    </button>
+                    <button class="btn btn-default" id="delete_voyage_btn">
+                        Delete Voyage
+                    </button>
                 </div>
-                <div class="col-xs-3">
-                    <fieldset id="ship_sub_form">
-                        <label>Ship Name<input type="text" class="form-control"
-                                               name="ship_name"></label>
-                        <label>Ship Captain<input type="text"
-                                                  class="form-control"
-                                                  name="ship_captain"></label>
-                        <label>Ship Flag<input type="text" class="form-control"
-                                               name="ship_flag"></label>
-                    </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-5">
+                {#                <input type="hidden" id="voyage_id">#}
+                <div class="form-group">
+                    <label for="voyage_id">Voyage ID</label>
+                    <span class="form-control-static" id="voyage_id"></span>
                 </div>
-                <div class="col-xs-3">
-                    <fieldset id="waypoint_sub_form">
-                        <p>
-                            <span>From Date [TODO]</span><span>To Date [TODO]</span>
-                        </p>
-                        <label>
-                            Waypoints
-                            <select name="waypoints" class="form-control"
-                                    id="waypoints">
-                                <option data-value=""></option>
-                            </select>
-                        </label>
-                        <label>
-                            Waypoint Name
-                            <input type="text" name="waypoint_name"
-                                class="form-control" id="waypoint_name">
-                        </label>
-                        <label>
-                            Waypoint Type
-                            <select name="waypoint_type" class="form-control"
-                             id="waypoint_type">
-                                <option></option>
-                             </select>
-                        </label>
-                        <label>
-                            Start Date
-                            <input type="text" name="waypoint_start_date"
-                                class="form-control"
-                                id="waypoint_start_date">
-                        </label>
-                        <label>
-                            End Date
-                            <input type="text" name="waypoint_end_date"
-                                   class="form-control"
-                                   id="waypoint_end_date">
-                        </label>
-                        <label>
-                            Location
-                            <input type="text" class="form-control"
-                                   name="location" id="location">
-                        </label>
-                        <div class="btn-group-vertical btn-group-sm"
-                             role="group">
-                            <button type="button" class="btn btn-default btn-sm"
-                                    name="add_waypoint"
-                                    id="add_waypoint_btn">Add
-                                Waypoint
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm"
-                                    name="modify_waypoint">Modify Waypoint
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm"
-                                    name="remove_waypoint">Remove
-                                Waypoint
-                            </button>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-xs-3">
+                <fieldset id="voyage_info_sub_form">
+                    <div class="form-group">
+                        <label>Voyage Name</label>
+                        <input type="text" class="form-control"
+                               name="voyage_name" id="voyage_name">
+                    </div>
+                    <div class="form-group">
+                        <label>Voyage Notes</label>
+                        <textarea name="voyage_notes" id="voyage_notes"
+                                  class="form-control">
+                        </textarea>
+                    </div>
+                </fieldset>
+                <fieldset id="ship_sub_form">
+                    <div class="form-group">
+                        <label>Ship Name</label>
+                        <input type="text" class="form-control"
+                               name="ship_name" id="ship_name">
+                    </div>
+                    <div class="form-group">
+                        <label>Ship Captain</label>
+                        <input type="text" class="form-control"
+                               name="ship_captain" id="ship_captain">
+                    </div>
+                    <div class="form-group">
+                        <label>Ship Flag</label>
+                        <input type="text" class="form-control"
+                               name="ship_flag" id="ship_flag">
+                    </div>
+                </fieldset>
+                <fieldset id="waypoint_sub_form">
+                    <legend>Waypoints</legend>
+                    <div class="form-group">
+                        <label for="waypoints">Waypoints</label>
+                        <select name="waypoints" class="form-control"
+                                id="waypoints">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_name">Waypoint Name</label>
+                        <input type="text" class="form-control"
+                               id="waypoint_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_type">Waypoint Type</label>
+                        <select name="waypoint_type" class="form-control"
+                                id="waypoint_type">
+                            <option value="start">start</option>
+                            <option value="stop">stop</option>
+                            <option value="end">end</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_start_date">Start Date</label>
+                        <input type="text" class="form-control"
+                               id="waypoint_start_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_end_date">End Date</label>
+                        <input type="text" class="form-control"
+                               id="waypoint_end_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" class="form-control" id="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_notes">Waypoint Notes</label>
+                        <textarea id="waypoint_notes" class="form-control">
+                        </textarea>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="add_waypoint" id="add_waypoint_btn">
+                            Add Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="modify_waypoint_btn">Modify Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="delete_waypoint_btn">Remove
+                            Waypoint
+                        </button>
+                    </div>
                     <fieldset id="trade_sub_form" disabled>
+                        <legend>Trades</legend>
                         <div class="form-group">
-                            <label>Trades<select name="trades"
-                                                 class="form-control"></select></label>
+                            <label for="trades">Trades</label>
+                            <select id="trades" class="form-control"></select>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                Bought/Sold
-                                <input type="checkbox" name="bought_sold"
-                                       class="form-control">
+                                <input type="radio" class="bought_sold"
+                                       name="bought_sold" value="bought">
+                                Bought
                             </label>
                         </div>
-                        <label>
-                            Item<input type="text" name="item"
-                                       class="form-control">
-                        </label>
-                        <label>
-                            Quantity
-                            <input type="number" name="quantity"
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="bought_sold"
+                                       name="bought_sold" value="sold">
+                                Sold
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Item</label>
+                            <input type="text" id="item" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" min="0" id="quantity"
                                    class="form-control">
-                        </label>
-
-                        <div class="btn-group-vertical btn-group-sm"
-                             role="group">
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn btn-default btn-sm"
                                     name="add_item">
                                 Add Item
@@ -122,39 +153,20 @@
                             </button>
                         </div>
                     </fieldset>
-                </div>
+                </fieldset>
             </div>
-            <div class="row">
-                <div class="col-xs-5">
-                    <button type="submit" class="btn btn-default btn-lg">Add
-                        Voyage
-                    </button>
-                </div>
-
+            <div class="col-xs-7">
+                <table class="table table-striped" id="voyages_table">
+                    <tr id="table_top_row">
+                        <th>Voyage ID</th>
+                        <th>Voyage Name</th>
+                        <th>Ship Name</th>
+                        <th>Ship Captain</th>
+                        <th>Ship Flag</th>
+                        <th>Waypoints</th>
+                    </tr>
+                </table>
             </div>
         </div>
-    </form>
-    <div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Voyage ID</th>
-                <th>Voyage Name</th>
-                <th>Ship</th>
-                <th>Waypoints</th>
-                <th>Trades</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- todo: for loop iterate over voyage documents -->
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 {% endblock %}
