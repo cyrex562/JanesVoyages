@@ -1,21 +1,11 @@
-###############################################################################
 """
 @file models.py
 @brief data model objects definition
 @author Josh Madden
 @copyright Fifth Column Group 2014
 """
-###############################################################################
-###############################################################################
-# IMPORTS
-###############################################################################
-
-from sqlalchemy.dialects.postgresql import *
 
 
-################################################################################
-# CLASSES
-################################################################################
 # class Voyage(db.Model):
 #     """
 #     Voyage DL object
@@ -112,7 +102,50 @@ from sqlalchemy.dialects.postgresql import *
 #         "other"
 #     ]
 
+mongo = None
 
-###############################################################################
-# END OF FILE
-###############################################################################
+
+def init(in_mongo):
+    global mongo
+    mongo = in_mongo
+
+
+def get_all_voyages():
+    # voyages_list = []
+    # voyages_collection = mongo.db.voyages
+    # for voyage in voyages_collection:
+    #     voyages_list.append(voyage)
+    # return voyages_list
+    return list(mongo.db.voyages.find())
+
+
+def add_voyage(new_voyage):
+    add_voyage_result = mongo.db.voyages.insert(new_voyage)
+    print "add_voyage_result: {0}".format(add_voyage_result)
+    return add_voyage_result
+
+
+def modify_voyage(mod_voyage):
+    modify_voyage_result = mongo.db.voyages.insert({"voyage_id": mod_voyage[
+        "voyage_id"]}, mod_voyage)
+    print "modify_voyage_result: {0}".format(modify_voyage_result)
+    return modify_voyage_result
+
+
+def delete_voyage(del_voyage):
+    del_voyage_result = mongo.db.voyages.remove({"voyage_id": del_voyage[
+        "voyage_id"]}, del_voyage)
+    print "del_voyage_result: {0}".format(del_voyage_result)
+    return del_voyage_result
+
+
+def get_voyage_by_id(voyage_id):
+    find_voyage_result = mongo.db.voyages.find({"voyage_id": voyage_id})
+    print "find_voyage_result: {0}".format(find_voyage_result)
+    return find_voyage_result
+
+
+
+
+
+

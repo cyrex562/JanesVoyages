@@ -20,37 +20,37 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                {#                <input type="hidden" id="voyage_id">#}
                 <div class="form-group">
                     <label for="voyage_id">Voyage ID</label>
                     <span class="form-control-static" id="voyage_id"></span>
                 </div>
                 <fieldset id="voyage_info_sub_form">
+                    <legend>Voyage</legend>
                     <div class="form-group">
-                        <label>Voyage Name</label>
+                        <label for="voyage_name">Voyage Name</label>
                         <input type="text" class="form-control"
-                               name="voyage_name" id="voyage_name">
+                               id="voyage_name">
                     </div>
                     <div class="form-group">
-                        <label>Voyage Notes</label>
-                        <textarea name="voyage_notes" id="voyage_notes"
-                                  class="form-control">
+                        <label for="voyage_notes">Voyage Notes</label>
+                        <textarea id="voyage_notes" class="form-control">
                         </textarea>
                     </div>
                 </fieldset>
                 <fieldset id="ship_sub_form">
+                    <legend>Ship</legend>
                     <div class="form-group">
-                        <label>Ship Name</label>
+                        <label for="ship_name">Ship Name</label>
                         <input type="text" class="form-control"
                                name="ship_name" id="ship_name">
                     </div>
                     <div class="form-group">
-                        <label>Ship Captain</label>
+                        <label for="ship_captain">Ship Captain</label>
                         <input type="text" class="form-control"
                                name="ship_captain" id="ship_captain">
                     </div>
                     <div class="form-group">
-                        <label>Ship Flag</label>
+                        <label for="ship_flag">Ship Flag</label>
                         <input type="text" class="form-control"
                                name="ship_flag" id="ship_flag">
                     </div>
@@ -62,6 +62,10 @@
                         <select name="waypoints" class="form-control"
                                 id="waypoints">
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="waypoint_id">Waypoint ID</label>
+                        <p id="waypoint_id">0</p>
                     </div>
                     <div class="form-group">
                         <label for="waypoint_name">Waypoint Name</label>
@@ -88,8 +92,8 @@
                                id="waypoint_end_date">
                     </div>
                     <div class="form-group">
-                        <label for="location">Location</label>
-                        <input type="text" class="form-control" id="location">
+                        <label for="waypoint_location">Location</label>
+                        <input type="text" class="form-control" id="waypoint_location">
                     </div>
                     <div class="form-group">
                         <label for="waypoint_notes">Waypoint Notes</label>
@@ -105,50 +109,55 @@
                                 id="modify_waypoint_btn">Modify Waypoint
                         </button>
                         <button type="button" class="btn btn-default btn-sm"
-                                id="delete_waypoint_btn">Remove
-                            Waypoint
+                                id="delete_waypoint_btn">
+                            Remove Waypoint
                         </button>
                     </div>
-                    <fieldset id="trade_sub_form" disabled>
+                    <fieldset id="trade_sub_form">
                         <legend>Trades</legend>
                         <div class="form-group">
                             <label for="trades">Trades</label>
                             <select id="trades" class="form-control"></select>
                         </div>
+                        <div class="form-group">
+                            <label for="trade_id">Trade ID</label>
+                            <p id="trade_id"></p>
+                        </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" class="bought_sold"
-                                       name="bought_sold" value="bought">
+                                <input type="radio" class="trade_bought_sold"
+                                       value="bought">
                                 Bought
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" class="bought_sold"
-                                       name="bought_sold" value="sold">
+                                <input type="radio" class="trade_bought_sold"
+                                       value="sold">
                                 Sold
                             </label>
                         </div>
                         <div class="form-group">
-                            <label>Item</label>
-                            <input type="text" id="item" class="form-control">
+                            <label for="item">Item</label>
+                            <input type="text" id="trade_item"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>Quantity</label>
-                            <input type="number" min="0" id="quantity"
+                            <label for="quantity">Quantity</label>
+                            <input type="number" min="0" id="trade_quantity"
                                    class="form-control">
                         </div>
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn btn-default btn-sm"
-                                    name="add_item">
+                                    id="add_trade_btn">
                                 Add Item
                             </button>
                             <button type="button" class="btn btn-default btn-sm"
-                                    name="modify_item">
+                                    id="modify_trade_btn">
                                 Modify Item
                             </button>
                             <button type="button" class="btn btn-default btn-sm"
-                                    name="remove_item">
+                                    id="delete_trade_btn">
                                 Remove Item
                             </button>
                         </div>
