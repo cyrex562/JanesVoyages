@@ -111,11 +111,6 @@ def init(in_mongo):
 
 
 def get_all_voyages():
-    # voyages_list = []
-    # voyages_collection = mongo.db.voyages
-    # for voyage in voyages_collection:
-    #     voyages_list.append(voyage)
-    # return voyages_list
     return list(mongo.db.voyages.find())
 
 
@@ -126,23 +121,31 @@ def add_voyage(new_voyage):
 
 
 def modify_voyage(mod_voyage):
-    modify_voyage_result = mongo.db.voyages.insert({"voyage_id": mod_voyage[
+    modify_voyage_result = mongo.db.voyages.update({"voyage_id": mod_voyage[
         "voyage_id"]}, mod_voyage)
     print "modify_voyage_result: {0}".format(modify_voyage_result)
     return modify_voyage_result
 
 
 def delete_voyage(del_voyage):
-    del_voyage_result = mongo.db.voyages.remove({"voyage_id": del_voyage[
-        "voyage_id"]}, del_voyage)
+    del_voyage_result = mongo.db.voyages.remove(
+        {"voyage_id": del_voyage["voyage_id"]})
     print "del_voyage_result: {0}".format(del_voyage_result)
     return del_voyage_result
 
 
 def get_voyage_by_id(voyage_id):
-    find_voyage_result = mongo.db.voyages.find({"voyage_id": voyage_id})
+    find_voyage_result = mongo.db.voyages.find_one({"voyage_id": voyage_id})
     print "find_voyage_result: {0}".format(find_voyage_result)
     return find_voyage_result
+
+
+def stringify_object_ids(voyage_list):
+    new_voyages_list = []
+    for v in voyage_list:
+        v['_id'] = str(v['_id'])
+        new_voyages_list.append(v)
+    return new_voyages_list
 
 
 

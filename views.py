@@ -19,7 +19,6 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = os.urandom(24)
 mongo = PyMongo(app)
-
 models.init(mongo)
 
 
@@ -43,11 +42,11 @@ def default_page_controller():
     default route handler
     :return:
     """
-    return redirect(url_for('voyages_page_controller_2'))
+    return redirect(url_for('voyages_page_get'))
 
 
-@app.route('/voyages2', methods=['GET'])
-def voyages_page_controller_2():
+@app.route('/voyages', methods=['GET'])
+def voyages_page_get():
     """
     page controller
     :return:
@@ -55,35 +54,55 @@ def voyages_page_controller_2():
     return render_template('voyages2.html')
 
 
-@app.route('/voyages', methods=['GET', 'POST', 'PUSH', 'DELETE'])
-def voyages_route_handler():
+@app.route('/voyages/get', methods=['POST'])
+def voyages_get():
     """
-    route handler for voyages
-    GET -- get a list of all voyages
-    POST -- post a new voyage
-    PUT -- update a voyage
-    DELETE -- delete a voyage
+
     :return:
     """
-    if request.method == 'GET':
+    app.logger.debug('voyages_get')
+    voyage_ids = request.json["params"]["voyage_ids"]
+
+    if len(voyage_ids) == 0:
         voyages = models.get_all_voyages()
-        # return jsonpickle.encode({'message': 'success', 'data': {voyages}},
-        #                          unpicklable=False)
-        return jsonify(message="success", data={"voyages": voyages})
-    elif request.method == 'POST':
-        new_voyage = request.json["params"]["new_voyage"]
-        add_result = models.add_voyage(new_voyage)
-        return jsonify(message="success", data="")
-    elif request.method == 'PUSH':
-        mod_voyage = request.json["params"]["mod_voyage"]
-        mod_result = models.modify_voyage(mod_voyage)
-        return jsonify(message="success", data="")
-    elif request.method == 'DELETE':
-        del_voyage = request.json["params"]["del_voyage"]
-        del_result = models.delete_voyage(del_voyage)
-        return jsonify(message="success", data="")
+        voyages = models.stringify_object_ids(voyages)
+    elif len(voyage_ids) == 1:
+        voyage = models.get_voyage_by_id(voyage_ids[0])
+        voyages = [voyage]
+        voyages = models.stringify_object_ids(voyages)
     else:
-        print('unsupported request method: {0}'.format(request.method))
+        voyages = []
+        app.logger.error('voyages_get: NOT IMPLEMENTED')
+    result = jsonify(message="success", data={"voyages": voyages})
+    return result
+
+
+@app.route('/voyages/add', methods=['POST'])
+def voyages_post():
+    """
+
+    :return:
+    """
+    app.logger.debug('voyages_post')
+    new_voyage = request.json["params"]["new_voyage"]
+    add_result = models.add_voyage(new_voyage)
+    return jsonify(message="success", data="")
+
+
+@app.route('/voyages/modify', methods=['POST'])
+def voyages_put():
+    app.logger.debug('voyages_post')
+    mod_voyage = request.json["params"]["modified_voyage"]
+    mod_result = models.modify_voyage(mod_voyage)
+    return jsonify(message="success", data="")
+
+
+@app.route('/voyages/delete', methods=['POST'])
+def voyages_delete():
+    app.logger.debug('voyages_delete')
+    del_voyage = request.json["params"]["del_voyage"]
+    del_result = models.delete_voyage(del_voyage)
+    return jsonify(message="success", data="")
 
 
 if __name__ == '__main__':
