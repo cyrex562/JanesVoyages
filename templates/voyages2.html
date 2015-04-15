@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
     <script type=text/javascript
-            src="{{ url_for('static', filename='js/voyages2.js') }}"></script>
+        src="{{ url_for('static', filename='js/voyages2.js') }}">
+    </script>
+    <script type=text/javascript
+        src="{{ url_for('static', filename='js/waypoints.js') }}">
+    </script>
+    <script type=text/javascript
+        src="{{ url_for('static', filename='js/trades.js') }}">
+    </script>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12">
@@ -95,45 +102,33 @@
                         <label for="waypoint_location">Location</label>
                         <input type="text" class="form-control" id="waypoint_location">
                     </div>
-                    <div class="form-group">
-                        <label for="waypoint_notes">Waypoint Notes</label>
-                        <textarea id="waypoint_notes" class="form-control">
-                        </textarea>
-                    </div>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn btn-default btn-sm"
-                                name="add_waypoint" id="add_waypoint_btn">
-                            Add Waypoint
-                        </button>
-                        <button type="button" class="btn btn-default btn-sm"
-                                id="modify_waypoint_btn">Modify Waypoint
-                        </button>
-                        <button type="button" class="btn btn-default btn-sm"
-                                id="delete_waypoint_btn">
-                            Remove Waypoint
-                        </button>
-                    </div>
                     <fieldset id="trade_sub_form">
                         <legend>Trades</legend>
                         <div class="form-group">
                             <label for="trades">Trades</label>
-                            <select id="trades" class="form-control"></select>
+                            <select id="trades" class="form-control
+                            trade_form_ele"></select>
                         </div>
+                            <div class="form-group">
+                                <label for="trade_waypoints">Waypoint</label>
+                                <select id="trade_waypoints" class="form-control">
+                                </select>
+                            </div>
                         <div class="form-group">
                             <label for="trade_id">Trade ID</label>
-                            <p id="trade_id"></p>
+                            <p id="trade_id" class="trade_form_ele"></p>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" class="trade_bought_sold"
-                                       value="bought">
+                                <input type="radio" class="trade_bought_sold
+                                trade_form_ele" value="bought">
                                 Bought
                             </label>
                         </div>
                         <div class="radio">
                             <label>
                                 <input type="radio" class="trade_bought_sold"
-                                       value="sold">
+                                value="sold">
                                 Sold
                             </label>
                         </div>
@@ -162,7 +157,26 @@
                             </button>
                         </div>
                     </fieldset>
+                    <div class="form-group">
+                        <label for="waypoint_notes">Waypoint Notes</label>
+                        <textarea id="waypoint_notes" class="form-control">
+                        </textarea>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                name="add_waypoint" id="add_waypoint_btn">
+                            Add Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="modify_waypoint_btn">Modify Waypoint
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="delete_waypoint_btn">
+                            Remove Waypoint
+                        </button>
+                    </div>
                 </fieldset>
+
             </div>
             <div class="col-xs-7">
                 <table class="table table-striped" id="voyages_table">
