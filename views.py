@@ -42,7 +42,7 @@ def render_default():
 
 @app.route('/voyages', methods=['GET'])
 def render_voyages_page():
-    return render_template('voyages2.html')
+    return render_template('voyages.html')
 
 
 @app.route('/voyages/get', methods=['POST'])
@@ -142,8 +142,17 @@ def waypoints_delete():
 @app.route('/trades/get', methods=['POST'])
 def trades_get():
     app.logger.debug('trades_get')
-    trade_ids = request.json['params']['trade_ids']
-    found_trades = trade_model.get_trades(trade_ids)
+    params = request.json['params']
+    if 'trade_ids' in params:
+        trade_ids = params['trade_ids']
+        found_trades = trade_model.get_trades(trade_ids)
+    elif 'waypoint_id' in params:
+        waypoint_id = params['waypoint_id']
+        found_trades = trade_model.get_trades_for_waypoint(waypoint_id)
+
+    else:
+        found_trades = []
+        app.logger.error('invalid params: "{0}"'.format(params))
     result = jsonify(message='success', data={"found_trades": found_trades})
     return result
 

@@ -1,27 +1,23 @@
-// jsglobal curr_trade
-// jsglboal curr_waypoint
 
 /**
  *
- * @returns {number}
  */
-function get_trade_id() {
-    console.log('get_trade_id()');
-    return Date.now();
+function get_trade_from_form() {
+    console.log('get_trade_from_form()');
+    return {
+        trade_id: parseInt($('#trade_id').text()),
+        trade_bought_sold: $('.trade_bought_sold').val(),
+        trade_item: $('#trade_item').val(),
+        trade_quantity: parseInt($('#trade_quantity').val())
+    }
 }
 
-/**
- *
- */
-function update_curr_trade_from_form() {
-    console.log('udpate_curr_trade_from_form()');
-    curr_trade.trade_id = parseInt($('#trade_id').text());
-    curr_trade.trade_bought_sold = 'bought';
-    if ($('.trade_bought_sold').val() === 'sold') {
-        curr_trade.trade_bought_sold = 'sold';
-    }
-    curr_trade.trade_item = $('#trade_item').val();
-    curr_trade.trade_quantity = parseInt($('#trade_quantity').val());
+function fill_trade_form(in_trade) {
+    console.log('fill_trade_form()');
+    $('#trade_id').val(in_trade.trade_id);
+    $('#trade_item').val(in_trade.trade_item);
+    $('#trade_quantity').val(parseInt(in_trade.trade_quantity));
+    $('.trade_bought_sold').val(in_trade.trade_bought_sold);
 }
 
 /**
@@ -41,75 +37,135 @@ function gen_trade_option(trade) {
     return trade_option;
 }
 
-/**
- *
- */
-function refresh_trades_list() {
-    console.log('refresh_trades_list()');
-    var trades_list = $('#trades');
-    trades_list.empty();
-    for (var i = 0; i < curr_waypoint.trades.length; i++) {
-        trades_list.append(gen_trade_option(curr_waypoint.trades[i]));
+function refresh_trades_list_cb(response) {
+    console.log('refresh_trades_list_cb()');
+    var trades_list = $('#trades_list');
+    if (response.message === 'success') {
+        set_status_bar('success', 'trades retrieved');
+        var trades = response.data.found_trades;
+        trades_list.empty();
+        for (var i = 0; i < trades.length; i++) {
+            var trade_option = gen_trade_option(trades[i]);
+            trades_list.append(trade_option);
+        }
+    } else {
+        set_status_bar('danger', 'failed to get trades');
     }
 }
 
-/**
- *
- */
-function add_trade_btn_click() {
-    console.log('add_trade_btn_click()');
-    update_curr_trade_from_form();
-    curr_trade.trade_id = get_trade_id();
-    curr_waypoint.trades.push(JSON.parse(JSON.stringify(curr_trade)));
-    refresh_trades_list();
+function refresh_trades_list(in_trade_id) {
+    console.log('refresh_trades_list()');
+    var trade_list_ids = [];
+    if (in_trade_id !== null) {
+        trade_list_ids.push(in_trade_id);
+    }
+    $('#trade_list').each(function() {
+        trade_list_ids.push($(this).val());
+    });
+    send_request('trades/get', 'POST', {trade_ids: trade_list_ids},
+        refresh_trades_list_cb);
 }
 
-/**
- *
- */
+function get_trades_for_waypoint_cb(response) {
+    console.log('get_trades_for_waypoint_cb');
+    if (response.message === 'success') {
+        refresh_trades_list_cb(response);
+    } else {
+        console.log('danger', 'failed to get trades for waypoint');
+    }
+}
+
+function get_trades_for_waypoint(waypoint_id) {
+    console.log('get_trades_for_waypoint');
+    send_request('trades/get', 'POST', {waypoint_id: waypoint_id}, get_trades_for_waypoint_cb);
+}
+
+function trade_select_change_cb(response) {
+    console.log('trade_select_change_cb()');
+    if (response.message === 'success') {
+        console.log('trade retrieved');
+        var found_trade = response.data.found_trades[0];
+        fill_trade_form(found_trade);
+    } else {
+        console.log('failed to get trade');
+    }
+}
+
 function trade_select_change() {
     console.log('trade_select_change()');
-    var sel_trade_id = parseInt($('#trades').find('option:selected').attr('value'));
-    for (var i = 0; i < curr_waypoint.trades.length; i++) {
-        if (curr_waypoint.trades[i].trade_id === sel_trade_id) {
-            curr_trade = curr_waypoint.trades[i];
-            fill_trade_form();
-            break;
-        }
+    var selected_trade_id = $('#trade_list').val();
+    send_request('trades/get', 'POST', {trade_ids: [selected_trade_id]},
+        trade_select_change_cb);
+}
+
+function set_selected_trade(trade_id) {
+    var trade_list = $('#trade_list');
+    trade_list.val('');
+    trade_list.val(trade_id);
+}
+
+function get_selected_trade() {
+    console.log('get_selected_trade');
+    return $('#trade_list').val();
+}
+
+function add_trade_callback() {
+    console.log('add_trade_callback()');
+    if (response.message === 'success') {
+        var added_trade_id = response.data.added_trade_ids[0];
+        set_status_bar('success', 'trade added');
+        refresh_trades_list(added_trade_id);
+        set_selected_trade(added_trade_id);
+    } else {
+        set_status_bar('danger', 'failed to add trade');
     }
 }
 
-/**
- *
- */
-function modify_trade_btn_click() {
+function add_trade() {
+    console.log('add_trade())');
+    var trade_to_add = get_trade_from_form();
+    var trades_to_add = [];
+    trades_to_add.push(trade_to_add);
+    send_request('trades/add', 'POST', {trades_to_add: trades_to_add}, add_trade_callback);
+}
+
+function modify_trade_callback(response) {
+    console.log('modify_trade_callback');
+    if (resposne.message === 'success') {
+        set_status_bar('success', 'trade modified');
+        var modified_trade_id = response.data.modified_trade_ids[0];
+        refresh_trades_list(modified_trade_id);
+        set_selected_trade(modified_trade_id);
+    } else {
+        set_status_bar('danger', 'trade not modified');
+    }
+}
+
+function modify_trade() {
     console.log('modify_trade_btn_click()');
-    update_curr_trade_from_form();
-    for (var i = 0; i < curr_waypoint.trades.length; i++) {
-        if (curr_waypoint.trades[i].trade_id === curr_trade.trade_id) {
-            curr_waypoint.trades[i] = JSON.parse(JSON.stringify(curr_trade));
-            refresh_trades_list();
-            break;
-        }
+    var trade_to_modify = get_trade_from_form();
+    var trades_to_modify = [];
+    trade_to_modify.push(trade_to_modify);
+    send_request('trades/modify', 'POST', {trades_to_modify: trades_to_modify}, modify_trade_callback);
+}
+
+function delete_trade_callback(response) {
+    console.log('delete_trade_callback()');
+    if (response.message === 'success') {
+        set_status_bar('success', 'trade deleted');
+        var deleted_trade_id = response.data.deleted_trades[0];
+        refresh_trades_list(deleted_trade_id);
+        set_selected_trade(deleted_trade_id);
+    } else {
+        set_status_bar('danger', 'trade not deleted');
     }
 }
 
-/**
- *
- */
-function delete_trade_btn_click() {
-    console.log('delete_trade_btn_click()');
-    update_curr_trade_from_form();
-    var trades_index = -1;
-    for (var i = 0; i < curr_waypoint.trades.length; i++) {
-        if (curr_waypoint.trades[i].trade_id === curr_trade.trade_id) {
-            trades_index = i;
-            break;
-        }
-    }
-
-    if (trades_index >= 0) {
-        curr_waypoint.trades.slice(trades_index, 1);
-        refresh_trades_list();
-    }
+function delete_trade() {
+    console.log('delete_trade()');
+    var selected_trade_id = get_selected_trade().trade_id;
+    var trades_to_delete = [];
+    trades_to_delete.push(selected_trade_id);
+    send_request('trades/delete', 'POST',
+        {trades_to_delete: trades_to_delete}, delete_trade_callback);
 }

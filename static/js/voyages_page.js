@@ -1,38 +1,3 @@
-//var curr_trade = {
-//    "trade_id": -1,
-//    "trade_bought_sold": "bought",
-//    "trade_item": "",
-//    "trade_quantity": ""
-//};
-//
-//var curr_waypoint = {
-//    "waypoint_id": -1,
-//    "waypoint_name": "",
-//    "waypoint_type": "",
-//    "waypoint_start_date": "",
-//    "waypoint_end_date": "",
-//    "waypoint_location": "",
-//    "trades": [],
-//    "waypoint_notes": ""
-//};
-//
-//var curr_voyage = {
-//    "voyage_id": -1,
-//    "voyage_name": "",
-//    "voyage_notes": "",
-//    "ship_name": "",
-//    "ship_captain": "",
-//    "ship_flag": "",
-//    "waypoints": []
-//};
-
-/**
- *
- * @param action
- * @param request_type
- * @param request_data
- * @param callback
- */
 function send_request(action, request_type, request_data, callback) {
     console.log('send_request, action: %s, request_type: %s, ' +
         'request_data: %s, callback: %s', action, request_type, request_data,
@@ -54,18 +19,6 @@ function send_request(action, request_type, request_data, callback) {
     });
 }
 
-
-/**
- *
- * @param level
- * @param message
- *
- * <div class="alert alert-warning alert-dismissible" role="alert">
- <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
- <strong>Warning!</strong> Better check yourself, you're not looking too good.
- </div>
- *
- */
 function set_status_bar(level, message) {
     var status_bar = $('#status-bar');
     status_bar.empty();
@@ -75,10 +28,6 @@ function set_status_bar(level, message) {
         '&times;</span></button><p>' + message + '</p></div>');
 }
 
-/**
- * when a row is clicked in the voyages table, set the currently selected voyage
- * id
- */
 function voyage_row_click() {
     console.log('voyage_row_click()');
     var voyage_id_str = $(this).find('.voyage_id_cell').text();
@@ -94,6 +43,35 @@ function add_voyage_btn_click() {
 function modify_voyage_btn_click() {
     console.log('modify_voyage_btn_click()');
     modify_voyage();
+}
+
+function modify_waypoint_btn_click() {
+    console.log('modify_waypoint_btn_click()');
+    modify_waypoint();
+}
+function delete_waypoint_btn_click() {
+    console.log('delete_waypoint_btn_click()');
+    delete_waypoint();
+}
+
+function add_waypoint_btn_click() {
+    console.log('add_waypoint_btn_click()');
+    add_waypoint();
+}
+
+function add_trade_btn_click() {
+    console.log('add_trade_btn_click');
+    add_trade();
+}
+
+function modify_trade_btn_click() {
+    console.log('modify_trade_btn_click');
+    modify_trade();
+}
+
+function delete_trade_btn_click() {
+    console.log('delete_trade_btn_click');
+    delete_trade();
 }
 
 /**
