@@ -17,8 +17,14 @@ function fill_voyage_form(response) {
         $('#ship_captain').val(curr_voyage.ship_captain);
         /** @namespace curr_voyage.ship_flag */
         $('#ship_flag').val(curr_voyage.ship_flag);
-        /** @namespace curr_voyage.waypoints */
+        /** @namespace curr_voyage.ship_notes */
+        $('#ship_notes').val(curr_voyage.ship_notes);
         get_waypoints_for_voyage(curr_voyage.voyage_id);
+        if (curr_voyage.voyage_id === "") {
+            $('#waypoint_sub_form').attr("disabled");
+        } else {
+            $('#waypoint_sub_form').removeAttr("disabled");
+        }
     } else {
         set_status_bar('danger', 'failed to find voyage');
     }
@@ -80,9 +86,9 @@ function refresh_voyages_table() {
 
 function get_voyage_form_data() {
     var waypoint_ids = [];
-    $('#waypoints').each(function() {
-        waypoint_ids.push(($(this)).text());
-    });
+    //$('#waypoints').each(function() {
+    //    waypoint_ids.push(($(this)).text());
+    //});
 
     var voyage = {
         voyage_id: "",
@@ -91,7 +97,8 @@ function get_voyage_form_data() {
         ship_name: $('#ship_name').val(),
         ship_captain: $('#ship_captain').val(),
         ship_flag: $('#ship_flag').val(),
-        waypoints: waypoint_ids
+        ship_notes: $('#ship_notes').val()//,
+        //waypoints: waypoint_ids
     };
     var voyage_id_form_val = $('#voyage_id').text();
     if (voyage_id_form_val !== "") {

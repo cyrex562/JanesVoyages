@@ -1,6 +1,3 @@
-__author__ = 'root'
-
-
 mongo = None
 app = None
 logger = None
@@ -16,19 +13,10 @@ def init(in_app, in_mongo):
 
 
 def get_all_waypoints():
-    """
-    return a list of all the waypoints in the collection
-    :return:
-    """
     return list(mongo.db.waypoints.find())
 
 
 def get_waypoint_by_id(waypoint_id):
-    """
-    search for a waypoint by its ID. If not found will return ?
-    :param waypoint_id:
-    :return:
-    """
     found_waypoint = mongo.db.waypoints.find_one(
         {"waypoint_id": waypoint_id})
     logger.debug("get_waypoint_id: find_waypoint_result: {0}".format(
@@ -36,13 +24,12 @@ def get_waypoint_by_id(waypoint_id):
     return found_waypoint
 
 
+def get_waypoints_by_voyage(voyage_id):
+    found_waypoints = mongo.db.waypoints.find({"voyage_id": voyage_id})
+    return found_waypoints
+
+
 def get_waypoints(waypoint_ids):
-    """
-    retrieve 0 or more or all waypoints optionally specifying a list of
-    waypoint IDs as a filter
-    :param waypoint_ids:
-    :return:
-    """
     found_waypoints = []
     if len(waypoint_ids) == 0:
         found_waypoints = get_all_waypoints()

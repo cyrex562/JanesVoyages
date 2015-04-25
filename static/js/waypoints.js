@@ -7,7 +7,8 @@ function get_waypoint_from_form() {
         waypoint_type: $('#waypoint_type').val(),
         waypoint_name: $('#waypoint_name').val(),
         waypoint_notes: $('#waypoint_notes').val(),
-        waypoint_location: $('#waypoint_location').val()
+        waypoint_location: $('#waypoint_location').val(),
+        voyage_id: $('#voyage_id').val()
     };
 }
 
@@ -20,6 +21,7 @@ function fill_waypoint_form(in_waypoint) {
     $('#waypoint_end_date').val(in_waypoint.waypoint_start_date);
     $('#waypoint_location').val(in_waypoint.waypoint_location);
     $('#waypoint_notes').val(in_waypoint.waypoint_notes);
+    $('#waypoint_voyage_id').val(in_waypoint.voyage_id);
     refresh_trades_list();
 }
 
@@ -64,6 +66,12 @@ function refresh_waypoints_list_callback(response) {
         }
     } else {
         set_status_bar('danger', 'failed to get waypoints');
+    }
+
+    if ($('#waypoints option').size() === 0) {
+        $('#trade_sub_form').attr("disabled");
+    } else {
+        $('#trade_sub_form').removeAttr("disabled");
     }
 }
 

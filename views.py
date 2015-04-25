@@ -37,7 +37,7 @@ def set_session_id(in_session):
 
 @app.route('/')
 def render_default():
-    return redirect(url_for('voyages_page_get'))
+    return redirect(url_for('render_voyages_page'))
 
 
 @app.route('/voyages', methods=['GET'])

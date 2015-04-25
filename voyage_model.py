@@ -1,5 +1,7 @@
 __author__ = 'root'
 
+import utils
+
 mongo = None
 app = None
 logger = None
@@ -49,7 +51,7 @@ def get_voyages(voyage_ids):
 def add_voyage(voyage_to_add):
     add_voyage_result = mongo.db.voyages.insert(voyage_to_add)
     logger.debug("add_voyage_result: {0}".format(add_voyage_result))
-    return add_voyage_result
+    return utils.stringify_obj_id(add_voyage_result)
 
 
 def add_voyages(voyages_to_add):

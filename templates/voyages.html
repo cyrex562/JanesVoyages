@@ -1,13 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
     <script type=text/javascript
-        src="{{ url_for('static', filename='js/voyages_page.js') }}">
+        src="{{ url_for('static', filename='js/trades.js') }}">
     </script>
     <script type=text/javascript
         src="{{ url_for('static', filename='js/waypoints.js') }}">
     </script>
     <script type=text/javascript
-        src="{{ url_for('static', filename='js/trades.js') }}">
+        src="{{ url_for('static', filename='js/voyages.js') }}">
+    </script>
+    <script type=text/javascript
+        src="{{ url_for('static', filename='js/voyages_page.js') }}">
     </script>
     <div class="container-fluid">
         <div class="row">
@@ -27,52 +30,69 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
+                <!-- voyage_id -->
                 <div class="form-group">
                     <label for="voyage_id">Voyage ID</label>
                     <span class="form-control-static" id="voyage_id"></span>
                 </div>
+                <!-- voyage -->
                 <fieldset id="voyage_info_sub_form">
                     <legend>Voyage</legend>
+                    <!-- voyage name -->
                     <div class="form-group">
                         <label for="voyage_name">Voyage Name</label>
                         <input type="text" class="form-control"
                                id="voyage_name">
                     </div>
+                    <!-- voyage notes -->
                     <div class="form-group">
                         <label for="voyage_notes">Voyage Notes</label>
                         <textarea id="voyage_notes" class="form-control">
                         </textarea>
                     </div>
                 </fieldset>
+                <!-- ship -->
                 <fieldset id="ship_sub_form">
                     <legend>Ship</legend>
+                    <!-- ship name -->
                     <div class="form-group">
                         <label for="ship_name">Ship Name</label>
                         <input type="text" class="form-control"
                                name="ship_name" id="ship_name">
                     </div>
+                    <!-- ship captain -->
                     <div class="form-group">
                         <label for="ship_captain">Ship Captain</label>
                         <input type="text" class="form-control"
                                name="ship_captain" id="ship_captain">
                     </div>
+                    <!-- ship flag -->
                     <div class="form-group">
                         <label for="ship_flag">Ship Flag</label>
                         <input type="text" class="form-control"
                                name="ship_flag" id="ship_flag">
                     </div>
+                    <!-- ship notes -->
+                    <div class="form-group">
+                        <label for="ship_notes">Ship Notes</label>
+                        <textarea id="ship_notes"
+                        class="form-control"></textarea>
+                    </div>
                 </fieldset>
                 <!-- waypoints -->
-                <fieldset id="waypoint_sub_form">
+                <fieldset id="waypoint_sub_form" disabled>
                     <legend>Waypoints</legend>
                     <!-- waypoint list -->
                     <div class="form-group">
                         <label for="waypoints">Waypoints</label>
                         <select name="waypoints`" class="form-control"
-                                id="waypoint_list">
+                                id="waypoints">
                         </select>
                     </div>
-                    <!-- waypoint form elements -->
+                    <!-- waypoint form elements
+                    <!-- voyage id -->
+                    <input type="hidden" id="waypoint_voyage_id"/>
+                    <!-- waypoint id -->
                     <div class="form-group">
                         <label for="waypoint_id">Waypoint ID</label>
                         <p id="waypoint_id">0</p>
@@ -132,7 +152,7 @@
                     </div>
                 </fieldset>
                 <!-- trades -->
-                <fieldset id="trade_sub_form">
+                <fieldset id="trade_sub_form" disabled>
                     <legend>Trades</legend>
                     <!-- trade list -->
                     <div class="form-group">
@@ -140,6 +160,8 @@
                         <select id="trades" class="form-control
                         trade_form_ele"></select>
                     </div>
+                    <!-- voyage id -->
+                    <input type="hidden" id="trade_waypoint_id"/>
                     <!-- trade id -->
                     <div class="form-group">
                         <label for="trade_id">Trade ID</label>

@@ -24,6 +24,11 @@ def get_trade_by_id(trade_id):
     return found_trade
 
 
+def get_trades_by_waypoint(waypoint_id):
+    found_trades = mongo.db.trades.find({"waypoint_it": waypoint_id})
+    return found_trades
+
+
 def get_trades(trade_ids):
     found_trades = []
     if len(found_trades) == 0:
