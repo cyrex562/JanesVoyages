@@ -17,11 +17,21 @@ def init(in_app, in_mongo):
 
 
 def get_all_voyages():
-    return list(mongo.db.voyages.find())
+    all_voyages = list(mongo.db.voyages.find())
+    all_voyages_out = []
+    for av in all_voyages:
+        # convert object id to string for output purposes
+        av['_id'] = unicode(av['_id'])
+        av['voyage_id'] = av['_id']
+        all_voyages_out.append(av)
+    return all_voyages_out
 
 
 def get_voyage_by_id(voyage_id):
     found_voyage = mongo.db.voyages.find_one({"voyage_id": voyage_id})
+    found_voyage_out = found_voyage
+    found_voyage_out['_id'] = unicode(found_voyage_out['_id'])
+    found_voyage_out['voyage_id'] = found_voyage_out['_id']
     logger.debug("find_voyage_result: {0}".format(found_voyage))
     return found_voyage
 

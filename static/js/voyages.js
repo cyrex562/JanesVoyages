@@ -3,7 +3,7 @@ function fill_voyage_form(response) {
 
     if (response.message === 'success') {
         /** @namespace response.data.voyages */
-        var curr_voyage = response.data.voyages[0];
+        var curr_voyage = response.data.found_voyages[0];
         console.log('current_voyage = %s', JSON.stringify(curr_voyage));
         /** @namespace curr_voyage.voyage_name */
         $('#voyage_name').val(curr_voyage.voyage_name);
@@ -50,15 +50,12 @@ function gen_voyage_row(voyage) {
         '<td class="ship_name_cell">[ship_name]</td>' +
         '<td class="ship_captain_cell">[ship_captain]</td>' +
         '<td class="ship_flag_cell">[ship_flag]</td>' +
-        '<td>[waypoints]</td>' +
         '</tr>';
     voyage_row = voyage_row.replace(/\[voyage_id\]/g, voyage.voyage_id);
     voyage_row = voyage_row.replace(/\[voyage_name\]/g, voyage.voyage_name);
     voyage_row = voyage_row.replace(/\[ship_name\]/g, voyage.ship_name);
     voyage_row = voyage_row.replace(/\[ship_captain\]/g, voyage.ship_captain);
     voyage_row = voyage_row.replace(/\[ship_flag]/g, voyage.ship_flag);
-    voyage_row = voyage_row.replace(/\[waypoints\]/g, '<span class="badge">' +
-        voyage.waypoints.length + '</span> waypoints');
     return voyage_row;
 }
 
@@ -85,13 +82,8 @@ function refresh_voyages_table() {
 }
 
 function get_voyage_form_data() {
-    var waypoint_ids = [];
-    //$('#waypoints').each(function() {
-    //    waypoint_ids.push(($(this)).text());
-    //});
-
     var voyage = {
-        voyage_id: "",
+        voyage_id: $('#voyage_id').text(),
         voyage_name: $('#voyage_name').val(),
         voyage_notes: $('#voyage_notes').val(),
         ship_name: $('#ship_name').val(),
@@ -100,10 +92,10 @@ function get_voyage_form_data() {
         ship_notes: $('#ship_notes').val()//,
         //waypoints: waypoint_ids
     };
-    var voyage_id_form_val = $('#voyage_id').text();
-    if (voyage_id_form_val !== "") {
-        voyage.voyage_id = voyage_id_form_val;
-    }
+    //var voyage_id_form_val = $('#voyage_id').text();
+    //if (voyage_id_form_val !== "") {
+    //    voyage.voyage_id = voyage_id_form_val;
+    //}
 
     return voyage;
 }

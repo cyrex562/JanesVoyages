@@ -5,21 +5,21 @@
 function get_trade_from_form() {
     console.log('get_trade_from_form()');
     return {
-        trade_id: parseInt($('#trade_id').text()),
+        trade_id: $('#trade_id').text(),
         trade_bought_sold: $('.trade_bought_sold').val(),
         trade_item: $('#trade_item').val(),
         trade_quantity: parseInt($('#trade_quantity').val()),
-        waypoint_id: parseInt($('#trade_waypoint_id').text())
+        waypoint_id: $('#trade_waypoint_id').text()
     }
 }
 
 function fill_trade_form(in_trade) {
     console.log('fill_trade_form()');
-    $('#trade_id').val(in_trade.trade_id);
+    $('#trade_id').text(in_trade.trade_id);
     $('#trade_item').val(in_trade.trade_item);
     $('#trade_quantity').val(parseInt(in_trade.trade_quantity));
     $('.trade_bought_sold').val(in_trade.trade_bought_sold);
-    $('#trade_waypoint_id').val(in_trade.waypoint_id);
+    $('#trade_waypoint_id').text(in_trade.waypoint_id);
 }
 
 /**

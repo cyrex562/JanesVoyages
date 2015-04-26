@@ -1,7 +1,7 @@
 function get_waypoint_from_form() {
     console.log('update_curr_waypoint_from_form()');
     return {
-        waypoint_id: parseInt($('#waypoint_id').text()),
+        waypoint_id: $('#waypoint_id').text(),
         waypoint_start_date: $('#waypoint_start_date').val(),
         waypoint_end_date: $('#waypoint_end_date').val(),
         waypoint_type: $('#waypoint_type').val(),

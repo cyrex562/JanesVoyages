@@ -107,8 +107,17 @@ def voyages_delete():
 @app.route('/waypoints/get', methods=['POST'])
 def waypoints_get():
     app.logger.debug('/voyages/get')
-    waypoint_ids = request.json["params"]["waypoint_ids"]
-    found_waypoints = waypoint_model.get_waypoints(waypoint_ids)
+    params = request.json['params']
+    if 'waypoint_ids' in params:
+        waypoint_ids = params["waypoint_ids"]
+        found_waypoints = waypoint_model.get_waypoints(waypoint_ids)
+    elif 'voyage_id' in params:
+        voyage_id = params['voyage_id']
+        found_waypoints = waypoint_model.get_waypoints_by_voyage(voyage_id)
+    else:
+        app.logger.debug('params not valid: {0}'.format(params))
+        found_waypoints = []
+
     return jsonify(message="success", data={"found_waypoints": found_waypoints})
 
 

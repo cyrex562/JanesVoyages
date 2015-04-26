@@ -30,8 +30,7 @@ function set_status_bar(level, message) {
 
 function voyage_row_click() {
     console.log('voyage_row_click()');
-    var voyage_id_str = $(this).find('.voyage_id_cell').text();
-    var voyage_id = parseInt(voyage_id_str);
+    var voyage_id = $(this).find('.voyage_id_cell').text();
     set_current_voyage(voyage_id)
 }
 

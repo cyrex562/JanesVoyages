@@ -25,7 +25,7 @@ def get_waypoint_by_id(waypoint_id):
 
 
 def get_waypoints_by_voyage(voyage_id):
-    found_waypoints = mongo.db.waypoints.find({"voyage_id": voyage_id})
+    found_waypoints = list(mongo.db.waypoints.find({"voyage_id": voyage_id}))
     return found_waypoints
 
 
