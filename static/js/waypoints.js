@@ -1,14 +1,14 @@
 function get_waypoint_from_form() {
     console.log('update_curr_waypoint_from_form()');
     return {
-        waypoint_id: $('#waypoint_id').text(),
+        //waypoint_id: $('#waypoint_id').text(),
         waypoint_start_date: $('#waypoint_start_date').val(),
         waypoint_end_date: $('#waypoint_end_date').val(),
         waypoint_type: $('#waypoint_type').val(),
         waypoint_name: $('#waypoint_name').val(),
-        waypoint_notes: $('#waypoint_notes').val(),
+        waypoint_notes: $('#waypoint_notes').val().trim(),
         waypoint_location: $('#waypoint_location').val(),
-        voyage_id: $('#voyage_id').val()
+        voyage_id: $('#voyage_id').text()
     };
 }
 
@@ -68,24 +68,23 @@ function refresh_waypoints_list_callback(response) {
         set_status_bar('danger', 'failed to get waypoints');
     }
 
-    if ($('#waypoints option').size() === 0) {
+    if (waypoint_list.find('option').size() === 0) {
         $('#trade_sub_form').attr("disabled");
     } else {
         $('#trade_sub_form').removeAttr("disabled");
     }
 }
 
-function refresh_waypoints_list(in_waypoint_id) {
+function refresh_waypoints_list(in_voyage_id) {
     console.log('refresh_waypoints_list');
-    var waypoint_list_ids = [];
-    if (in_waypoint_id !== null) {
-        waypoint_list_ids.push(in_waypoint_id);
-    }
-    $('#waypoints').each(function() {
-        waypoint_list_ids.push($(this).val());
-    });
-    send_request('waypoints/get', 'POST', {waypoint_ids: waypoint_list_ids},
-        refresh_waypoints_list_callback);
+    //var waypoint_list_ids = [];
+    //if (in_waypoint_id !== null) {
+    //    waypoint_list_ids.push(in_waypoint_id);
+    //}
+    //$('#waypoints').each(function() {
+    //    waypoint_list_ids.push($(this).val());
+    //});
+    send_request('waypoints/get', 'POST', {voyage_id: in_voyage_id}, get_waypoints_for_voyage_cb)
 }
 
 function get_waypoints_for_voyage_cb(response) {
@@ -121,15 +120,26 @@ function waypoint_select_change() {
         {waypoint_ids: [selected_waypoint_id]}, waypoint_select_change_cb);
 }
 
+/**
+ *
+ * @param waypoint_id
+ */
 function set_selected_waypoint(waypoint_id) {
-    var waypoint_list = $('#waypoint_list');
-    waypoint_list.val('');
+    console.log('set_selected_waypoint(), waypoint_id: ' + waypoint_id);
+    var waypoint_list = $('#waypoints');
     waypoint_list.val(waypoint_id);
 }
 
+/**
+ *
+ * @returns {*|jQuery}
+ */
 function get_selected_waypoint_id() {
     console.log('get_selected_waypoint_id');
-    return $('#waypoint_list').val();
+    var selected_waypoint_id = $('#waypoints').val();
+    console.log('get_selected_waypoint_id(), selected_waypoint_id: ' +
+    selected_waypoint_id);
+    return selected_waypoint_id;
 }
 
 function add_waypoint_callback(response) {
@@ -138,7 +148,8 @@ function add_waypoint_callback(response) {
         /** @namespace response.data.added_waypoint_ids */
         var added_waypoint_id = response.data.added_waypoint_ids[0];
         set_status_bar('success', 'waypoint added');
-        refresh_waypoints_list(added_waypoint_id);
+        var current_voyage_id = $('#voyage_id').text();
+        refresh_waypoints_list(current_voyage_id);
         set_selected_waypoint(added_waypoint_id);
     } else {
         set_status_bar('danger', 'failed to add waypoint')
@@ -160,7 +171,8 @@ function modify_waypoint_callback(response) {
         set_status_bar('success', 'waypoint modified');
         /** @namespace response.data.modified_waypoint_ids */
         var modified_waypoint_id = response.data.modified_waypoint_ids[0];
-        refresh_waypoints_list(modified_waypoint_id);
+        var current_voyage_id = $('#voayge_id').text();
+        refresh_waypoints_list(current_voyage_id);
         set_selected_waypoint(modified_waypoint_id)
     } else {
         set_status_bar('danger', 'waypoint not modified');
@@ -181,8 +193,9 @@ function delete_waypoint_callback(response) {
         set_status_bar('success', 'waypoint deleted');
         /** @namespace response.data.deleted_waypoint_ids */
         var deleted_waypoint_id = response.data.deleted_waypoint_ids[0];
-        refresh_waypoints_list(deleted_waypoint_id);
-        set_selected_waypoint(deleted_waypoint_id);
+        var current_voyage_id = $('#voayge_id').text();
+        refresh_waypoints_list(current_voyage_id);
+        set_selected_waypoint();
     } else {
         set_status_bar('danger', 'waypoint not deleted');
     }
@@ -191,8 +204,8 @@ function delete_waypoint_callback(response) {
 function delete_waypoint() {
     console.log('delete_waypoint()');
     var selected_waypoint_id = get_selected_waypoint_id();
-    var waypoints_to_delete = [];
-    waypoints_to_delete.push(selected_waypoint_id);
+    var waypoint_ids = [];
+    waypoint_ids.push(selected_waypoint_id);
     send_request('waypoints/delete', 'POST',
-        {waypoints_to_delete: waypoints_to_delete}, delete_waypoint_callback);
+        {waypoint_ids: waypoint_ids}, delete_waypoint_callback);
 }

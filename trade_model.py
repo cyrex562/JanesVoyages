@@ -20,13 +20,26 @@ def get_all_trades():
 
 
 def get_trade_by_id(trade_id):
-    found_trade = mongo.db.trades.find_one({"trade_id": trade_id})
+    found_trade = mongo.db.trades.find_one({"_id": trade_id})
     return found_trade
 
 
 def get_trades_by_waypoint(waypoint_id):
-    found_trades = mongo.db.trades.find({"waypoint_it": waypoint_id})
-    return found_trades
+    """
+
+    :param waypoint_id:
+    :return:
+    """
+    logger.debug('get_trades_by_waypoint(), waypoint_id: {0}'
+        .format(waypoint_id))
+    found_trades = mongo.db.trades.find({"waypoint_id": waypoint_id})
+    found_trades_out = []
+    for ft in found_trades:
+        ft['_id'] = str(ft['_id'])
+        found_trades_out.append(ft)
+    logger.debug('get_trades_by_waypoint(), retrieved {0} trades'.format(len(
+        found_trades_out)))
+    return found_trades_out
 
 
 def get_trades(trade_ids):

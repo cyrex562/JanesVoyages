@@ -1,7 +1,6 @@
 function send_request(action, request_type, request_data, callback) {
     console.log('send_request, action: %s, request_type: %s, ' +
-        'request_data: %s, callback: %s', action, request_type, request_data,
-        callback);
+        'request_data: %s', action, request_type, request_data);
     //noinspection JSUnresolvedVariable
     $.ajax({
         type: request_type,
@@ -73,11 +72,41 @@ function delete_trade_btn_click() {
     delete_trade();
 }
 
+function clear_voyage_form() {
+    $('#voyage_name').val('');
+    $('#voyage_id').text('');
+    $('#voyage_notes').text('');
+    $('#ship_name').val('');
+    $('#ship_captain').val('');
+    $('#ship_flag').val('');
+    $('#ship_notes').text('');
+}
+
+function clear_waypoint_form() {
+    $('#waypoints').empty();
+    $('#waypoint_id').text('');
+    $('#waypoint_type').val('start');
+    $('#waypoint_start_date').val('');
+    $('#waypoint_end_date').val('');
+    $('#waypoint_location').val('');
+    $('#waypoint_notes').text('');
+}
+
+function clear_trade_form() {
+    $('#trade_id').text('');
+    // TODO: clear bought/sold
+    $('#trade_item').val('');
+    $('#trade_quantity').val('');
+}
+
 /**
  *
  */
 $(document).ready(function () {
     console.log('document.ready()');
+    clear_voyage_form();
+    clear_waypoint_form();
+    clear_trade_form();
     refresh_voyages_table();
     $("#add_voyage_btn").click(add_voyage_btn_click);
     $("#modify_voyage_btn").click(modify_voyage_btn_click);

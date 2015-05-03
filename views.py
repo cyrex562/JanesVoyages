@@ -52,8 +52,9 @@ def voyages_get():
     :return: a JSON object in the format:
     { "message": "success|<error message>", data={"voyages": []}}
     """
-    app.logger.debug('voyages_get')
     voyage_ids = request.json["params"]["voyage_ids"]
+    app.logger.debug('route: "/voyages/get", voyage_ids: {0}'.format(
+        voyage_ids))
     found_voyages = voyage_model.get_voyages(voyage_ids)
     result = jsonify(message="success", data={"found_voyages": found_voyages})
     return result
@@ -106,8 +107,8 @@ def voyages_delete():
 
 @app.route('/waypoints/get', methods=['POST'])
 def waypoints_get():
-    app.logger.debug('/voyages/get')
     params = request.json['params']
+    app.logger.debug('route: /waypoints/get, params: {0}'.format(str(params)))
     if 'waypoint_ids' in params:
         waypoint_ids = params["waypoint_ids"]
         found_waypoints = waypoint_model.get_waypoints(waypoint_ids)
@@ -123,8 +124,9 @@ def waypoints_get():
 
 @app.route('/waypoints/add', methods=['POST'])
 def waypoints_add():
-    app.logger.debug('/waypoints/add')
     waypoints_to_add = request.json["params"]["waypoints_to_add"]
+    app.logger.debug('route: "/waypoints/add", waypoints_to_add: {0}'.format(
+        waypoints_to_add))
     added_waypoint_ids = waypoint_model.add_waypoints(waypoints_to_add)
     return jsonify(message="success",
                    data={"added_waypoint_ids": added_waypoint_ids})
@@ -132,8 +134,13 @@ def waypoints_add():
 
 @app.route('/waypoints/modify', methods=['POST'])
 def waypoints_modify():
-    app.logger.debug('/waypoints/modify')
+    """
+
+    :return:
+    """
     waypoints_to_modify = request.json["params"]["waypoints_to_modify"]
+    app.logger.debug('route: "/waypoints/modify", waypoints_to_modify: {'
+                     '0}'.format(str(waypoints_to_modify)))
     modified_waypoint_ids = waypoint_model.modify_waypoints(waypoints_to_modify)
     return jsonify(message="success",
                    data={"modified_waypoint_ids": modified_waypoint_ids})
@@ -141,24 +148,35 @@ def waypoints_modify():
 
 @app.route('/waypoints/delete', methods=['POST'])
 def waypoints_delete():
-    app.logger.debug('waypoints/delete')
-    waypoints_to_delete = request.json["params"]["waypoints_to_delete"]
-    deleted_waypoint_ids = waypoint_model.delete_waypoint(waypoints_to_delete)
-    return jsonify(message="success",
-                   data={"deleted_waypoint_ids": deleted_waypoint_ids})
+    """
+
+    :return:
+    """
+    waypoint_ids = request.json["params"]["waypoint_ids"]
+    app.logger.debug('route: "/waypoints/delete", waypoint_ids: {'
+                     '0}'.format(str(waypoint_ids)))
+    success = waypoint_model.delete_waypoints(waypoint_ids)
+    if success is True:
+        result = jsonify(message="success", data={})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
 
 
 @app.route('/trades/get', methods=['POST'])
 def trades_get():
-    app.logger.debug('trades_get')
+    """
+
+    :return:
+    """
     params = request.json['params']
+    app.logger.debug('route: "/trades/get", params: {0}'.format(params))
     if 'trade_ids' in params:
         trade_ids = params['trade_ids']
         found_trades = trade_model.get_trades(trade_ids)
     elif 'waypoint_id' in params:
         waypoint_id = params['waypoint_id']
-        found_trades = trade_model.get_trades_for_waypoint(waypoint_id)
-
+        found_trades = trade_model.get_trades_by_waypoint(waypoint_id)
     else:
         found_trades = []
         app.logger.error('invalid params: "{0}"'.format(params))

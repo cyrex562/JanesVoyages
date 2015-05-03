@@ -1,29 +1,37 @@
+/**
+ *
+ * @param response
+ */
 function fill_voyage_form(response) {
     console.log('fill_voyage_form()');
-
     if (response.message === 'success') {
         /** @namespace response.data.voyages */
-        var curr_voyage = response.data.found_voyages[0];
-        console.log('current_voyage = %s', JSON.stringify(curr_voyage));
-        /** @namespace curr_voyage.voyage_name */
-        $('#voyage_name').val(curr_voyage.voyage_name);
-        /** @namespace curr_voyage.voyage_id */
-        $('#voyage_id').text(curr_voyage.voyage_id);
-        /** @namespace curr_voyage.voyage_notes */
-        $('#voyage_notes').val(curr_voyage.voyage_notes);
-        /** @namespace curr_voyage.ship_name */
-        $('#ship_name').val(curr_voyage.ship_name);
-        /** @namespace curr_voyage.ship_captain */
-        $('#ship_captain').val(curr_voyage.ship_captain);
-        /** @namespace curr_voyage.ship_flag */
-        $('#ship_flag').val(curr_voyage.ship_flag);
-        /** @namespace curr_voyage.ship_notes */
-        $('#ship_notes').val(curr_voyage.ship_notes);
-        get_waypoints_for_voyage(curr_voyage.voyage_id);
-        if (curr_voyage.voyage_id === "") {
-            $('#waypoint_sub_form').attr("disabled");
+        var found_voyages = response.data.found_voyages;
+        if (found_voyages.length === 1) {
+            var curr_voyage = found_voyages[0];
+            console.log('current_voyage = %s', JSON.stringify(curr_voyage));
+            /** @namespace curr_voyage.voyage_name */
+            $('#voyage_name').val(curr_voyage.voyage_name);
+            /** @namespace curr_voyage.voyage_id */
+            $('#voyage_id').text(curr_voyage.voyage_id);
+            /** @namespace curr_voyage.voyage_notes */
+            $('#voyage_notes').val(curr_voyage.voyage_notes);
+            /** @namespace curr_voyage.ship_name */
+            $('#ship_name').val(curr_voyage.ship_name);
+            /** @namespace curr_voyage.ship_captain */
+            $('#ship_captain').val(curr_voyage.ship_captain);
+            /** @namespace curr_voyage.ship_flag */
+            $('#ship_flag').val(curr_voyage.ship_flag);
+            /** @namespace curr_voyage.ship_notes */
+            $('#ship_notes').val(curr_voyage.ship_notes);
+            get_waypoints_for_voyage(curr_voyage.voyage_id);
+            if (curr_voyage.voyage_id === "") {
+                $('#waypoint_sub_form').attr("disabled");
+            } else {
+                $('#waypoint_sub_form').removeAttr("disabled");
+            }
         } else {
-            $('#waypoint_sub_form').removeAttr("disabled");
+            console.log('bad found_voyages length: ' + found_voyages.length);
         }
     } else {
         set_status_bar('danger', 'failed to find voyage');
@@ -73,30 +81,32 @@ function populate_voyages_table(response) {
         }
         $('.voyage_row').click(voyage_row_click);
     }
-
 }
 
+/**
+ *
+ */
 function refresh_voyages_table() {
     console.log('refresh_voyages_table()');
-    send_request('voyages/get', 'POST', {voyage_ids: []}, populate_voyages_table);
+    send_request('voyages/get', 'POST', {voyage_ids: []},
+        populate_voyages_table);
 }
 
+/**
+ *
+ * @returns {{voyage_id: (*|jQuery), voyage_name: (*|jQuery), voyage_notes: (*|jQuery), ship_name: (*|jQuery), ship_captain: (*|jQuery), ship_flag: (*|jQuery), ship_notes: (*|jQuery)}}
+ */
 function get_voyage_form_data() {
     var voyage = {
-        voyage_id: $('#voyage_id').text(),
+        //voyage_id: $('#voyage_id').text(),
         voyage_name: $('#voyage_name').val(),
-        voyage_notes: $('#voyage_notes').val(),
+        voyage_notes: $('#voyage_notes').val().trim(),
         ship_name: $('#ship_name').val(),
         ship_captain: $('#ship_captain').val(),
         ship_flag: $('#ship_flag').val(),
-        ship_notes: $('#ship_notes').val()//,
-        //waypoints: waypoint_ids
+        ship_notes: $('#ship_notes').val().trim()
     };
-    //var voyage_id_form_val = $('#voyage_id').text();
-    //if (voyage_id_form_val !== "") {
-    //    voyage.voyage_id = voyage_id_form_val;
-    //}
-
+    console.log('get_voyage_form_data(): voyage: ' + voyage);
     return voyage;
 }
 
@@ -160,5 +170,5 @@ function delete_voyage_btn_click() {
     var voyages_to_delete = [];
     voyages_to_delete.push(voyage_to_delete);
     send_request('voyages/delete', 'POST',
-            {voyages_to_delete: voyages_to_delete}, delete_voyage_callback);
+        {voyages_to_delete: voyages_to_delete}, delete_voyage_callback);
 }
