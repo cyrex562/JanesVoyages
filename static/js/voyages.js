@@ -25,11 +25,7 @@ function fill_voyage_form(response) {
             /** @namespace curr_voyage.ship_notes */
             $('#ship_notes').val(curr_voyage.ship_notes);
             get_waypoints_for_voyage(curr_voyage.voyage_id);
-            if (curr_voyage.voyage_id === "") {
-                $('#waypoint_sub_form').attr("disabled");
-            } else {
-                $('#waypoint_sub_form').removeAttr("disabled");
-            }
+
         } else {
             console.log('bad found_voyages length: ' + found_voyages.length);
         }
@@ -39,12 +35,14 @@ function fill_voyage_form(response) {
 }
 
 function get_voyage_by_id(voyage_id, callback) {
+    console.log('get_voyage_by_id()');
     var voyage_ids = [voyage_id];
     send_request('voyages/get', 'POST', {voyage_ids: voyage_ids},
         callback);
 }
 
 function set_current_voyage(voyage_id) {
+    console.log('set_current_voyage()');
     /* get the voyage */
     get_voyage_by_id(voyage_id, fill_voyage_form);
 }
@@ -68,7 +66,7 @@ function gen_voyage_row(voyage) {
 }
 
 function populate_voyages_table(response) {
-    console.log('get_voyages_callback()');
+    console.log('populate_voyages_table()');
     if (response.message === 'success') {
         set_status_bar('success', 'voyages retrieved');
         /** @namespace response.data.found_voyages */
@@ -97,6 +95,7 @@ function refresh_voyages_table() {
  * @returns {{voyage_id: (*|jQuery), voyage_name: (*|jQuery), voyage_notes: (*|jQuery), ship_name: (*|jQuery), ship_captain: (*|jQuery), ship_flag: (*|jQuery), ship_notes: (*|jQuery)}}
  */
 function get_voyage_form_data() {
+    console.log('get_voyage_form_data()');
     var voyage = {
         //voyage_id: $('#voyage_id').text(),
         voyage_name: $('#voyage_name').val(),
@@ -115,9 +114,7 @@ function add_voyage_callback(response) {
     if (response.message === 'success') {
         set_status_bar('success', 'voyage added');
         refresh_voyages_table();
-        /** @namespace response.data.added_voyage_ids */
-        var added_voyage_ids = response.data.added_voyage_ids;
-        set_current_voyage(added_voyage_ids[0]);
+        set_current_voyage(response.data.added_voyage_ids[0]);
     } else {
         set_status_bar('danger', 'failed to add voyage');
     }

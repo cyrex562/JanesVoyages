@@ -11,8 +11,8 @@ function send_request(action, request_type, request_data, callback) {
         success: callback,
         error: function (request, status, error) {
             console.log("AJAX request failed: action: {0}, " +
-                    "request_data: {1}, callback: {2}, status: {3}, request: " +
-                    "{4}, error: {5}", action, request_data, callback, status,
+                "request_data: {1}, callback: {2}, status: {3}, request: " +
+                "{4}, error: {5}", action, request_data, callback, status,
                 request, error);
         }
     });
@@ -75,39 +75,62 @@ function delete_trade_btn_click() {
 function clear_voyage_form() {
     $('#voyage_name').val('');
     $('#voyage_id').text('');
-    $('#voyage_notes').text('');
+    $('#voyage_notes').val('');
     $('#ship_name').val('');
     $('#ship_captain').val('');
     $('#ship_flag').val('');
     $('#ship_notes').text('');
 }
 
-function clear_waypoint_form() {
-    $('#waypoints').empty();
+function clear_waypoint_form(clear_waypoints_list)
+{
+    if (clear_waypoints_list === true) {
+        reset_waypoints_list();
+    }
+
+    $('#waypoint_name').val('');
     $('#waypoint_id').text('');
     $('#waypoint_type').val('start');
     $('#waypoint_start_date').val('');
     $('#waypoint_end_date').val('');
     $('#waypoint_location').val('');
-    $('#waypoint_notes').text('');
+    $('#waypoint_notes').val('');
 }
 
-function clear_trade_form() {
+function clear_trade_form()
+{
+    var trades_list = $('#trades_list');
+    trades_list.empty();
+    trades_list.append('<option id=select_trade>Select A Trade...</trade>');
     $('#trade_id').text('');
     // TODO: clear bought/sold
     $('#trade_item').val('');
     $('#trade_quantity').val('');
 }
 
-/**
- *
- */
+function clear_form_btn_click()
+{
+    console.log('clear_form_btn_click()');
+    clear_voyage_form();
+    clear_waypoint_form(true);
+    clear_trade_form();
+    hide_waypoint_form();
+    hide_trade_form();
+}
+
+function reset_waypoint_form_btn_click() {
+    console.log('reset_waypoint_form_btn_click()');
+    clear_waypoint_form(false);
+}
+
 $(document).ready(function () {
     console.log('document.ready()');
     clear_voyage_form();
-    clear_waypoint_form();
+    clear_waypoint_form(true);
     clear_trade_form();
     refresh_voyages_table();
+    hide_waypoint_form();
+    hide_trade_form();
     $("#add_voyage_btn").click(add_voyage_btn_click);
     $("#modify_voyage_btn").click(modify_voyage_btn_click);
     $('#delete_voyage_btn').click(delete_voyage_btn_click);
@@ -119,4 +142,6 @@ $(document).ready(function () {
     $('#modify_trade_btn').click(modify_trade_btn_click);
     $('#delete_trade_btn').click(delete_trade_btn_click);
     $('#trades').change(trade_select_change);
+    $('#clear_form_btn').click(clear_form_btn_click);
+    $('#reset_waypoint_form_btn').click(reset_waypoint_form_btn_click);
 });

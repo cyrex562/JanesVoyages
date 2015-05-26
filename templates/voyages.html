@@ -25,6 +25,9 @@
                     <button class="btn btn-default" id="delete_voyage_btn">
                         Delete Voyage
                     </button>
+                    <button class="btn btn-default" id="clear_form_btn">
+                        Clear Form
+                    </button>
                 </div>
             </div>
         </div>
@@ -80,13 +83,15 @@
                     </div>
                 </fieldset>
                 <!-- waypoints -->
-                <fieldset id="waypoint_sub_form" disabled>
+                <div id="waypoint_sub_form" class="collapse in">
+                    <fieldset>
                     <legend>Waypoints</legend>
                     <!-- waypoint list -->
                     <div class="form-group">
                         <label for="waypoints">Waypoints</label>
                         <select name="waypoints`" class="form-control"
                                 id="waypoints">
+                            <option id="select_waypoint">Select a Waypoint...</option>
                         </select>
                     </div>
                     <!-- waypoint form elements
@@ -108,6 +113,7 @@
                         <label for="waypoint_type">Waypoint Type</label>
                         <select name="waypoint_type" class="form-control"
                                 id="waypoint_type">
+                            <option value="">Select a waypoint type</option>
                             <option value="start">start</option>
                             <option value="stop">stop</option>
                             <option value="end">end</option>
@@ -149,18 +155,27 @@
                                 id="delete_waypoint_btn">
                             Remove Waypoint
                         </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="reset_waypoint_form_btn">
+                            Reset Waypoint Form
+                        </button>
                     </div>
                 </fieldset>
+                </div>
+
                 <!-- trades -->
-                <fieldset id="trade_sub_form" disabled>
+                <div id="trade_sub_form" class="collapse in">
+                    <fieldset>
                     <legend>Trades</legend>
                     <!-- trade list -->
                     <div class="form-group">
                         <label for="trades">Trades</label>
                         <select id="trades" class="form-control
-                        trade_form_ele"></select>
+                        trade_form_ele">
+                            <option id="select_trade">Select a trade...</option>
+                        </select>
                     </div>
-                    <!-- voyage id -->
+                    <!-- waypoint id -->
                     <input type="hidden" id="trade_waypoint_id"/>
                     <!-- trade id -->
                     <div class="form-group">
@@ -171,14 +186,14 @@
                     <div class="radio">
                         <label>
                             <input type="radio" class="trade_bought_sold
-                            trade_form_ele" value="bought">
+                            trade_form_ele" value="bought" name="trade_bought_sold">
                             Bought
                         </label>
                     </div>
                     <div class="radio">
                         <label>
                             <input type="radio" class="trade_bought_sold"
-                            value="sold">
+                            value="sold" name="trade_bought_sold">
                             Sold
                         </label>
                     </div>
@@ -186,7 +201,7 @@
                     <div class="form-group">
                         <label for="item">Item</label>
                         <input type="text" id="trade_item"
-                               class="form-control">
+                               class="form-control" name="bought_sold">
                     </div>
                     <!-- trade quantity -->
                     <div class="form-group">
@@ -210,6 +225,8 @@
                         </button>
                     </div>
                 </fieldset>
+                </div>
+
             </div>
             <div class="col-xs-7">
                 <table class="table table-striped" id="voyages_table">

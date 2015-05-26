@@ -107,6 +107,10 @@ def voyages_delete():
 
 @app.route('/waypoints/get', methods=['POST'])
 def waypoints_get():
+    """
+
+    :return:
+    """
     params = request.json['params']
     app.logger.debug('route: /waypoints/get, params: {0}'.format(str(params)))
     if 'waypoint_ids' in params:
@@ -141,9 +145,16 @@ def waypoints_modify():
     waypoints_to_modify = request.json["params"]["waypoints_to_modify"]
     app.logger.debug('route: "/waypoints/modify", waypoints_to_modify: {'
                      '0}'.format(str(waypoints_to_modify)))
-    modified_waypoint_ids = waypoint_model.modify_waypoints(waypoints_to_modify)
-    return jsonify(message="success",
-                   data={"modified_waypoint_ids": modified_waypoint_ids})
+    waypoints_modified = waypoint_model.modify_waypoints(waypoints_to_modify)
+    if waypoints_modified is True:
+        modified_waypoint_ids = []
+        for wtm in waypoints_to_modify:
+            modified_waypoint_ids.append(wtm['waypoint_id'])
+        result = jsonify(message="success",
+                         data={'modified_waypoint_ids': modified_waypoint_ids})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
 
 
 @app.route('/waypoints/delete', methods=['POST'])
@@ -180,6 +191,7 @@ def trades_get():
     else:
         found_trades = []
         app.logger.error('invalid params: "{0}"'.format(params))
+        app.logger.debug('trades_get, found trades count={0}'.format(len(found_trades)))
     result = jsonify(message='success', data={"found_trades": found_trades})
     return result
 
@@ -187,7 +199,7 @@ def trades_get():
 @app.route('/trades/add', methods=['POST'])
 def trades_add():
     app.logger.debug('trades_add')
-    trades_to_add = request.json["parms"]["trades_to_add"]
+    trades_to_add = request.json["params"]["trades_to_add"]
     added_trade_ids = trade_model.add_trades(trades_to_add)
     return jsonify(message="success",
                    data={"added_trade_ids": added_trade_ids})
@@ -206,10 +218,16 @@ def trades_modify():
 def trades_delete():
     app.logger.debug('trades_delete')
     trades_to_delete = request.json["params"]["trades_to_delete"]
-    deleted_trade_ids = trade_model.delete_trade(trades_to_delete)
-    return jsonify(message="success",
-                   data={"deleted_trade_ids": deleted_trade_ids})
+    success = trade_model.delete_trades(trades_to_delete)
+    if success is True:
+        result = jsonify(message="success", data={})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
 
 
 if __name__ == '__main__':
     app.run()
+
+
+# END OF FILE

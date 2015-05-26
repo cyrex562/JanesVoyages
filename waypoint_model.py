@@ -168,35 +168,45 @@ def modify_waypoint(waypoint_to_modify):
     :param waypoint_to_modify:
     :return:
     """
-    modify_waypoint_result = None
-    if waypoint_to_modify is not None:
-        modify_waypoint_result = mongo.db.waypoints.update(
-            {"_id": ObjectId(waypoint_to_modify["_id"])},
-            waypoint_to_modify)
-        logger.debug(
-            "modify waypoint result: {0}".format(modify_waypoint_result))
-    else:
+    success = False
+
+    if waypoint_to_modify is None:
         logger.error('modify_waypoint(): waypoint_to_modify was None')
-    return modify_waypoint_result
+        return success
+
+    modify_waypoint_result = mongo.db.waypoints.update(
+        {"_id": ObjectId(waypoint_to_modify["waypoint_id"])},
+        waypoint_to_modify)
+    if modify_waypoint_result['updatedExisting'] == True \
+            and modify_waypoint_result['nModified'] == 1:
+        success = True
+    else:
+        logger.warning('modify_waypoint, error modifying waypoint, '
+            'modify_waypoint_result={0}'.format(modify_waypoint_result))
+    return success
 
 
 def modify_waypoints(waypoints_to_modify):
     """
-
-    :param waypoints_to_modify:
-    :return:
+    modify a list of waypoints.
+    :param waypoints_to_modify: a list of modified waypoints to update in the
+    database
+    :return: true if all waypoints were modified; false if they were not
     """
-    modified_waypoint_ids = []
-    if waypoints_to_modify is not None:
-        for waypoint_to_modify in waypoints_to_modify:
-            modified_waypoint_id = modify_waypoint(waypoint_to_modify)
-            if modified_waypoint_id is not None:
-                modified_waypoint_ids.append(modified_waypoint_id)
-            else:
-                logger.error('modify_waypoints(): modified_waypoint_id is None')
-    else:
+    waypoints_modified = False
+    if waypoints_to_modify is None:
         logger.error('modify_waypoints(): waypoints_to_modify is None')
-    return modified_waypoint_ids
+        return waypoints_modified
+
+    waypoints_modified = True
+    for waypoint_to_modify in waypoints_to_modify:
+        waypoint_modified = modify_waypoint(waypoint_to_modify)
+        if waypoint_modified is False:
+            logger.error('modify_waypoints, failed to modify waypoint')
+            waypoints_modified = False
+            break
+
+    return waypoints_modified
 
 
 def delete_waypoint(waypoint_id):
@@ -237,8 +247,3 @@ def delete_waypoints(waypoint_ids):
     else:
         logger.error('delete_waypoints(): waypoint_ids is None')
     return success
-
-
-
-
-
