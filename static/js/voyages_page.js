@@ -97,13 +97,16 @@ function clear_waypoint_form(clear_waypoints_list)
     $('#waypoint_notes').val('');
 }
 
-function clear_trade_form()
+function clear_trade_form(clear_list)
 {
-    var trades_list = $('#trades_list');
-    trades_list.empty();
-    trades_list.append('<option id=select_trade>Select A Trade...</trade>');
+    if (clear_list) {
+        var trades_list = $('#trades_list');
+        trades_list.empty();
+        trades_list.append('<option id=select_trade>Select A Trade...</trade>');
+    }
+
     $('#trade_id').text('');
-    // TODO: clear bought/sold
+    $('.trade_bought_sold').removeProp('checked');
     $('#trade_item').val('');
     $('#trade_quantity').val('');
 }
@@ -121,6 +124,11 @@ function clear_form_btn_click()
 function reset_waypoint_form_btn_click() {
     console.log('reset_waypoint_form_btn_click()');
     clear_waypoint_form(false);
+}
+
+function reset_trade_form_btn_click() {
+    console.log('reset_trade_form_btn_click()');
+    clear_trade_form(false);
 }
 
 $(document).ready(function () {
@@ -144,4 +152,5 @@ $(document).ready(function () {
     $('#trades').change(trade_select_change);
     $('#clear_form_btn').click(clear_form_btn_click);
     $('#reset_waypoint_form_btn').click(reset_waypoint_form_btn_click);
+    $('#reset_trade_form_btn').click(reset_trade_form_btn_click);
 });

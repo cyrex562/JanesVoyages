@@ -209,9 +209,16 @@ def trades_add():
 def trades_modify():
     app.logger.debug('trades_modify')
     trades_to_modify = request.json["params"]["trades_to_modify"]
-    modified_trade_ids = trade_model.modify_trades(trades_to_modify)
-    return jsonify(message="success",
-                   data={"modified_trade_ids": modified_trade_ids})
+    trades_modified = trade_model.modify_trades(trades_to_modify)
+    if trades_modified is True:
+        modified_trade_ids = []
+        for ttm in trades_to_modify:
+            modified_trade_ids.append(ttm['trade_id'])
+        result = jsonify(message="success", data={'modified_trade_ids': modified_trade_ids})
+    else:
+        result = jsonify(message="failure", data={})
+
+    return result
 
 
 @app.route('/trades/delete', methods=['POST'])

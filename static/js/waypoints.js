@@ -88,8 +88,6 @@ function hide_waypoint_form() {
 function show_waypoint_form() {
     console.log('show_waypoint_form()');
     $('#waypoint_sub_form').collapse('show');
-    //$('#waypoints').class('show');
-    //$('#waypoints').removeClass('hidden');
 }
 
 function refresh_waypoints_list(in_voyage_id) {
@@ -101,11 +99,12 @@ function get_waypoints_for_voyage_cb(response) {
     console.log('get_waypoints_for_voyage_cb()');
     if (response.message === 'success') {
         refresh_waypoints_list_callback(response);
-        if (response.data.found_waypoints.length > 0) {
-            show_waypoint_form();
-        } else {
-            hide_waypoint_form();
-        }
+        show_waypoint_form();
+        //if (response.data.found_waypoints.length > 0) {
+        //    clear_waypoint
+        //} else {
+        //    hide_waypoint_form();
+        //}
     } else {
         console.log('danger', 'failed to get waypoints for voyage');
     }

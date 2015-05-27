@@ -145,14 +145,20 @@ def modify_trade(trade_to_modify):
     :param trade_to_modify:
     :return:
     """
-    modified_trade_id = None
+    success = False
+
     if trade_to_modify is None:
-        return modified_trade_id
+        return False
 
-    modified_trade_id = mongo.db.trades.update({"_id": ObjectId(trade_to_modify[
-        "_id"])}, trade_to_modify)
+    modify_trade_result = mongo.db.trades.update({"_id": ObjectId(trade_to_modify[
+        "trade_id"])}, trade_to_modify)
+    if modify_trade_result['updatedExisting'] is True \
+            and modify_trade_result["nModified"] == 1:
+        success = True
+    else:
+        logger.warning('modify_trade, error modifying trade, modify_trade_result={0}'.format(modify_trade_result))
 
-    return modified_trade_id
+    return success
 
 
 def modify_trades(trades_to_modify):
@@ -161,15 +167,20 @@ def modify_trades(trades_to_modify):
     :param trades_to_modify:
     :return:
     """
-    modified_trade_ids = []
-    if trades_to_modify is None:
-        return modified_trade_ids
+    trades_modified = False
 
+    if trades_to_modify is None:
+        logger.error('modify_trades(): trades_to_modify is None')
+        return trades_modified
+
+    trades_modified = True
     for trade_to_modify in trades_to_modify:
-        modified_trade_id = modify_trade(trade_to_modify)
-        if modified_trade_id is not None:
-            modified_trade_ids.append(modified_trade_id)
-    return modified_trade_ids
+        trade_modified = modify_trade(trade_to_modify)
+        if trade_modified is False:
+            trades_modified = False
+            break
+
+    return trades_modified
 
 
 def delete_trade(trade_to_delete):

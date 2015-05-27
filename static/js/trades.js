@@ -3,12 +3,13 @@
  */
 function get_trade_from_form() {
     console.log('get_trade_from_form()');
+    var bought_sold = $("input:radio[name='trade_bought_sold']:checked").val();
+    console.log('get_Trade_from_form(), trade_bought_sold=', bought_sold);
     return {
         trade_id: $('#trade_id').text(),
-        trade_bought_sold: $('.trade_bought_sold').val(),
+        trade_bought_sold: bought_sold,
         trade_item: $('#trade_item').val(),
         trade_quantity: parseInt($('#trade_quantity').val()),
-        //waypoint_id: $('#trade_waypoint_id').text()
         waypoint_id: $('#waypoint_id').text()
     }
 }
@@ -69,16 +70,9 @@ function refresh_trades_list_cb(response) {
     }
 }
 
-function refresh_trades_list(in_trade_id) {
+function refresh_trades_list(in_waypoint_id) {
     console.log('refresh_trades_list()');
-    var trade_list_ids = [];
-    if (in_trade_id !== null) {
-        trade_list_ids.push(in_trade_id);
-    }
-    $('#trades').each(function () {
-        trade_list_ids.push($(this).val());
-    });
-    send_request('trades/get', 'POST', {trade_ids: trade_list_ids},
+    send_request('trades/get', 'POST', {waypoint_id: in_waypoint_id},
         refresh_trades_list_cb);
 }
 
@@ -111,9 +105,11 @@ function trade_select_change_cb(response) {
 function trade_select_change() {
     console.log('trade_select_change()');
     var selected_trade_id = $('#trades').val();
-    if (selected_trade_id.indexOf("select") == -1) {
+    if (selected_trade_id.indexOf("Select") == -1) {
         send_request('trades/get', 'POST', {trade_ids: [selected_trade_id]},
             trade_select_change_cb);
+    } else {
+        clear_trade_form(false);
     }
 }
 
@@ -133,8 +129,9 @@ function add_trade_callback(response) {
     console.log('add_trade_callback()');
     if (response.message === 'success') {
         var added_trade_id = response.data.added_trade_ids[0];
+        var current_waypoint_id = $('#waypoint_id').text();
         set_status_bar('success', 'trade added');
-        refresh_trades_list(added_trade_id);
+        refresh_trades_list(current_waypoint_id);
         set_selected_trade(added_trade_id);
     } else {
         set_status_bar('danger', 'failed to add trade');
@@ -152,11 +149,12 @@ function add_trade() {
 
 function modify_trade_callback(response) {
     console.log('modify_trade_callback()');
-    if (resposne.message === 'success') {
+    if (response.message === 'success') {
         set_status_bar('success', 'trade modified');
         var modified_trade_id = response.data.modified_trade_ids[0];
-        refresh_trades_list(modified_trade_id);
-        set_selected_trade(modified_trade_id);
+        var current_waypoint_id = $('#waypoint_id').text();
+        refresh_trades_list(current_waypoint_id);
+        clear_trade_form(false);
     } else {
         set_status_bar('danger', 'trade not modified');
     }
@@ -166,7 +164,7 @@ function modify_trade() {
     console.log('modify_trade_btn_click()');
     var trade_to_modify = get_trade_from_form();
     var trades_to_modify = [];
-    trade_to_modify.push(trade_to_modify);
+    trades_to_modify.push(trade_to_modify);
     send_request('trades/modify', 'POST', {trades_to_modify: trades_to_modify},
         modify_trade_callback);
 }
@@ -175,9 +173,11 @@ function delete_trade_callback(response) {
     console.log('delete_trade_callback()');
     if (response.message === 'success') {
         set_status_bar('success', 'trade deleted');
-        var deleted_trade_id = response.data.deleted_trades[0];
-        refresh_trades_list(deleted_trade_id);
-        set_selected_trade(deleted_trade_id);
+        //var deleted_trade_id = response.data.deleted_trades[0];
+        var current_waypoint_id = $('#waypoint_id').text();
+        refresh_trades_list(current_waypoint_id);
+        clear_trade_form(false);
+        //set_selected_trade(deleted_trade_id);
     } else {
         set_status_bar('danger', 'trade not deleted');
     }
