@@ -120,8 +120,8 @@ function set_selected_trade(trade_id) {
     trade_list.val(trade_id);
 }
 
-function get_selected_trade() {
-    console.log('get_selected_trade()');
+function get_selected_trade_id() {
+    console.log('get_selected_trade_id()');
     return $('#trades').val();
 }
 
@@ -185,9 +185,10 @@ function delete_trade_callback(response) {
 
 function delete_trade() {
     console.log('delete_trade()');
-    var selected_trade_id = get_selected_trade().trade_id;
+    var selected_trade_id = get_selected_trade_id();
     var trades_to_delete = [];
     trades_to_delete.push(selected_trade_id);
+    console.log('trades_to_delete ', trades_to_delete);
     send_request('trades/delete', 'POST',
         {trades_to_delete: trades_to_delete}, delete_trade_callback);
 }

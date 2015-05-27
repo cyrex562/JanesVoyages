@@ -193,8 +193,8 @@ def delete_trade(trade_to_delete):
     if trade_to_delete is None:
         return success
 
-    deleted_trade_result = mongo.db.trades.remove({"trade_id": trade_to_delete[
-        "trade_id"]})
+    deleted_trade_result = \
+        mongo.db.trades.remove({"_id": ObjectId(trade_to_delete)})
     if deleted_trade_result['ok'] == 1:
         success = True
     else:
@@ -210,8 +210,8 @@ def delete_trades(trades_to_delete):
         return False
 
     for trade_to_delete in trades_to_delete:
-        waypoint_deleted = delete_trade(trade_to_delete)
-        if waypoint_deleted is False:
+        trade_deleted = delete_trade(trade_to_delete)
+        if trade_deleted is False:
             success = False
             logger.error('delete_trades, failed to delete trade')
             break
