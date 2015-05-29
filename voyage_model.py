@@ -1,4 +1,5 @@
 from bson import ObjectId
+from waypoint_model import get_waypoints_by_voyage, delete_waypoints
 
 __author__ = 'root'
 
@@ -85,10 +86,11 @@ def get_voyages(voyage_ids):
     :param voyage_ids: a list of 0 or more voyage IDs to find
     :return: a list of 0 or more voyage objects
     """
+    logger.debug('get_voyages()')
     found_voyages = []
     if voyage_ids is not None:
         app.logger.debug("get_voyages(), voyage_ids: {0}"
-            .format(str(voyage_ids)))
+                         .format(str(voyage_ids)))
         if len(voyage_ids) == 0:
             found_voyages = get_all_voyages()
         else:
@@ -109,6 +111,7 @@ def add_voyage(voyage_to_add):
     :param voyage_to_add:
     :return:
     """
+    logger.debug('add_voyage')
     added_voyage_id = ''
     if voyage_to_add is not None:
         add_voyage_result = mongo.db.voyages.insert(voyage_to_add)
@@ -125,6 +128,7 @@ def add_voyages(voyages_to_add):
     :param voyages_to_add:
     :return:
     """
+    logger.debug('add_voyages()')
     added_voyage_ids = []
     if voyages_to_add is not None:
         for voyage_to_add in voyages_to_add:
@@ -142,6 +146,7 @@ def modify_voyage(voyage_to_modify):
     :param voyage_to_modify:
     :return:
     """
+    logger.debug('modify_voyage()')
     modify_voyage_result = None
     if voyage_to_modify is not None:
         modify_voyage_result = mongo.db.voyages.update(
@@ -158,6 +163,7 @@ def modify_voyages(voyages_to_modify):
     :param voyages_to_modify:
     :return:
     """
+    logger.debug('modify_voyages()')
     modified_voyage_ids = []
     if voyages_to_modify is not None:
         for voyage_to_modify in voyages_to_modify:
@@ -170,23 +176,53 @@ def modify_voyages(voyages_to_modify):
 
 
 def delete_voyage(voyage_to_delete):
-    del_voyage_result = None
+    """
+
+    :param voyage_to_delete:
+    :return:
+    """
+    logger.debug('delete_voyage()')
+    success = False
     if voyage_to_delete is not None:
+        voyage_id = voyage_to_delete["voyage_id"]
         del_voyage_result = mongo.db.voyages.remove(
-            {"voyage_id": voyage_to_delete["voyage_id"]})
+            {"_id": ObjectId(voyage_to_delete["voyage_id"])})
+        voyage_deleted = del_voyage_result['ok'] == 1
+        waypoints = get_waypoints_by_voyage(voyage_id)
+        waypoint_ids = []
+        for waypoint in waypoints:
+            waypoint_ids.append(waypoint["waypoint_id"])
+        waypoints_deleted = delete_waypoints(waypoint_ids)
+        if waypoints_deleted and voyage_deleted:
+            success = True
         logger.debug("del_voyage_result: {0}".format(del_voyage_result))
     else:
         logger.error('delete_voyage(): voyage_to_delete was None')
-    return del_voyage_result
+    return success
 
 
 def delete_voyages(voyages_to_delete):
-    deleted_voyage_ids = []
-    if voyages_to_delete is not None:
-        for voyage_to_delete in voyages_to_delete:
-            deleted_voyage_id = delete_voyage(voyage_to_delete)
-            if deleted_voyage_id is not None:
-                deleted_voyage_ids.append(deleted_voyage_id)
+    """
+
+    :param voyages_to_delete:
+    :return:
+    """
+    logger.debug('delete_voyages()')
+    success = True
+
+    if voyages_to_delete is None:
+        logger.error('delete_voyages, voyages_to_delete is None')
+        return False
+
+    for voyage_to_delete in voyages_to_delete:
+        voyage_deleted = delete_voyage(voyage_to_delete)
+        if voyage_deleted is False:
+            logger.error('delete_voyages, failed to delete voyage')
+            success = False
+            break
+
     else:
         logger.error('delete_voyages(): voyages_to_delete was None')
-    return deleted_voyage_ids
+    return success
+
+# end of file #

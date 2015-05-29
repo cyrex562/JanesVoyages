@@ -4,7 +4,6 @@
 @author Josh Madden <cyrex562@gmail.com>
 @copyright Josh Madden 2014
 """
-
 import os
 import uuid
 
@@ -27,6 +26,11 @@ waypoint_model.init(app, mongo)
 
 
 def set_session_id(in_session):
+    """
+
+    :param in_session:
+    :return:
+    """
     if 'session_id' in in_session:
         result = in_session['session_id']
     else:
@@ -37,11 +41,19 @@ def set_session_id(in_session):
 
 @app.route('/')
 def render_default():
+    """
+
+    :return:
+    """
     return redirect(url_for('render_voyages_page'))
 
 
 @app.route('/voyages', methods=['GET'])
 def render_voyages_page():
+    """
+
+    :return:
+    """
     return render_template('voyages.html')
 
 
@@ -70,8 +82,8 @@ def voyages_add():
     app.logger.debug('voyages_post')
     voyages_to_add = request.json["params"]["voyages_to_add"]
     added_voyage_ids = voyage_model.add_voyages(voyages_to_add)
-    result = jsonify(message="success", data={"added_voyage_ids":
-        added_voyage_ids})
+    result = jsonify(message="success",
+                     data={"added_voyage_ids": added_voyage_ids})
     return result
 
 
@@ -85,8 +97,8 @@ def voyages_modify():
     app.logger.debug('voyages_post')
     voyages_to_modify = request.json["params"]["voyages_to_modify"]
     modified_voyage_ids = voyage_model.modify_voyages(voyages_to_modify)
-    result = jsonify(message="success", data={"modified_voyage_ids":
-        modified_voyage_ids})
+    result = jsonify(message="success",
+                     data={"modified_voyage_ids": modified_voyage_ids})
     return result
 
 
@@ -99,9 +111,11 @@ def voyages_delete():
     """
     app.logger.debug('voyages_delete')
     voyages_to_delete = request.json["params"]["voyages_to_delete"]
-    deleted_voyage_ids = voyage_model.delete_voyages(voyages_to_delete)
-    result = jsonify(message="success", data={"deleted_voyage_ids":
-        deleted_voyage_ids})
+    success = voyage_model.delete_voyages(voyages_to_delete)
+    if success is True:
+        result = jsonify(message="success", data={})
+    else:
+        result = jsonify(message="failure", data={})
     return result
 
 
@@ -128,6 +142,10 @@ def waypoints_get():
 
 @app.route('/waypoints/add', methods=['POST'])
 def waypoints_add():
+    """
+
+    :return:
+    """
     waypoints_to_add = request.json["params"]["waypoints_to_add"]
     app.logger.debug('route: "/waypoints/add", waypoints_to_add: {0}'.format(
         waypoints_to_add))
@@ -191,13 +209,18 @@ def trades_get():
     else:
         found_trades = []
         app.logger.error('invalid params: "{0}"'.format(params))
-        app.logger.debug('trades_get, found trades count={0}'.format(len(found_trades)))
+        app.logger.debug('trades_get, found trades count={0}'
+                         .format(len(found_trades)))
     result = jsonify(message='success', data={"found_trades": found_trades})
     return result
 
 
 @app.route('/trades/add', methods=['POST'])
 def trades_add():
+    """
+
+    :return:
+    """
     app.logger.debug('trades_add')
     trades_to_add = request.json["params"]["trades_to_add"]
     added_trade_ids = trade_model.add_trades(trades_to_add)
@@ -207,6 +230,10 @@ def trades_add():
 
 @app.route('/trades/modify', methods=['POST'])
 def trades_modify():
+    """
+
+    :return:
+    """
     app.logger.debug('trades_modify')
     trades_to_modify = request.json["params"]["trades_to_modify"]
     trades_modified = trade_model.modify_trades(trades_to_modify)
@@ -214,7 +241,8 @@ def trades_modify():
         modified_trade_ids = []
         for ttm in trades_to_modify:
             modified_trade_ids.append(ttm['trade_id'])
-        result = jsonify(message="success", data={'modified_trade_ids': modified_trade_ids})
+        result = jsonify(message="success",
+                         data={'modified_trade_ids': modified_trade_ids})
     else:
         result = jsonify(message="failure", data={})
 
@@ -223,6 +251,10 @@ def trades_modify():
 
 @app.route('/trades/delete', methods=['POST'])
 def trades_delete():
+    """
+
+    :return:
+    """
     app.logger.debug('trades_delete')
     trades_to_delete = request.json["params"]["trades_to_delete"]
     success = trade_model.delete_trades(trades_to_delete)
@@ -233,8 +265,9 @@ def trades_delete():
     return result
 
 
+# entry point #
 if __name__ == '__main__':
     app.run()
 
 
-# END OF FILE
+# END OF FILE #

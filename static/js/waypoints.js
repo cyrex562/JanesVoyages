@@ -137,9 +137,13 @@ function waypoint_select_change_cb(response) {
 function waypoint_select_change() {
     console.log('waypoint_select_change()');
     var selected_waypoint_id = $('#waypoints').val();
-    send_request('waypoints/get', 'POST',
+    if (selected_waypoint_id.toLowerCase().indexOf('select') == -1) {
+        send_request('waypoints/get', 'POST',
         {waypoint_ids: [selected_waypoint_id]}, waypoint_select_change_cb);
-
+    } else {
+        clear_waypoint_form(false);
+        hide_trade_form();
+    }
 }
 
 /**

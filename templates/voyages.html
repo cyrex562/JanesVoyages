@@ -14,8 +14,8 @@
     </script>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
-                <div class="btn-group">
+            <div class="col-xs-1">
+                <div class="btn-group btn-group-vertical">
                     <button class="btn btn-default" id="add_voyage_btn">
                         Add Voyage
                     </button>
@@ -29,10 +29,9 @@
                         Clear Form
                     </button>
                 </div>
+                <div id="status-bar">[STATUS BAR]</div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-5">
+            <div class="col-xs-6">
                 <!-- voyage_id -->
                 <div class="form-group">
                     <label for="voyage_id">Voyage ID</label>
@@ -230,7 +229,7 @@
                 </div>
 
             </div>
-            <div class="col-xs-7">
+            <div class="col-xs-5">
                 <table class="table table-striped" id="voyages_table">
                     <tr id="table_top_row">
                         <th>Voyage ID</th>

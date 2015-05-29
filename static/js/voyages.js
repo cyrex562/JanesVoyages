@@ -97,7 +97,7 @@ function refresh_voyages_table() {
 function get_voyage_form_data() {
     console.log('get_voyage_form_data()');
     var voyage = {
-        //voyage_id: $('#voyage_id').text(),
+        voyage_id: $('#voyage_id').text(),
         voyage_name: $('#voyage_name').val(),
         voyage_notes: $('#voyage_notes').val().trim(),
         ship_name: $('#ship_name').val(),
@@ -155,7 +155,8 @@ function delete_voyage_callback(response) {
     if (response.message === 'success') {
         set_status_bar('success', 'voyage deleted');
         refresh_voyages_table();
-        set_current_voyage({});
+        //set_current_voyage({});
+        clear_voyage_form();
     } else {
         set_status_bar('danger', 'failed to delete voyage');
     }
