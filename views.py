@@ -14,6 +14,7 @@ from flask.ext.pymongo import PyMongo
 import voyage_model
 import trade_model
 import waypoint_model
+import source_model
 
 VERSION = 'version 0.1.3'
 COPYRIGHT = 'Copyright Fifth Column Group 2015'
@@ -25,6 +26,7 @@ mongo = PyMongo(app)
 voyage_model.init(app, mongo)
 trade_model.init(app, mongo)
 waypoint_model.init(app, mongo)
+source_model.init(app, mongo)
 
 
 def set_session_id(in_session):
@@ -264,6 +266,52 @@ def trades_delete():
     trades_to_delete = request.json["params"]["trades_to_delete"]
     success = trade_model.delete_trades(trades_to_delete)
     if success is True:
+        result = jsonify(message="success", data={})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
+
+
+@app.route('/sources/get', methods=['POST'])
+def sources_get():
+    params = request.json['params']
+    if 'source_ids' in params:
+        source_ids = params['source_ids']
+        found_sources = source_model.get_sources(source_ids)
+    elif 'voyage_id' in params:
+        voyage_id = params['voyage_id']
+        found_sources = source_model.get_sources_by_voyage(voyage_id)
+    else:
+        found_sources = []
+    return jsonify(message="success", data={"found_sources": found_sources})
+
+
+@app.route('/sources/add', methods=['POST'])
+def sources_add():
+    sources_to_add = request.json["params"]["sources_to_add"]
+    added_source_ids = source_model.add_sources(sources_to_add)
+    return jsonify(message="success", data={"added_source_ids": added_source_ids})
+
+
+@app.route('/sources/modify', methods=['POST'])
+def sources_modify():
+    sources_to_modify = request.json["params"]["sources_to_modify"]
+    sources_modified = source_model.modify_sources(sources_to_modify)
+    if sources_modified is True:
+        modified_source_ids = []
+        for stm in sources_to_modify:
+            modified_source_ids.append(stm['source_id'])
+        result = jsonify(message="success", data={'modified_source_ids': modified_source_ids})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
+
+
+@app.route('/sources/delete', methods=['POST'])
+def sources_delete():
+    sources_to_delete = request.json['params']['sources_to_delete']
+    sources_deleted = source_model.delete_sources(sources_to_delete)
+    if sources_deleted is True:
         result = jsonify(message="success", data={})
     else:
         result = jsonify(message="failure", data={})

@@ -81,8 +81,6 @@ function refresh_waypoints_list_callback(response) {
 function hide_waypoint_form() {
     console.log('hide_waypoint_form()');
     $('#waypoint_sub_form').collapse('hide');
-    //$('#waypoint_sub_form').class('hidden');
-    //$('#waypoint_sub_form').removeClass('show');
 }
 
 function show_waypoint_form() {

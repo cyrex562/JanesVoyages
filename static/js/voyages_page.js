@@ -174,6 +174,7 @@ $(document).ready(function () {
     refresh_voyages_table();
     hide_waypoint_form();
     hide_trade_form();
+    hide_source_form();
     $("#add_voyage_btn").click(add_voyage_btn_click);
     $("#modify_voyage_btn").click(modify_voyage_btn_click);
     $('#delete_voyage_btn').click(delete_voyage_btn_click);
