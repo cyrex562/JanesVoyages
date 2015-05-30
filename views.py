@@ -15,6 +15,8 @@ import voyage_model
 import trade_model
 import waypoint_model
 
+VERSION = 'version 0.1.3'
+COPYRIGHT = 'Copyright Fifth Column Group 2015'
 
 app = Flask(__name__)
 app.debug = True
@@ -54,7 +56,7 @@ def render_voyages_page():
 
     :return:
     """
-    return render_template('voyages.html')
+    return render_template('voyages.html', version=VERSION, copyright=COPYRIGHT)
 
 
 @app.route('/voyages/get', methods=['POST'])
@@ -68,6 +70,9 @@ def voyages_get():
     app.logger.debug('route: "/voyages/get", voyage_ids: {0}'.format(
         voyage_ids))
     found_voyages = voyage_model.get_voyages(voyage_ids)
+    for voyage in found_voyages:
+        voyage['waypoint_count'] = \
+            waypoint_model.get_voyage_waypoint_count(voyage['voyage_id'])
     result = jsonify(message="success", data={"found_voyages": found_voyages})
     return result
 

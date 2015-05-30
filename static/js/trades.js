@@ -10,7 +10,8 @@ function get_trade_from_form() {
         trade_bought_sold: bought_sold,
         trade_item: $('#trade_item').val(),
         trade_quantity: parseInt($('#trade_quantity').val()),
-        waypoint_id: $('#waypoint_id').text()
+        waypoint_id: $('#waypoint_id').text(),
+        trade_notes: $('#trade_notes').val().trim()
     }
 }
 
@@ -30,10 +31,12 @@ function fill_trade_form(in_trade) {
     $('#trade_item').val(in_trade.trade_item);
     $('#trade_quantity').val(parseInt(in_trade.trade_quantity));
     console.log('fill_trade_form, in_trade.trade_bought_sold="'
-        + in_trade.trade_bought_sold + '"');32
-    $('input[type="radio"][name=trade_bought_sold][value=' + in_trade.trade_bought_sold + ']').prop('checked', true);
+        + in_trade.trade_bought_sold + '"');
+    $('input[type="radio"][name=trade_bought_sold][value=' +
+        in_trade.trade_bought_sold + ']').prop('checked', true);
     //$('.trade_bought_sold').val(in_trade.trade_bought_sold);
     $('#trade_waypoint_id').text(in_trade.waypoint_id);
+    $('#trade_notes').val(in_trade.trade_notes);
 }
 
 /**

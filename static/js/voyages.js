@@ -14,6 +14,7 @@ function fill_voyage_form(response) {
             $('#voyage_name').val(curr_voyage.voyage_name);
             /** @namespace curr_voyage.voyage_id */
             $('#voyage_id').text(curr_voyage.voyage_id);
+            $('#voyage_id_form_group').show();
             /** @namespace curr_voyage.voyage_notes */
             $('#voyage_notes').val(curr_voyage.voyage_notes);
             /** @namespace curr_voyage.ship_name */
@@ -25,7 +26,7 @@ function fill_voyage_form(response) {
             /** @namespace curr_voyage.ship_notes */
             $('#ship_notes').val(curr_voyage.ship_notes);
             get_waypoints_for_voyage(curr_voyage.voyage_id);
-
+            get_sources_for_voyage(curr_voyage.voyage_id);
         } else {
             console.log('bad found_voyages length: ' + found_voyages.length);
         }
@@ -51,17 +52,20 @@ function gen_voyage_row(voyage) {
     console.log('gen_voyage_row()');
     var voyage_row = '' +
         '<tr class="voyage_row">' +
-        '<td class="voyage_id_cell">[voyage_id]</td>' +
+        '<td class="voyage_id_cell" data-toggle="tooltip" title="[voyage_id]"]>[voyage_id_brief]...</td>' +
         '<td class="voyage_name_cell">[voyage_name]</td>' +
         '<td class="ship_name_cell">[ship_name]</td>' +
         '<td class="ship_captain_cell">[ship_captain]</td>' +
         '<td class="ship_flag_cell">[ship_flag]</td>' +
+        '<td class="waypoint_count_cell">[waypoint_count]</td>' +
         '</tr>';
     voyage_row = voyage_row.replace(/\[voyage_id\]/g, voyage.voyage_id);
+    voyage_row = voyage_row.replace(/\[voyage_id_brief\]/g, voyage.voyage_id.substring(0,4));
     voyage_row = voyage_row.replace(/\[voyage_name\]/g, voyage.voyage_name);
     voyage_row = voyage_row.replace(/\[ship_name\]/g, voyage.ship_name);
     voyage_row = voyage_row.replace(/\[ship_captain\]/g, voyage.ship_captain);
     voyage_row = voyage_row.replace(/\[ship_flag]/g, voyage.ship_flag);
+    voyage_row = voyage_row.replace(/\[waypoint_count]/g, voyage.waypoint_count);
     return voyage_row;
 }
 

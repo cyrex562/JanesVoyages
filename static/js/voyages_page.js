@@ -29,7 +29,7 @@ function set_status_bar(level, message) {
 
 function voyage_row_click() {
     console.log('voyage_row_click()');
-    var voyage_id = $(this).find('.voyage_id_cell').text();
+    var voyage_id = $(this).find('.voyage_id_cell').attr('title');
     set_current_voyage(voyage_id)
 }
 
@@ -72,9 +72,22 @@ function delete_trade_btn_click() {
     delete_trade();
 }
 
+function add_source_btn_click() {
+    add_source();
+}
+
+function modify_source_btn_click() {
+    modify_source();
+}
+
+function delete_source_btn_click() {
+    delete_source();
+}
+
 function clear_voyage_form() {
     $('#voyage_name').val('');
     $('#voyage_id').text('');
+    $('#voyage_id_form_group').hide();
     $('#voyage_notes').val('');
     $('#ship_name').val('');
     $('#ship_captain').val('');
@@ -100,15 +113,28 @@ function clear_waypoint_form(clear_waypoints_list)
 function clear_trade_form(clear_list)
 {
     if (clear_list) {
-        var trades_list = $('#trades_list');
+        var trades_list = $('#trades');
         trades_list.empty();
-        trades_list.append('<option id=select_trade>Select A Trade...</trade>');
+        trades_list.append('<option id="select_trade">Select A Trade...</option>');
     }
 
     $('#trade_id').text('');
     $('.trade_bought_sold').removeProp('checked');
     $('#trade_item').val('');
     $('#trade_quantity').val('');
+    $('#trade_notes').val('');
+}
+
+function clear_source_form(clear_list) {
+    if (clear_list) {
+        var sources_list = $('#sources');
+        sources_list.empty();
+        sources_list.append('<option id="select_source">Select A Source...</option>');
+    }
+
+    $('#source_id').text('');
+    $('#source_citation').val('');
+    $('#source_notes').val('');
 }
 
 function clear_form_btn_click()
@@ -116,10 +142,14 @@ function clear_form_btn_click()
     console.log('clear_form_btn_click()');
     clear_voyage_form();
     clear_waypoint_form(true);
-    clear_trade_form();
+    clear_trade_form(true);
+    clear_source_form(true);
     hide_waypoint_form();
     hide_trade_form();
+    hide_source_form();
 }
+
+
 
 function reset_waypoint_form_btn_click() {
     console.log('reset_waypoint_form_btn_click()');
@@ -129,6 +159,11 @@ function reset_waypoint_form_btn_click() {
 function reset_trade_form_btn_click() {
     console.log('reset_trade_form_btn_click()');
     clear_trade_form(false);
+}
+
+function reset_source_form_btn_click() {
+    console.log("reset source form btn click");
+    clear_source_form(false);
 }
 
 $(document).ready(function () {
@@ -153,4 +188,10 @@ $(document).ready(function () {
     $('#clear_form_btn').click(clear_form_btn_click);
     $('#reset_waypoint_form_btn').click(reset_waypoint_form_btn_click);
     $('#reset_trade_form_btn').click(reset_trade_form_btn_click);
+    /* source */
+    $('#add_source_btn').click(add_source_btn_click);
+    $('#modify_source_btn').click(modify_source_btn_click);
+    $('#delete_source_btn').click(delete_source_btn_click);
+    $('#sources').change(source_select_change);
+    $('#reset_source_form_btn').click(reset_source_form_btn_click);
 });

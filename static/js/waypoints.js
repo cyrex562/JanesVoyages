@@ -100,11 +100,6 @@ function get_waypoints_for_voyage_cb(response) {
     if (response.message === 'success') {
         refresh_waypoints_list_callback(response);
         show_waypoint_form();
-        //if (response.data.found_waypoints.length > 0) {
-        //    clear_waypoint
-        //} else {
-        //    hide_waypoint_form();
-        //}
     } else {
         console.log('danger', 'failed to get waypoints for voyage');
     }

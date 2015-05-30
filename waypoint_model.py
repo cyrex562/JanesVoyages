@@ -101,6 +101,11 @@ def get_waypoints_by_voyage(voyage_id):
     return found_waypoints_out
 
 
+def get_voyage_waypoint_count(voyage_id):
+    voyage_waypoints = get_waypoints_by_voyage(voyage_id)
+    return len(voyage_waypoints)
+
+
 def get_waypoints(waypoint_ids):
     """
 
