@@ -73,18 +73,22 @@ function delete_trade_btn_click() {
 }
 
 function add_source_btn_click() {
+    console.log('add_source_btn_click');
     add_source();
 }
 
 function modify_source_btn_click() {
+    console.log('modify_source_btn_click');
     modify_source();
 }
 
 function delete_source_btn_click() {
+    console.log('delete_source_btn_click');
     delete_source();
 }
 
 function clear_voyage_form() {
+    console.log('clear_voyage_form');
     $('#voyage_name').val('');
     $('#voyage_id').text('');
     $('#voyage_id_form_group').hide();
@@ -97,6 +101,7 @@ function clear_voyage_form() {
 
 function clear_waypoint_form(clear_waypoints_list)
 {
+    console.log('clear_waypoint_form');
     if (clear_waypoints_list === true) {
         reset_waypoints_list();
     }
@@ -112,6 +117,7 @@ function clear_waypoint_form(clear_waypoints_list)
 
 function clear_trade_form(clear_list)
 {
+    console.log('clear_trade_form');
     if (clear_list) {
         var trades_list = $('#trades');
         trades_list.empty();
@@ -126,6 +132,7 @@ function clear_trade_form(clear_list)
 }
 
 function clear_source_form(clear_list) {
+    console.log('clear_source_form');
     if (clear_list) {
         var sources_list = $('#sources');
         sources_list.empty();

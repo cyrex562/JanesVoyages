@@ -56,6 +56,7 @@ def get_trade_by_id(trade_id):
         return found_trade_out
     found_trade = mongo.db.trades.find_one({"_id": ObjectId(trade_id)})
     found_trade_out = convert_trade_ids(found_trade)
+    logger.debug('get_trade_by_id(): found_trade_out={0}'.format(str(found_trade_out)))
     return found_trade_out
 
 

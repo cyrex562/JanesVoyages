@@ -283,6 +283,7 @@ def sources_get():
         found_sources = source_model.get_sources_by_voyage(voyage_id)
     else:
         found_sources = []
+    app.logger.debug('found_sources={0}'.format(found_sources))
     return jsonify(message="success", data={"found_sources": found_sources})
 
 
@@ -290,7 +291,9 @@ def sources_get():
 def sources_add():
     sources_to_add = request.json["params"]["sources_to_add"]
     added_source_ids = source_model.add_sources(sources_to_add)
-    return jsonify(message="success", data={"added_source_ids": added_source_ids})
+    app.logger.debug('added_source_ids: {0}'.format(added_source_ids))
+    return jsonify(message="success",
+                   data={"added_source_ids": added_source_ids})
 
 
 @app.route('/sources/modify', methods=['POST'])
@@ -309,7 +312,7 @@ def sources_modify():
 
 @app.route('/sources/delete', methods=['POST'])
 def sources_delete():
-    sources_to_delete = request.json['params']['sources_to_delete']
+    sources_to_delete = request.json['params']['source_ids']
     sources_deleted = source_model.delete_sources(sources_to_delete)
     if sources_deleted is True:
         result = jsonify(message="success", data={})

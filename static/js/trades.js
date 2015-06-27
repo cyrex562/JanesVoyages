@@ -56,6 +56,10 @@ function gen_trade_option(trade) {
     return trade_option;
 }
 
+/**
+ *
+ * @param response
+ */
 function refresh_trades_list_cb(response) {
     console.log('refresh_trades_list_cb()');
     var trades_list = $('#trades');
@@ -73,18 +77,28 @@ function refresh_trades_list_cb(response) {
     }
 }
 
+/**
+ *
+ * @param in_waypoint_id
+ */
 function refresh_trades_list(in_waypoint_id) {
     console.log('refresh_trades_list()');
     send_request('trades/get', 'POST', {waypoint_id: in_waypoint_id},
         refresh_trades_list_cb);
 }
 
+/**
+ *
+ * @param response
+ */
 function get_trades_for_waypoint_cb(response) {
     console.log('get_trades_for_waypoint_cb()');
     if (response.message === 'success') {
+        set_status_bar('success', 'trades retrieved for waypoint');
         refresh_trades_list_cb(response);
     } else {
         console.log('danger', 'failed to get trades for waypoint');
+        set_status_bar('danger', 'failed to get trades for waypoint');
     }
 }
 
@@ -94,14 +108,20 @@ function get_trades_for_waypoint(waypoint_id) {
         get_trades_for_waypoint_cb);
 }
 
+/**
+ *
+ * @param response
+ */
 function trade_select_change_cb(response) {
     console.log('trade_select_change_cb()');
     if (response.message === 'success') {
         var found_trade = response.data.found_trades[0];
         console.log('trade retrieved, ', found_trade);
         fill_trade_form(found_trade);
+        set_status_bar("success", "trade selection changed");
     } else {
         console.log('failed to get trade');
+        set_status_bar("danger", "failed to change trade selection");
     }
 }
 

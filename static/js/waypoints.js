@@ -98,8 +98,10 @@ function get_waypoints_for_voyage_cb(response) {
     if (response.message === 'success') {
         refresh_waypoints_list_callback(response);
         show_waypoint_form();
+        set_status_bar("success", "waypoints retrieved for voyage");
     } else {
         console.log('danger', 'failed to get waypoints for voyage');
+        set_status_bar("danger", "failed to get waypoints for voyage");
     }
 }
 
@@ -119,11 +121,14 @@ function waypoint_select_change_cb(response) {
             get_trades_for_waypoint(found_waypoint.waypoint_id);
             clear_trade_form();
             $('#trade_waypoint_id').text(found_waypoint.waypoint_id);
+
         } else {
             hide_trade_form();
         }
+        set_status_bar("success", "waypoint selection changed");
     } else {
-        console.log('failed to get waypoint')
+        console.log('failed to get waypoint');
+        set_status_bar("danger", "failed to change waypoint selection");
     }
 }
 

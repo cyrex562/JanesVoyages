@@ -67,16 +67,22 @@ function show_source_form() {
     $('#sources_sub_form').collapse('show');
 }
 
-function refresh_sources_list(in_source_id) {
+function refresh_sources_list(in_voyage_id) {
     console.log('refresh_sources_list');
-    send_request('sources/get', 'POST', {source_id: in_source_id}, get_sources_for_voyage_cb);
+    //send_request('sources/get', 'POST', {voayge_id: in_voyage_id}, get_sources_for_voyage_cb);
+    get_sources_for_voyage(in_voyage_id);
 }
 
+/**
+ *
+ * @param response
+ */
 function get_sources_for_voyage_cb(response) {
     console.log("get sources for voyage cb");
     if (response.message == 'success') {
         refresh_sources_list_callback(response);
         show_source_form();
+        set_status_bar('success', 'sources retrieved for voyage');
     } else {
         set_status_bar('danger', 'failed to get sources for voyage');
     }
@@ -94,8 +100,10 @@ function source_select_change_cb(response) {
             var found_source = response.data.found_sources[0];
             fill_source_form(found_source);
         }
+        set_status_bar('success', 'source selection changed');
     } else {
         console.log('failed to get source');
+        set_status_bar('danger', 'failed to set source selection');
     }
 }
 
@@ -103,17 +111,18 @@ function source_select_change() {
     console.log('source select change');
     var selected_source_id = $('#sources').val();
     if (selected_source_id.toLowerCase().indexOf('select') === -1) {
-        send_request('sources/get', 'POST', {source_ids: [selected_source_id]}, source_select_change_cb);
+        send_request('sources/get', 'POST', {source_ids: [selected_source_id]},
+            source_select_change_cb);
     } else {
         clear_source_form(false);
     }
 }
 
-function set_selected_source(source_id) {
-    console.log('set_selected_source');
-    var source_list = $('#sources');
-    source_list.val(source_id);
-}
+//function set_selected_source(source_id) {
+//    console.log('set_selected_source');
+//    var source_list = $('#sources');
+//    source_list.val(source_id);
+//}
 
 function get_selected_source_id() {
     console.log('get selected source id');
@@ -121,22 +130,25 @@ function get_selected_source_id() {
 }
 
 function add_source_callback(response) {
-    console.log('add source callback');
+    console.log('add source callback, response=' + response.toString());
     if (response.message === 'success') {
-        var added_source_id = response.data.added_source_ids[0];
+        //var added_source_id = response.data.added_source_ids[0];
         set_status_bar('success', 'source added');
         var current_voyage_id = $('#voyage_id').text();
         refresh_sources_list(current_voyage_id);
-        set_selected_source(added_source_id);
     } else {
         set_status_bar('danger', 'failed to add source');
     }
 }
 
+/**
+ *
+ */
 function add_source() {
     console.log('add source');
     var source_to_add = get_source_from_form();
     var sources_to_add = [source_to_add];
+    console.log('sources_to_add=' + sources_to_add.toString());
     send_request('sources/add', 'POST', {sources_to_add: sources_to_add}, add_source_callback);
 }
 
@@ -147,6 +159,8 @@ function modify_source_callback(response) {
         var current_voyage_id = $('#voyage_id').text();
         refresh_sources_list(current_voyage_id);
         clear_source_form(false);
+    } else {
+        set_status_bar('danger', 'failed to modify source');
     }
 }
 
@@ -154,7 +168,8 @@ function modify_source() {
     console.log('modify_source');
     var source_to_modify = get_source_from_form();
     var sources_to_modify = [source_to_modify];
-    send_request('sources/modify', 'POST', {sources_to_modify: sources_to_modify}, modify_source_callback);
+    send_request('sources/modify', 'POST',
+        {sources_to_modify: sources_to_modify}, modify_source_callback);
 }
 
 function delete_source_callback(response) {
@@ -173,5 +188,6 @@ function delete_source() {
     console.log('delete source');
     var selected_source_id = get_selected_source_id();
     var source_ids = [selected_source_id];
-    send_request('sources/delete', 'POST', {source_ids: source_ids}, delete_source_callback);
+    send_request('sources/delete', 'POST', {source_ids: source_ids},
+        delete_source_callback);
 }
