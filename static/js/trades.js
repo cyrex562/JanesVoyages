@@ -177,7 +177,7 @@ function modify_trade_callback(response) {
     console.log('modify_trade_callback()');
     if (response.message === 'success') {
         set_status_bar('success', 'trade modified');
-        var modified_trade_id = response.data.modified_trade_ids[0];
+        //var modified_trade_id = response.data.modified_trade_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
         refresh_trades_list(current_waypoint_id);
         clear_trade_form(false);

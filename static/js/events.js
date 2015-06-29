@@ -110,7 +110,7 @@ function get_selected_event_id() {
 function add_event_cb(response) {
     console.log("add_event_cb");
     if (response.message === 'success') {
-        var added_event_id = response.data.added_event_ids[0];
+        //var added_event_id = response.data.added_event_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
         set_status_bar('success', 'event added');
         //refresh_event_list(current_waypoint_id);
@@ -130,7 +130,7 @@ function add_event() {
 function modify_event_cb(response) {
     console.log("add_event_cb");
     if (response.message === 'success') {
-        var modified_event_id = response.data.modified_event_ids[0];
+        //var modified_event_id = response.data.modified_event_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
         set_status_bar('success', 'event modified');
         get_events_for_waypoint(current_waypoint_id);
