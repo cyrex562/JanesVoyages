@@ -1,4 +1,5 @@
 from bson import ObjectId
+from source_model import delete_sources, get_sources_by_voyage
 from waypoint_model import get_waypoints_by_voyage, delete_waypoints
 
 __author__ = 'root'
@@ -147,14 +148,18 @@ def modify_voyage(voyage_to_modify):
     :return:
     """
     logger.debug('modify_voyage()')
+    success = False
     modify_voyage_result = None
     if voyage_to_modify is not None:
         modify_voyage_result = mongo.db.voyages.update(
-            {"voyage_id": voyage_to_modify["voyage_id"]}, voyage_to_modify)
+            {"_id": ObjectId(voyage_to_modify["voyage_id"])},
+            voyage_to_modify)
         logger.debug("modify_voyage_result: {0}".format(modify_voyage_result))
+        if modify_voyage_result['updatedExisting'] is True and modify_voyage_result["nModified"] == 1:
+            success = True
     else:
         logger.error('modify_voyage(): voyage to modify was None')
-    return modify_voyage_result
+    return success
 
 
 def modify_voyages(voyages_to_modify):
@@ -164,15 +169,16 @@ def modify_voyages(voyages_to_modify):
     :return:
     """
     logger.debug('modify_voyages()')
-    modified_voyage_ids = []
+    success = True
     if voyages_to_modify is not None:
         for voyage_to_modify in voyages_to_modify:
-            modified_voyage_id = modify_voyage(voyage_to_modify)
-            if modified_voyage_id is not None:
-                modified_voyage_ids.append(modified_voyage_id)
+            voyage_modified = modify_voyage(voyage_to_modify)
+            if voyage_modified is False:
+                success = False
+                break
     else:
         logger.error('modify_voyages(): voyages_to_modify was None')
-    return modified_voyage_ids
+    return success
 
 
 def delete_voyage(voyage_to_delete):
@@ -193,7 +199,14 @@ def delete_voyage(voyage_to_delete):
         for waypoint in waypoints:
             waypoint_ids.append(waypoint["waypoint_id"])
         waypoints_deleted = delete_waypoints(waypoint_ids)
-        if waypoints_deleted and voyage_deleted:
+
+        sources = get_sources_by_voyage(voyage_id)
+        source_ids = []
+        for source in sources:
+            source_ids.append(source["source_id"])
+        sources_deleted = delete_sources(source_ids)
+
+        if waypoints_deleted and voyage_deleted and sources_deleted:
             success = True
         logger.debug("del_voyage_result: {0}".format(del_voyage_result))
     else:

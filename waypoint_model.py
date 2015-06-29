@@ -226,8 +226,11 @@ def delete_waypoint(waypoint_id):
             {"_id": ObjectId(waypoint_id)})
         delete_trade_result = \
             mongo.db.trades.remove({"waypoint_id": waypoint_id})
+        delete_event_result = \
+            mongo.db.events.remove({"waypoint_id": waypoint_id})
 
-        if delete_waypoint_result['ok'] == 1 and delete_trade_result['ok'] == 1:
+        if delete_waypoint_result['ok'] == 1 and delete_trade_result['ok'] == 1\
+                and delete_event_result['ok'] == 1:
             success = True
         else:
             logger.error('delete_waypoint(): failed to delete waypoint, '

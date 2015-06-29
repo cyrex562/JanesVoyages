@@ -13,6 +13,9 @@
         src="{{ url_for('static', filename='js/sources.js') }}">
     </script>
     <script type=text/javascript
+        src="{{ url_for('static', filename='js/events.js') }}">
+    </script>
+    <script type=text/javascript
         src="{{ url_for('static', filename='js/voyages_page.js') }}">
     </script>
     <div class="container-fluid">
@@ -36,14 +39,14 @@
                         Clear Form
                     </button>
                 </div>
-                <div id="status-bar">[STATUS BAR]</div>
+                <div id="status-bar" closed="1"></div>
             </div>
             <div class="col-xs-5">
                 <!-- voyage -->
                 <fieldset id="voyage_info_sub_form">
                     <legend>Voyage</legend>
                     <!-- voyage_id -->
-                    <div class="form-group" id="voyage_id_form_group">
+                    <div class="form-group hide" id="voyage_id_form_group">
                         <label for="voyage_id">Voyage ID</label>
                         <span class="form-control-static" id="voyage_id"></span>
                     </div>
@@ -59,6 +62,7 @@
                         <label for="voyage_notes" data-toggle="collapse"
                                data-target="#voyage_notes_pane">
                             Voyage Notes
+                            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                         </label>
                         <div id="voyage_notes_pane" class="collapse">
                             <textarea id="voyage_notes" class="form-control"
@@ -98,7 +102,9 @@
                     <div class="form-group">
                         <label for="ship_notes" data-toggle="collapse"
                                data-target="#ship_notes_pane">Ship
-                            Notes</label>
+                            Notes
+                            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                        </label>
                         <div id="ship_notes_pane" class="collapse">
                             <textarea id="ship_notes" class="form-control"
                                       tabindex="0" data-toggle="tooltip"
@@ -124,13 +130,13 @@
                             </option>
                         </select>
                     </div>
-                    <!-- waypoint form elements
+                    <!-- waypoint form elements -->
                     <!-- voyage id -->
                     <input type="hidden" id="waypoint_voyage_id"/>
                     <!-- waypoint id -->
-                    <div class="form-group">
+                    <div class="form-group hide" id="waypoint_id_form_group">
                         <label for="waypoint_id">Waypoint ID</label>
-                        <p id="waypoint_id">0</p>
+                        <p id="waypoint_id"></p>
                     </div>
                     <!-- waypoint name -->
                     <div class="form-group">
@@ -186,7 +192,9 @@
                         <div class="form-group">
                             <label for="waypoint_notes" data-toggle="collapse"
                                    data-target="#waypoint_notes_pane">Waypoint
-                                Notes</label>
+                                Notes
+                                <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                            </label>
 
                             <div id="waypoint_notes_pane" class="collapse">
                                 <textarea id="waypoint_notes"
@@ -243,7 +251,7 @@
                     <!-- waypoint id -->
                     <input type="hidden" id="trade_waypoint_id"/>
                     <!-- trade id -->
-                    <div class="form-group">
+                    <div class="form-group hide" id="trade_id_form_group">
                         <label for="trade_id">Trade ID</label>
                         <p id="trade_id" class="trade_form_ele"></p>
                     </div>
@@ -287,7 +295,7 @@
                     <!-- trade notes -->
                     <div class="form-group">
                         <label for="trade_notes" data-toggle="collapse"
-                               data-target="#trade_notes_pane">Trade Notes</label>
+                               data-target="#trade_notes_pane">Trade Notes<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></label>
                         <div id="trade_notes_pane" class="collapse">
                             <textarea id="trade_notes" class="form-control"
                                       tabindex="0" data-toggle="tooltip"
@@ -320,6 +328,75 @@
                     </div>
                 </fieldset>
                 </div>
+                <!-- events -->
+                <div id="event_sub_form" class="collapse in">
+                    <fieldset>
+                        <!-- event list -->
+                        <legend>Events</legend>
+                        <div class="form-group">
+                            <label for="events">Events</label>
+                            <select id="events" class="form-control" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="the list of events associated with the waypoint">
+                                <option id="select_event">Select an event...</option>
+                            </select>
+                        </div>
+                        <!-- waypoint id -->
+                        <input type="hidden" id="event_waypoint_id"/>
+                        <!-- event id -->
+                        <div class="form-group hide" id="event_id_form_group">
+                            <label for="event_id">Event ID</label>
+                            <p id="event_id"></p>
+                        </div>
+                        <!-- event name -->
+                        <div class="form-group">
+                            <label for="event_name">Event Name</label>
+                            <input type="text" id="event_name" class="form-control"
+                                   tabindex="0" data-toggle="tooltip"
+                                   title="the short name of the event">
+                        </div>
+                        <!-- event notes -->
+                        <div class="form-group">
+                            <label for="event_notes" data-toggle="collapse"
+                                   data-target="#event_notes_pane">Event Notes
+                                <span class="glyphicon glyphicon-collapse-down"
+                                      aria-hidden="true"></span>
+                            </label>
+                            <div id="event_notes_pane" class="collapse">
+                                <textarea id="event_notes" class="form-control"
+                                          tabindex="0" data-toggle="tooltip"
+                                          title="Description of the event and additional notes">
+
+                                </textarea>
+                            </div>
+                        </div>
+                        <!-- event form buttons -->
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="add_event_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Add an event to the waypoint">
+                                Add Event
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="modify_event_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Modify the selected event">
+                                Modify Event
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="delete_event_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Delete the selected Event">
+                                Remove Event
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="reset_event_form_btn" tabindex="0">Reset
+                                Event Form
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
                 <div id="sources_sub_form" class="collapse in">
                     <fieldset>
                         <legend>Sources</legend>
@@ -334,7 +411,7 @@
                         </div>
                         <!-- source id -->
                         <input type="hidden" id="source_voyage_id"/>
-                        <div class="form-group">
+                        <div class="form-group hide" id="source_id_form_group">
                             <label for="source_id">Source ID</label>
                             <p id="source_id"></p>
                         </div>
@@ -344,12 +421,15 @@
                             <input type="text" id="source_citation"
                                    name="source_citation" tabindex="0"
                                    data-toggle="tooltip"
-                                   title="The citation for the source"/>
+                                   title="The citation for the source"
+                                    class="form-control"/>
                         </div>
                         <!-- source notes -->
                         <div class="form-group">
                         <label for="source_notes" data-toggle="collapse"
-                               data-target="#source_notes_pane">Source Notes</label>
+                               data-target="#source_notes_pane">Source Notes
+                            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                        </label>
                         <div id="source_notes_pane" class="collapse">
                             <textarea id="source_notes" class="form-control"
                                       tabindex="0" data-toggle="tooltip"
@@ -375,7 +455,7 @@
                                 id="delete_source_btn" tabindex="0"
                                 data-toggle="tooltip"
                                 title="Delete the selected source">
-                            Remove Item
+                            Remove Source
                         </button>
                         <button type="button" class="btn btn-default btn-sm"
                                 id="reset_source_form_btn" tabindex="0"

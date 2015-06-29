@@ -16,6 +16,7 @@ function fill_waypoint_form(in_waypoint) {
     console.log('fill_waypoint_form()');
     $('#waypoint_name').val(in_waypoint.waypoint_name);
     $('#waypoint_id').text(in_waypoint.waypoint_id);
+    $("#waypoint_id_form_group").show();
     $('#waypoint_type').val(in_waypoint.waypoint_type);
     $('#waypoint_start_date').val(in_waypoint.waypoint_start_date);
     $('#waypoint_end_date').val(in_waypoint.waypoint_end_date);
@@ -81,6 +82,7 @@ function refresh_waypoints_list_callback(response) {
 function hide_waypoint_form() {
     console.log('hide_waypoint_form()');
     $('#waypoint_sub_form').collapse('hide');
+    $('#waypoint_id_form_group').hide();
 }
 
 function show_waypoint_form() {
@@ -118,8 +120,13 @@ function waypoint_select_change_cb(response) {
             var found_waypoint = response.data.found_waypoints[0];
             fill_waypoint_form(found_waypoint);
             show_trade_form();
+            clear_trade_form(true);
             get_trades_for_waypoint(found_waypoint.waypoint_id);
-            clear_trade_form();
+
+            clear_event_form(true);
+            show_event_form();
+            get_events_for_waypoint(found_waypoint.waypoint_id);
+
             $('#trade_waypoint_id').text(found_waypoint.waypoint_id);
 
         } else {

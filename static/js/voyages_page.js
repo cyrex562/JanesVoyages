@@ -20,12 +20,24 @@ function send_request(action, request_type, request_data, callback) {
 
 function set_status_bar(level, message) {
     var status_bar = $('#status-bar');
-    status_bar.empty();
-    status_bar.append('<div class="alert-dismissible alert alert-' + level +
-        '" role="alert"><button type="button" class="close" ' +
+    if (parseInt(status_bar.attr('closed')) === 1) {
+        status_bar.append('<div class="alert-dismissible alert alert-' + level +
+        '" role="alert"><button id="dismiss_alert_btn" type="button" class="close" ' +
         'data-dismiss="alert" aria-lable="Close"><span aria-hidden="true">' +
-        '&times;</span></button><p>' + message + '</p></div>');
+        '&times;</span></button><div id="status_bar_msg"><p>' + message +
+            '</p></div></div>');
+        status_bar.attr('closed', "0");
+    } else {
+        $('#status_bar_msg').append('<p>' + message + '</p>');
+    }
+    $('#dismiss_alert_btn').click(function() {
+        status_bar.empty();
+        $('#status-bar').attr("closed", "1");
+    });
 }
+
+
+
 
 function voyage_row_click() {
     console.log('voyage_row_click()');
@@ -87,6 +99,23 @@ function delete_source_btn_click() {
     delete_source();
 }
 
+function add_event_btn_click() {
+    console.log('add_event_btn_click');
+    add_event();
+}
+
+function modify_event_btn_click() {
+    console.log('modify_event_btn_click');
+    modify_event();
+}
+
+function delete_event_btn_click() {
+    console.log('delete_event_btn_click');
+    delete_event();
+}
+
+
+
 function clear_voyage_form() {
     console.log('clear_voyage_form');
     $('#voyage_name').val('');
@@ -113,6 +142,7 @@ function clear_waypoint_form(clear_waypoints_list)
     $('#waypoint_end_date').val('');
     $('#waypoint_location').val('');
     $('#waypoint_notes').val('');
+    $('#waypoint_id_form_group').hide();
 }
 
 function clear_trade_form(clear_list)
@@ -129,6 +159,21 @@ function clear_trade_form(clear_list)
     $('#trade_item').val('');
     $('#trade_quantity').val('');
     $('#trade_notes').val('');
+    $('#trade_id_form_group').hide();
+}
+
+function clear_event_form(clear_list) {
+    console.log('clear_event_form');
+    if (clear_list) {
+        var event_list = $('#events');
+        event_list.empty();
+        event_list.append('<option id="select_event">Select an event...</option>');
+    }
+
+    $('#event_id').text('');
+    $('#event_name').val('');
+    $('#event_id_form_group').hide();
+    $('#event_notes').val('');
 }
 
 function clear_source_form(clear_list) {
@@ -142,6 +187,7 @@ function clear_source_form(clear_list) {
     $('#source_id').text('');
     $('#source_citation').val('');
     $('#source_notes').val('');
+    $('#source_id_form_group').hide();
 }
 
 function clear_form_btn_click()
@@ -151,6 +197,8 @@ function clear_form_btn_click()
     clear_waypoint_form(true);
     clear_trade_form(true);
     clear_source_form(true);
+    clear_event_form(true);
+    hide_event_form();
     hide_waypoint_form();
     hide_trade_form();
     hide_source_form();
@@ -173,15 +221,22 @@ function reset_source_form_btn_click() {
     clear_source_form(false);
 }
 
+function reset_event_form_btn_click() {
+    console.log('reset event form btn click');
+    clear_event_form(false);
+}
+
 $(document).ready(function () {
     console.log('document.ready()');
     clear_voyage_form();
     clear_waypoint_form(true);
     clear_trade_form();
+    clear_event_form();
     refresh_voyages_table();
     hide_waypoint_form();
     hide_trade_form();
     hide_source_form();
+    hide_event_form();
     $("#add_voyage_btn").click(add_voyage_btn_click);
     $("#modify_voyage_btn").click(modify_voyage_btn_click);
     $('#delete_voyage_btn').click(delete_voyage_btn_click);
@@ -202,4 +257,11 @@ $(document).ready(function () {
     $('#delete_source_btn').click(delete_source_btn_click);
     $('#sources').change(source_select_change);
     $('#reset_source_form_btn').click(reset_source_form_btn_click);
+    /* event */
+    $('#add_event_btn').click(add_event_btn_click);
+    $('#modify_event_btn').click(modify_event_btn_click);
+    $('#delete_event_btn').click(delete_event_btn_click);
+    $('#reset_event_form_btn').click(reset_event_form_btn_click);
+    $('#events').change(event_select_change);
+    /* handler for status bar close */
 });

@@ -15,6 +15,7 @@ function get_source_from_form() {
 function fill_source_form(in_source) {
     console.log("fill_source_form()");
     $('#source_id').text(in_source.source_id);
+    $('#source_id_form_group').show();
     $('#source_citation').val(in_source.source_citation);
     $('#source_notes').val(in_source.source_notes);
     $('#source_voyage_id').val(in_source.voyage_id);
@@ -60,6 +61,7 @@ function refresh_sources_list_callback(response) {
 function hide_source_form() {
     console.log("hide_source_form");
     $('#sources_sub_form').collapse('hide');
+    $('#source_id_form_group').hide();
 }
 
 function show_source_form() {

@@ -11,10 +11,12 @@ from flask import jsonify, render_template, request, redirect, \
     url_for, Flask
 from flask.ext.pymongo import PyMongo
 
+
 import voyage_model
 import trade_model
 import waypoint_model
 import source_model
+import event_model
 
 VERSION = 'version 0.1.3'
 COPYRIGHT = 'Copyright Fifth Column Group 2015'
@@ -27,6 +29,7 @@ voyage_model.init(app, mongo)
 trade_model.init(app, mongo)
 waypoint_model.init(app, mongo)
 source_model.init(app, mongo)
+event_model.init(app, mongo)
 
 
 def set_session_id(in_session):
@@ -103,9 +106,15 @@ def voyages_modify():
     """
     app.logger.debug('voyages_post')
     voyages_to_modify = request.json["params"]["voyages_to_modify"]
-    modified_voyage_ids = voyage_model.modify_voyages(voyages_to_modify)
-    result = jsonify(message="success",
-                     data={"modified_voyage_ids": modified_voyage_ids})
+    voyages_modified = voyage_model.modify_voyages(voyages_to_modify)
+    if voyages_modified is True:
+        modified_voyage_ids = []
+        for vtm in voyages_to_modify:
+            modified_voyage_ids.append(vtm['voyage_id'])
+        result = jsonify(message="success",
+                         data={"modified_voyage_ids": modified_voyage_ids})
+    else:
+        result = jsonify(message="failure", data={})
     return result
 
 
@@ -315,6 +324,55 @@ def sources_delete():
     sources_to_delete = request.json['params']['source_ids']
     sources_deleted = source_model.delete_sources(sources_to_delete)
     if sources_deleted is True:
+        result = jsonify(message="success", data={})
+    else:
+        result = jsonify(message="failure", data={})
+    return result
+
+
+@app.route('/events/get', methods=['POST'])
+def events_get():
+    params = request.json['params']
+    if 'event_ids' in params:
+        event_ids = params['event_ids']
+        found_events = event_model.get_events(event_ids)
+    elif 'waypoint_id' in params:
+        waypoint_id = params['waypoint_id']
+        found_events = event_model.get_events_by_waypoint(waypoint_id)
+    else:
+        found_events = []
+    result = jsonify(message="success", data={"found_events": found_events})
+    return result
+
+
+@app.route('/events/add', methods=['POST'])
+def events_add():
+    events_to_add = request.json['params']['events_to_add']
+    added_event_ids = event_model.add_events(events_to_add)
+    return jsonify(message="success",
+                   data={"added_event_ids": added_event_ids})
+
+
+@app.route('/events/modify', methods=['POST'])
+def events_modify():
+    events_to_modify = request.json["params"]["events_to_modify"]
+    events_modified = event_model.modify_events(events_to_modify)
+    if events_modified is True:
+        modified_event_ids = []
+        for etm in events_to_modify:
+            modified_event_ids.append(etm['event_id'])
+        result = jsonify(message="success", data={'modified_event_ids': modified_event_ids})
+    else:
+        result = jsonify(message="failure", data={})
+
+    return result
+
+
+@app.route('/events/delete', methods=['POST'])
+def events_delete():
+    events_to_delete = request.json["params"]["events_to_delete"]
+    success = event_model.delete_events(events_to_delete)
+    if success is True:
         result = jsonify(message="success", data={})
     else:
         result = jsonify(message="failure", data={})

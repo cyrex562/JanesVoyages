@@ -17,7 +17,9 @@ function get_trade_from_form() {
 
 function hide_trade_form() {
     console.log('hide_trade_form()');
+    $('#trade_id_form_group').hide();
     $('#trade_sub_form').collapse('hide');
+
 }
 
 function show_trade_form() {
@@ -28,6 +30,7 @@ function show_trade_form() {
 function fill_trade_form(in_trade) {
     console.log('fill_trade_form()');
     $('#trade_id').text(in_trade.trade_id);
+    $('#trade_id_form_group').show();
     $('#trade_item').val(in_trade.trade_item);
     $('#trade_quantity').val(parseInt(in_trade.trade_quantity));
     console.log('fill_trade_form, in_trade.trade_bought_sold="'
@@ -67,7 +70,7 @@ function refresh_trades_list_cb(response) {
         set_status_bar('success', 'trades retrieved');
         var trades = response.data.found_trades;
         trades_list.empty();
-        trades_list.append('<option id=select_trade>Select A Trade...</trade>');
+        trades_list.append('<option id="select_trade">Select A Trade...</option>');
         for (var i = 0; i < trades.length; i++) {
             var trade_option = gen_trade_option(trades[i]);
             trades_list.append(trade_option);
