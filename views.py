@@ -359,6 +359,16 @@ def events_get():
         found_events = event_model.get_events_by_waypoint(waypoint_id)
     else:
         found_events = []
+
+    if len(found_events) > 0:
+        for i in xrange(0, len(found_events)):
+            waypoint_id = found_events[i]['waypoint_id']
+            if waypoint_id != '' and waypoint_id != None:
+                voyage_id = waypoint_model.get_voyage_id_for_waypoint_id(waypoint_id)
+                found_events[i]['voyage_id'] = voyage_id
+            else:
+                found_events[i]['voyage_id'] = ''
+
     result = jsonify(message="success", data={"found_events": found_events})
     return result
 

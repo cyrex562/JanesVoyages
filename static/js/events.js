@@ -1,9 +1,20 @@
 function get_event_from_form() {
     console.log("get_event_from_form");
+    var waypoint_id = $('#waypoint_id').text();
+    if (waypoint_id == undefined || waypoint_id == '') {
+        waypoint_id = $('#event_waypoint_id').val();
+    }
+
+    var voyage_id = $('#voyage_id').text();
+    if (voyage_id == undefined || voyage_id == '') {
+        voyage_id = $('#event_voyage_id').val();
+    }
+
     return {
         event_id: $('#event_id').text(),
         event_name: $('#event_name').val(),
-        waypoint_id: $('#waypoint_id').text(),
+        waypoint_id: waypoint_id,
+        voyage_id: voyage_id,
         event_notes: $('#event_notes').val().trim()
     }
 }
@@ -19,13 +30,64 @@ function show_event_form() {
     $('#event_sub_form').collapse('show');
 }
 
-function fill_event_form(in_event) {
+function fill_event_form(response) {
     console.log('fill_event_form');
+
+    var in_event = response;
+    if ('data' in response) {
+        in_event = response.data.found_events[0];
+    }
+
     $('#event_id').text(in_event.event_id);
     $('#event_id_form_group').show();
     $('#event_name').val(in_event.event_name);
-    $('#event_waypoint_id').text(in_event.waypoint_id);
+    $('#event_waypoint_id').val(in_event.waypoint_id);
+    $('#event_voyage_id').val(in_event.voyage_id);
     $('#event_notes').val(in_event.event_notes);
+}
+
+function gen_event_row(event) {
+    console.log('gen_event_row, event=%s', JSON.stringify(event));
+    var row = '<tr class="event_row">' +
+        '<td class="event_id_cell" data-toggle="tooltip" title="[event_id]">[event_id_brief]...</td>' +
+        '<td data-toggle="tooltip" title="[waypoint_id]">[waypoint_id_brief]...</td>' +
+        '<td data-toggle="tooltip" title="[voyage_id]">[voyage_id_brief]...</td>' +
+        '<td>[event_name]</td>' +
+        '<td>[event_notes]</td>';
+    row = row.replace(/\[event_id\]/g, event.event_id);
+    row = row.replace(/\[event_id_brief\]/g, event.event_id.substring(0,4));
+    row = row.replace(/\[waypoint_id\]/g, event.waypoint_id);
+    row = row.replace(/\[waypoint_id_brief\]/g, event.waypoint_id.substring(0,4));
+    row = row.replace(/\[voyage_id\]/g, event.voyage_id);
+    row = row.replace(/\[voyage_id_brief\]/g, event.voyage_id.substring(0,4));
+    row = row.replace(/\[event_name\]/g, event.event_name);
+    return row;
+}
+
+function event_row_click() {
+    console.log('event row click');
+    var event_id = $(this).find('.event_id_cell').attr('title');
+    get_event_by_id(event_id, fill_event_form);
+}
+
+function populate_events_table(response) {
+    console.log('populate events table');
+    if (response.message === 'success') {
+        set_status_bar('success', 'events retrieved');
+        var events = response.data.found_events;
+        var events_table = $('#events_table');
+        events_table.find("tr:gt(0)").remove();
+        for (var i = 0; i < events.length; i++) {
+            var event_row = gen_event_row(events[i]);
+            events_table.append(event_row);
+        }
+        $('.event_row').click(event_row_click);
+    }
+}
+
+function refresh_events_table() {
+    console.log('refresh_events_table');
+    send_request('events/get', 'POST', {"event_ids": []}, populate_events_table);
 }
 
 function gen_event_option(in_event) {
@@ -104,18 +166,19 @@ function set_selected_event(event_id) {
 
 function get_selected_event_id() {
     console.log('get_selected_event_id');
-    return $('#events').val();
+    var selected_event_id = $('#events').val();
+    if (selected_event_id === undefined || selected_event_id === '') {
+        selected_event_id = $('#event_id').text();
+    }
+    return selected_event_id;
 }
 
 function add_event_cb(response) {
     console.log("add_event_cb");
     if (response.message === 'success') {
-        //var added_event_id = response.data.added_event_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
         set_status_bar('success', 'event added');
-        //refresh_event_list(current_waypoint_id);
         get_events_for_waypoint(current_waypoint_id);
-        //set_selected_event(added_event_id);
     } else {
         set_status_bar('danger', 'event not added');
     }
@@ -130,11 +193,14 @@ function add_event() {
 function modify_event_cb(response) {
     console.log("add_event_cb");
     if (response.message === 'success') {
-        //var modified_event_id = response.data.modified_event_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
         set_status_bar('success', 'event modified');
-        get_events_for_waypoint(current_waypoint_id);
-        //set_selected_event(modified_event_id);
+        if ($('#events_table').length === 0) {
+            get_events_for_waypoint(current_waypoint_id);
+        } else {
+            refresh_events_table();
+        }
+        clear_event_form(false);
     } else {
         set_status_bar('danger', 'event not modified');
     }
@@ -151,7 +217,11 @@ function delete_event_cb(response) {
     if (response.message === 'success') {
         set_status_bar('success', 'event deleted');
         var current_waypoint_id = $('#waypoint_id').text();
-        get_events_for_waypoint(current_waypoint_id);
+        if ($('#events_table').length === 0) {
+            get_events_for_waypoint(current_waypoint_id);
+        } else {
+            refresh_events_table();
+        }
         clear_event_form(false);
     } else {
         set_status_bar('danger', 'event not deleted');
@@ -163,4 +233,26 @@ function delete_event() {
     var events_to_delete = [get_selected_event_id()];
     send_request('events/delete', 'POST', {events_to_delete: events_to_delete}, delete_event_cb);
 }
+
+function get_event_by_id(event_id, cb) {
+    console.log('get_event_by_id, event_id = %s', event_id);
+    var event_ids = [event_id];
+    send_request('events/get', 'POST', {event_ids: event_ids}, cb);
+}
+
+function clear_event_form(clear_list) {
+    console.log('clear_event_form');
+    if (clear_list) {
+        var event_list = $('#events');
+        event_list.empty();
+        event_list.append('<option id="select_event">Select an event...</option>');
+    }
+
+    $('#event_id').text('');
+    $('#event_name').val('');
+    $('#event_id_form_group').hide();
+    $('#event_notes').val('');
+}
+
+
 

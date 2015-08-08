@@ -193,3 +193,17 @@ function delete_source() {
     send_request('sources/delete', 'POST', {source_ids: source_ids},
         delete_source_callback);
 }
+
+function clear_source_form(clear_list) {
+    console.log('clear_source_form');
+    if (clear_list) {
+        var sources_list = $('#sources');
+        sources_list.empty();
+        sources_list.append('<option id="select_source">Select A Source...</option>');
+    }
+
+    $('#source_id').text('');
+    $('#source_citation').val('');
+    $('#source_notes').val('');
+    $('#source_id_form_group').hide();
+}

@@ -85,50 +85,11 @@ function clear_voyage_form() {
 
 
 
-function clear_trade_form(clear_list)
-{
-    console.log('clear_trade_form');
-    if (clear_list) {
-        var trades_list = $('#trades');
-        trades_list.empty();
-        trades_list.append('<option id="select_trade">Select A Trade...</option>');
-    }
 
-    $('#trade_id').text('');
-    $('.trade_bought_sold').removeProp('checked');
-    $('#trade_item').val('');
-    $('#trade_quantity').val('');
-    $('#trade_notes').val('');
-    $('#trade_id_form_group').hide();
-}
 
-function clear_event_form(clear_list) {
-    console.log('clear_event_form');
-    if (clear_list) {
-        var event_list = $('#events');
-        event_list.empty();
-        event_list.append('<option id="select_event">Select an event...</option>');
-    }
 
-    $('#event_id').text('');
-    $('#event_name').val('');
-    $('#event_id_form_group').hide();
-    $('#event_notes').val('');
-}
 
-function clear_source_form(clear_list) {
-    console.log('clear_source_form');
-    if (clear_list) {
-        var sources_list = $('#sources');
-        sources_list.empty();
-        sources_list.append('<option id="select_source">Select A Source...</option>');
-    }
 
-    $('#source_id').text('');
-    $('#source_citation').val('');
-    $('#source_notes').val('');
-    $('#source_id_form_group').hide();
-}
 
 function clear_form_btn_click()
 {

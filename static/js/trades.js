@@ -235,8 +235,7 @@ function add_trade_callback(response) {
 function add_trade() {
     console.log('add_trade())');
     var trade_to_add = get_trade_from_form();
-    var trades_to_add = [];
-    trades_to_add.push(trade_to_add);
+    var trades_to_add = [trade_to_add];
     send_request('trades/add', 'POST', {trades_to_add: trades_to_add},
         add_trade_callback);
 }
@@ -262,8 +261,7 @@ function modify_trade_callback(response) {
 function modify_trade() {
     console.log('modify_trade_btn_click()');
     var trade_to_modify = get_trade_from_form();
-    var trades_to_modify = [];
-    trades_to_modify.push(trade_to_modify);
+    var trades_to_modify = [trade_to_modify];
     send_request('trades/modify', 'POST', {trades_to_modify: trades_to_modify},
         modify_trade_callback);
 }
