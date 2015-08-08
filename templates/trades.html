@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/utils.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/trades.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/waypoints.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/voyages.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/sources.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/events.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/trades_page.js') }}">
+    </script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+
+            </div>
+            <div class="col-xs-6">
+                <div id="trade_sub_form">
+                    <!-- waypoint id -->
+                    <input type="hidden" id="trade_waypoint_id"/>
+                    <!-- trade id -->
+                    <div class="form-group" id="trade_id_form_group">
+                        <label for="trade_id">Trade ID</label>
+                        <p id="trade_id" class="trade_form_ele"></p>
+                    </div>
+                    <!-- trade type -->
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="trade_bought_sold
+                            trade_form_ele" value="bought"
+                                   name="trade_bought_sold" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The item was purchased">
+                            Bought
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="trade_bought_sold"
+                                   value="sold" name="trade_bought_sold"
+                                   tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The item was sold">
+                            Sold
+                        </label>
+                    </div>
+                    <!-- trade quantity -->
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" min="0" id="trade_quantity"
+                               class="form-control" tabindex="0"
+                               data-toggle="tooltip"
+                               title="The number of items">
+                    </div>
+                    <!-- trade item -->
+                    <div class="form-group">
+                        <label for="item">Item</label>
+                        <input type="text" id="trade_item"
+                               class="form-control" name="bought_sold"
+                               tabindex="0" data-toggle="tooltip"
+                               title="A descriptive name for the item">
+                    </div>
+                    <!-- trade notes -->
+                    <div class="form-group">
+                        <label for="trade_notes" data-toggle="collapse"
+                               data-target="#trade_notes_pane">Trade Notes<span
+                                class="glyphicon glyphicon-collapse-down"
+                                aria-hidden="true"></span></label>
+
+                        <div id="trade_notes_pane" class="collapse">
+                            <textarea id="trade_notes" class="form-control"
+                                      tabindex="0" data-toggle="tooltip"
+                                      title="Description of the item and any
+                                    additional notes"></textarea>
+                        </div>
+                    </div>
+                    <!-- trade form textview experiment -->
+{#                    <div>#}
+{#                        <textarea id="trade_text_form" class="form-control"#}
+{#                                  tabindex="0" data-toggle="tooltip"#}
+{#                                  title="expert text form">#}
+{#                        </textarea>#}
+{#                    </div>#}
+                    <!-- trade form buttons -->
+                    <div class="btn-group btn-group-sm disabled" role="group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="add_trade_btn" tabindex="0"
+                                data-toggle="tooltip"
+                                title="Add a traded item to the waypoint">
+                            Add Item
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="modify_trade_btn" tabindex="0"
+                                data-toggle="tooltip"
+                                title="Modify the selected item">
+                            Modify Item
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="delete_trade_btn" tabindex="0"
+                                data-toggle="tooltip"
+                                title="Delete the selected Item">
+                            Remove Item
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm"
+                                id="reset_trade_form_btn" tabindex="0">Reset
+                            Trade Form
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <table class="table table-striped" id="trades_table2">
+                    <tr id="table_top_row">
+                        <th>ID</th>
+                        <th>Voyage</th>
+                        <th>Waypoint</th>
+                        <th>Trade Type</th>
+                        <th>Trade Quantity</th>
+                        <th>Trade Item</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

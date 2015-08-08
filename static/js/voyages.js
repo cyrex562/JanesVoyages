@@ -15,6 +15,7 @@ function fill_voyage_form(response) {
             /** @namespace curr_voyage.voyage_id */
             $('#voyage_id').text(curr_voyage.voyage_id);
             $('#voyage_id_form_group').show();
+            $('#voyage_id_form_group').removeClass('hide');
             /** @namespace curr_voyage.voyage_notes */
             $('#voyage_notes').val(curr_voyage.voyage_notes);
             /** @namespace curr_voyage.ship_name */
@@ -52,7 +53,7 @@ function gen_voyage_row(voyage) {
     console.log('gen_voyage_row()');
     var voyage_row = '' +
         '<tr class="voyage_row">' +
-        '<td class="voyage_id_cell" data-toggle="tooltip" title="[voyage_id]"]>[voyage_id_brief]...</td>' +
+        '<td class="voyage_id_cell" data-toggle="tooltip" title="[voyage_id]">[voyage_id_brief]...</td>' +
         '<td class="voyage_name_cell">[voyage_name]</td>' +
         '<td class="ship_name_cell">[ship_name]</td>' +
         '<td class="ship_captain_cell">[ship_captain]</td>' +
@@ -83,6 +84,12 @@ function populate_voyages_table(response) {
         }
         $('.voyage_row').click(voyage_row_click);
     }
+}
+
+function voyage_row_click() {
+    console.log('voyage_row_click()');
+    var voyage_id = $(this).find('.voyage_id_cell').attr('title');
+    set_current_voyage(voyage_id)
 }
 
 /**

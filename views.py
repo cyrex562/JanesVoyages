@@ -64,6 +64,31 @@ def render_voyages_page():
     return render_template('voyages.html', version=VERSION, copyright=COPYRIGHT)
 
 
+@app.route('/waypoints', methods=['GET'])
+def render_waypoints_page():
+    return render_template('waypoints.html', version=VERSION, copyright=COPYRIGHT)
+
+
+@app.route('/trades', methods=['GET'])
+def render_trade_page():
+    return render_template('trades.html', version=VERSION, copyright=COPYRIGHT)
+
+
+@app.route('/ships', methods=['GET'])
+def render_ships_page():
+    return render_template('ships.html', version=VERSION, copyright=COPYRIGHT)
+
+
+@app.route('/events', methods=['GET'])
+def render_events_page():
+    return render_template('events.html', version=VERSION, copyright=COPYRIGHT)
+
+
+@app.route('/sources', methods=['GET'])
+def render_sources_page():
+    return render_template('sources.html', version=VERSION, copyright=COPYRIGHT)
+
+
 @app.route('/voyages/get', methods=['POST'])
 def voyages_get():
     """
@@ -210,10 +235,6 @@ def waypoints_delete():
 
 @app.route('/trades/get', methods=['POST'])
 def trades_get():
-    """
-
-    :return:
-    """
     params = request.json['params']
     app.logger.debug('route: "/trades/get", params: {0}'.format(params))
     if 'trade_ids' in params:
@@ -227,29 +248,30 @@ def trades_get():
         app.logger.error('invalid params: "{0}"'.format(params))
         app.logger.debug('trades_get, found trades count={0}'
                          .format(len(found_trades)))
+    if len(found_trades) > 0:
+        for i in xrange(0, len(found_trades)):
+            waypoint_id = found_trades[i]['waypoint_id']
+            if waypoint_id != '' and waypoint_id != None:
+                voyage_id = waypoint_model.get_voyage_id_for_waypoint_id(waypoint_id)
+                found_trades[i]['voyage_id'] = voyage_id
+            else:
+                found_trades[i]['voyage_id'] = ''
     result = jsonify(message='success', data={"found_trades": found_trades})
     return result
 
 
 @app.route('/trades/add', methods=['POST'])
 def trades_add():
-    """
-
-    :return:
-    """
     app.logger.debug('trades_add')
     trades_to_add = request.json["params"]["trades_to_add"]
     added_trade_ids = trade_model.add_trades(trades_to_add)
-    return jsonify(message="success",
-                   data={"added_trade_ids": added_trade_ids})
+    result = jsonify(message="success",
+                     data={"added_trade_ids": added_trade_ids})
+    return result
 
 
 @app.route('/trades/modify', methods=['POST'])
 def trades_modify():
-    """
-
-    :return:
-    """
     app.logger.debug('trades_modify')
     trades_to_modify = request.json["params"]["trades_to_modify"]
     trades_modified = trade_model.modify_trades(trades_to_modify)
@@ -267,10 +289,6 @@ def trades_modify():
 
 @app.route('/trades/delete', methods=['POST'])
 def trades_delete():
-    """
-
-    :return:
-    """
     app.logger.debug('trades_delete')
     trades_to_delete = request.json["params"]["trades_to_delete"]
     success = trade_model.delete_trades(trades_to_delete)

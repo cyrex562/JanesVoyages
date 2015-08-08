@@ -260,3 +260,16 @@ def delete_waypoints(waypoint_ids):
     else:
         logger.error('delete_waypoints(): waypoint_ids is None')
     return success
+
+
+def get_voyage_id_for_waypoint_id(waypoint_id):
+    """
+
+    :param waypoint_id:
+    :return:
+    """
+    logger.debug('get_voyage_id_for_waypoint_id')
+    found_waypoint = get_waypoint_by_id(waypoint_id)
+    return found_waypoint['voyage_id']
+
+

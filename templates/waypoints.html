@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/utils.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/trades.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/waypoints.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/voyages.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/sources.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/events.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/waypoints_page.js') }}">
+    </script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+
+            </div>
+            <div class="col-xs-6">
+                <div id="waypoint_sub_form" class="collapse in">
+                    <fieldset>
+                        <legend>Waypoints</legend>
+{#                        <!-- waypoint list -->#}
+{#                        <div class="form-group">#}
+{#                            <label for="waypoints">Waypoints</label>#}
+{#                            <select name="waypoints`" class="form-control"#}
+{#                                    id="waypoints" tabindex="0"#}
+{#                                    data-toggle="tooltip"#}
+{#                                    title="list of waypoints associated with the#}
+{#                                voyage">#}
+{#                                <option id="select_waypoint">#}
+{#                                    Select a Waypoint...#}
+{#                                </option>#}
+{#                            </select>#}
+{#                        </div>#}
+                        <!-- waypoint form elements -->
+                        <!-- voyage id -->
+                        <input type="hidden" id="waypoint_voyage_id"/>
+                        <!-- waypoint id -->
+                        <div class="form-group hide"
+                             id="waypoint_id_form_group">
+                            <label for="waypoint_id">Waypoint ID</label>
+
+                            <p id="waypoint_id"></p>
+                        </div>
+                        <!-- waypoint name -->
+                        <div class="form-group">
+                            <label for="waypoint_name">Waypoint Name</label>
+                            <input type="text" class="form-control"
+                                   id="waypoint_name" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="Descriptive name for the waypoint">
+                        </div>
+                        <!-- waypoint type -->
+                        <div class="form-group">
+                            <label for="waypoint_type">Waypoint Type</label>
+                            <select name="waypoint_type" class="form-control"
+                                    id="waypoint_type" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="The type of the waypoint; start:
+                                beginnning of voyage, stop: temporary stop
+                                during voyage; end: final location of voyage">
+                                <option value="">Select a waypoint type</option>
+                                <option value="start">start</option>
+                                <option value="stop">stop</option>
+                                <option value="end">end</option>
+                            </select>
+                        </div>
+                        <!-- waypoint start date -->
+                        <div class="form-group">
+                            <label for="waypoint_start_date">Start Date</label>
+                            <input type="text" class="form-control"
+                                   id="waypoint_start_date" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The beginning date of the waypoint; for
+                                single-date waypoints such as start, just fill
+                                in this field">
+                        </div>
+                        <!-- waypoint end date -->
+                        <div class="form-group">
+                            <label for="waypoint_end_date">End Date</label>
+                            <input type="text" class="form-control"
+                                   id="waypoint_end_date" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The end date of the waypoint; primarily
+                                for stops that lasted more than one day">
+                        </div>
+                        <!-- waypoint location -->
+                        <div class="form-group">
+                            <label for="waypoint_location">Location</label>
+                            <input type="text" class="form-control"
+                                   id="waypoint_location" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The location of the waypoint">
+                        </div>
+                        <!-- waypoint notes -->
+                        <div class="form-group">
+                            <label for="waypoint_notes" data-toggle="collapse"
+                                   data-target="#waypoint_notes_pane">Waypoint
+                                Notes
+                                <span class="glyphicon glyphicon-collapse-down"
+                                      aria-hidden="true"></span>
+                            </label>
+
+                            <div id="waypoint_notes_pane" class="collapse">
+                                <textarea id="waypoint_notes"
+                                          class="form-control"
+                                          tabindex="0" data-toggle="tooltip"
+                                          title="Descriptive notes aobut the
+                                        waypoint">
+                                </textarea>
+                            </div>
+                        </div>
+                        <!-- waypoint operation buttons -->
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-default btn-sm disabled"
+                                    name="add_waypoint" id="add_waypoint_btn"
+                                    tabindex="0" data-toggle="tooltip"
+                                    title="Add a waypoint to the current voyage">
+                                Add Waypoint
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="modify_waypoint_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Modify the selected waypoint">
+                                Modify Waypoint
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="delete_waypoint_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Delete the selected waypoint">
+                                Remove Waypoint
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="reset_waypoint_form_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Reset the waypoint form">
+                                Reset Waypoint Form
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <table class="table table-striped" id="waypoints_table">
+                    <tr id="table_top_row">
+                        <th>ID</th>
+                        <th>Voyage</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

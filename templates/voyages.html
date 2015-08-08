@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
+     <script type=text/javascript
+        src="{{ url_for('static', filename='js/utils.js') }}">
+    </script>
     <script type=text/javascript
         src="{{ url_for('static', filename='js/trades.js') }}">
     </script>
@@ -48,7 +51,7 @@
                     <!-- voyage_id -->
                     <div class="form-group hide" id="voyage_id_form_group">
                         <label for="voyage_id">Voyage ID</label>
-                        <span class="form-control-static" id="voyage_id"></span>
+                        <p id="voyage_id"></p>
                     </div>
                     <!-- voyage name -->
                     <div class="form-group">

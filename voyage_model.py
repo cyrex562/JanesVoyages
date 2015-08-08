@@ -238,4 +238,10 @@ def delete_voyages(voyages_to_delete):
         logger.error('delete_voyages(): voyages_to_delete was None')
     return success
 
+
+
+
+
+
+
 # end of file #

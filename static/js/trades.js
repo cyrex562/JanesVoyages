@@ -5,12 +5,16 @@ function get_trade_from_form() {
     console.log('get_trade_from_form()');
     var bought_sold = $("input:radio[name='trade_bought_sold']:checked").val();
     console.log('get_Trade_from_form(), trade_bought_sold=', bought_sold);
+    var waypoint_id = $('#waypoint_id').text();
+    if (waypoint_id === undefined || waypoint_id === '') {
+        waypoint_id = $('#trade_waypoint_id').val();
+    }
     return {
         trade_id: $('#trade_id').text(),
         trade_bought_sold: bought_sold,
         trade_item: $('#trade_item').val(),
         trade_quantity: parseInt($('#trade_quantity').val()),
-        waypoint_id: $('#waypoint_id').text(),
+        waypoint_id: waypoint_id,
         trade_notes: $('#trade_notes').val().trim()
     }
 }
@@ -27,8 +31,13 @@ function show_trade_form() {
     $('#trade_sub_form').collapse('show');
 }
 
-function fill_trade_form(in_trade) {
-    console.log('fill_trade_form()');
+function fill_trade_form(response) {
+    console.log('fill_trade_form: in_trade: %s', JSON.stringify(response));
+    var in_trade = response;
+    if ('data' in response) {
+        in_trade = response.data.found_trades[0];
+    }
+
     $('#trade_id').text(in_trade.trade_id);
     $('#trade_id_form_group').show();
     $('#trade_item').val(in_trade.trade_item);
@@ -38,7 +47,7 @@ function fill_trade_form(in_trade) {
     $('input[type="radio"][name=trade_bought_sold][value=' +
         in_trade.trade_bought_sold + ']').prop('checked', true);
     //$('.trade_bought_sold').val(in_trade.trade_bought_sold);
-    $('#trade_waypoint_id').text(in_trade.waypoint_id);
+    $('#trade_waypoint_id').val(in_trade.waypoint_id);
     $('#trade_notes').val(in_trade.trade_notes);
 }
 
@@ -146,9 +155,68 @@ function set_selected_trade(trade_id) {
     trade_list.val(trade_id);
 }
 
+function gen_trade_row(trade) {
+    console.log('gen_trade_row, trade = %s', JSON.stringify(trade));
+    var row =
+        "<tr class=\"trade_row\">" +
+        "<td class=\"trade_id_cell\" data-toggle=\"tooltip\" title=\"[trade_id]\">[trade_id_brief]...</td>" +
+        "<td data-toggle=\"tooltip\" title=\"[voyage_id]\">[voyage_id_brief]...</td>" +
+        "<td data-toggle=\"tooltip\" title=\"[waypoint_id]\">[waypoint_id_brief]...</td>" +
+        "<td>[trade_type]</td>" +
+        "<td>[trade_qty]</td>" +
+        "<td>[trade_item]</td>" +
+        "</tr>";
+
+    row = row.replace(/\[trade_id]/g, trade.trade_id);
+    row = row.replace(/\[trade_id_brief]/g, trade.trade_id.substring(0,4));
+    row = row.replace(/\[voyage_id]/g, trade.voyage_id);
+    row = row.replace(/\[voyage_id_brief]/g, trade.voyage_id.substring(0,4));
+    row = row.replace(/\[waypoint_id]/g, trade.waypoint_id);
+    row = row.replace(/\[waypoint_id_brief]/g, trade.waypoint_id.substring(0,4));
+    row = row.replace(/\[trade_type]/g, trade.trade_bought_sold);
+    row = row.replace(/\[trade_qty]/g, trade.trade_quantity);
+    row = row.replace(/\[trade_item]/g, trade.trade_item);
+    return row;
+}
+
+function populate_trades_table(response) {
+    console.log('populate trades table');
+    if (response.message === 'success') {
+        set_status_bar('success', 'trades retrieved');
+        var trades = response.data.found_trades;
+        var trades_table2 = $('#trades_table2');
+        trades_table2.find("tr:gt(0)").remove();
+        for (var i = 0; i < trades.length; i++) {
+            var trade_row = gen_trade_row(trades[i]);
+            trades_table2.append(trade_row);
+        }
+        $('.trade_row').click(trade_row_click);
+    }
+}
+
+function refresh_trades_table() {
+    console.log('refresh trades table');
+    send_request('trades/get', 'POST', {"trade_ids": []}, populate_trades_table);
+}
+
+function trade_row_click() {
+    console.log('trade_row_click()');
+    var trade_id = $(this).find('.trade_id_cell').attr('title');
+    get_trade_by_id(trade_id, fill_trade_form);
+}
+
+function reset_trade_form_btn_click() {
+    console.log('reset_trade_form_btn_click()');
+    clear_trade_form(false);
+}
+
 function get_selected_trade_id() {
     console.log('get_selected_trade_id()');
-    return $('#trades').val();
+    var selected_trade_id = $('#trades').val();
+    if (selected_trade_id === undefined) {
+        selected_trade_id = $('#trade_id').text();
+    }
+    return selected_trade_id;
 }
 
 function add_trade_callback(response) {
@@ -179,7 +247,12 @@ function modify_trade_callback(response) {
         set_status_bar('success', 'trade modified');
         //var modified_trade_id = response.data.modified_trade_ids[0];
         var current_waypoint_id = $('#waypoint_id').text();
-        refresh_trades_list(current_waypoint_id);
+        if ($('#trades_table2').length === 0) {
+            refresh_trades_list(current_waypoint_id);
+        } else {
+            refresh_trades_table();
+        }
+
         clear_trade_form(false);
     } else {
         set_status_bar('danger', 'trade not modified');
@@ -199,11 +272,13 @@ function delete_trade_callback(response) {
     console.log('delete_trade_callback()');
     if (response.message === 'success') {
         set_status_bar('success', 'trade deleted');
-        //var deleted_trade_id = response.data.deleted_trades[0];
         var current_waypoint_id = $('#waypoint_id').text();
-        refresh_trades_list(current_waypoint_id);
+        if ($('#trades_table2').length === 0) {
+            refresh_trades_list(current_waypoint_id);
+        } else {
+            refresh_trades_table();
+        }
         clear_trade_form(false);
-        //set_selected_trade(deleted_trade_id);
     } else {
         set_status_bar('danger', 'trade not deleted');
     }
@@ -217,4 +292,28 @@ function delete_trade() {
     console.log('trades_to_delete ', trades_to_delete);
     send_request('trades/delete', 'POST',
         {trades_to_delete: trades_to_delete}, delete_trade_callback);
+}
+
+function get_trade_by_id(trade_id, callback)
+{
+    console.log('get_trade_by_id');
+    var trade_ids = [trade_id];
+    send_request('trades/get', 'POST', {trade_ids: trade_ids}, callback);
+}
+
+function clear_trade_form(clear_list)
+{
+    console.log('clear_trade_form');
+    if (clear_list) {
+        var trades_list = $('#trades');
+        trades_list.empty();
+        trades_list.append('<option id="select_trade">Select A Trade...</option>');
+    }
+
+    $('#trade_id').text('');
+    $('.trade_bought_sold').removeProp('checked');
+    $('#trade_item').val('');
+    $('#trade_quantity').val('');
+    $('#trade_notes').val('');
+    $('#trade_id_form_group').hide();
 }
