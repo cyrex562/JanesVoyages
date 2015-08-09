@@ -217,6 +217,7 @@ function modify_waypoint_callback(response) {
         } else {
             refresh_waypoints_table();
         }
+
         clear_waypoint_form(false);
     } else {
         set_status_bar('danger', 'waypoint not modified');
@@ -302,6 +303,12 @@ function gen_waypoint_row(waypoint) {
     return row;
 }
 
+function waypoint_row_click() {
+    console.log('waypoint_row_click()');
+    var waypoint_id = $(this).find('.waypoint_id_cell').attr('title');
+    get_waypoint_by_id(waypoint_id, fill_waypoint_form);
+}
+
 function populate_waypoints_table(response) {
     console.log('populate waypoints table');
     if (response.message === 'success') {
@@ -323,11 +330,7 @@ function refresh_waypoints_table() {
         populate_waypoints_table);
 }
 
-function waypoint_row_click() {
-    console.log('waypoint_row_click()');
-    var waypoint_id = $(this).find('.waypoint_id_cell').attr('title');
-    get_waypoint_by_id(waypoint_id, fill_waypoint_form);
-}
+
 
 function clear_waypoint_form(clear_waypoints_list) {
     console.log('clear_waypoint_form');

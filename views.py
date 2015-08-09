@@ -6,17 +6,26 @@
 """
 import os
 import uuid
+import sys
+import subprocess
 
-from flask import jsonify, render_template, request, redirect, \
-    url_for, Flask
-from flask.ext.pymongo import PyMongo
+try:
+    from flask import jsonify, render_template, request, redirect, \
+        url_for, Flask, make_response
+    from flask.ext.pymongo import PyMongo
 
+    import jsonpickle
+    import psutil
+except ImportError as ie:
+    print "missing package for import: {0}".format(ie)
+    sys.exit()
 
 import voyage_model
 import trade_model
 import waypoint_model
 import source_model
 import event_model
+import dataset_model
 
 VERSION = 'version 0.1.3'
 COPYRIGHT = 'Copyright Fifth Column Group 2015'
@@ -24,12 +33,43 @@ COPYRIGHT = 'Copyright Fifth Column Group 2015'
 app = Flask(__name__)
 app.debug = True
 app.secret_key = os.urandom(24)
-mongo = PyMongo(app)
+
+# check if mongodb is running, start it if its not
+mongo_running = False
+for proc in psutil.process_iter():
+    try:
+        pinfo = proc.as_dict(attrs=['pid', 'name'])
+    except psutil.NoSuchProcess:
+        pass
+    else:
+        if pinfo['name'].find('mongod') > -1:
+            print "mongo is running"
+            mongo_running = True
+            break
+
+
+if mongo_running is False:
+    try:
+        subprocess.Popen(
+            'c:\\Program Files\\MongoDB\\Server\\3.0\\bin\\mongod.exe',
+            shell=False, stdout=False)
+        print "starting mongo"
+        mongo_running = True
+    except subprocess.CalledProcessError as cpe:
+        print "failed to launch mongodb: {0}".format(cpe)
+
+if mongo_running:
+    mongo = PyMongo(app)
+else:
+    print "MongoDB not running"
+    sys.exit()
+
 voyage_model.init(app, mongo)
 trade_model.init(app, mongo)
 waypoint_model.init(app, mongo)
 source_model.init(app, mongo)
 event_model.init(app, mongo)
+dataset_model.init(app, mongo)
 
 
 def set_session_id(in_session):
@@ -74,9 +114,14 @@ def render_trade_page():
     return render_template('trades.html', version=VERSION, copyright=COPYRIGHT)
 
 
-@app.route('/ships', methods=['GET'])
-def render_ships_page():
-    return render_template('ships.html', version=VERSION, copyright=COPYRIGHT)
+@app.route('/settings', methods=['GET'])
+def render_settings_page():
+    return render_template('settings.html', version=VERSION, copyright=COPYRIGHT)
+
+
+# @app.route('/ships', methods=['GET'])
+# def render_ships_page():
+#     return render_template('ships.html', version=VERSION, copyright=COPYRIGHT)
 
 
 @app.route('/events', methods=['GET'])
@@ -312,6 +357,24 @@ def sources_get():
         found_sources = []
     app.logger.debug('found_sources={0}'.format(found_sources))
     return jsonify(message="success", data={"found_sources": found_sources})
+
+
+@app.route('/dataset/get', methods=['GET'])
+def dataset_get():
+    # params = request.json['params']
+    # if 'csv' in params:
+    #     dataset = ""
+    # else:
+    #     dataset = {}
+    #     pass
+    dataset = dataset_model.get_dataset()
+    dataset_json = jsonpickle.encode(dataset, unpicklable=False)
+    response = make_response(dataset_json)
+    response.headers["Content-Disposition"] = "attachment; filename=dataset.json"
+    # response.headers["Content-Type"] = "application/download"
+
+    # return jsonify(message="success", data={"dataset": dataset})
+    return response
 
 
 @app.route('/sources/add', methods=['POST'])

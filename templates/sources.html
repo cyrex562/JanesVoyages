@@ -1,37 +1,94 @@
 {% extends "layout.html" %}
 {% block body %}
     <script type=text/javascript
-        src="{{ url_for('static', filename='js/utils.js') }}">
-</script>
+            src="{{ url_for('static', filename='js/utils.js') }}">
+    </script>
     <script type=text/javascript
-        src="{{ url_for('static', filename='js/trades.js') }}">
-</script>
-<script type=text/javascript
-        src="{{ url_for('static', filename='js/waypoints.js') }}">
-</script>
-<script type=text/javascript
-        src="{{ url_for('static', filename='js/voyages.js') }}">
-</script>
-<script type=text/javascript
-        src="{{ url_for('static', filename='js/sources.js') }}">
-</script>
-<script type=text/javascript
-        src="{{ url_for('static', filename='js/events.js') }}">
-</script>
-<script type=text/javascript
-        src="{{ url_for('static', filename='js/sources_page.js') }}">
-</script>
-<div class="container-fluid">
+            src="{{ url_for('static', filename='js/sources.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/sources_page.js') }}">
+    </script>
+    <div class="container-fluid">
         <div class="row">
-                <div class="col-xs-2">
+            <div class="col-xs-2">
 
-                </div>
-                <div class="col-xs-6">
+            </div>
+            <div class="col-xs-6">
+                <div id="sources_sub_form" class="collapse in">
+                    <fieldset>
+                        <legend>Sources</legend>
+                        <!-- source id -->
+                        <input type="hidden" id="source_voyage_id"/>
 
-                </div>
-                <div class="col-xs-4">
+                        <div class="form-group hide" id="source_id_form_group">
+                            <label for="source_id">Source ID</label>
 
+                            <p id="source_id"></p>
+                        </div>
+                        <!-- citation -->
+                        <div class="form-group">
+                            <label for="source_citation">Citation</label>
+                            <input type="text" id="source_citation"
+                                   name="source_citation" tabindex="0"
+                                   data-toggle="tooltip"
+                                   title="The citation for the source"
+                                   class="form-control"/>
+                        </div>
+                        <!-- source notes -->
+                        <div class="form-group">
+                            <label for="source_notes" data-toggle="collapse"
+                                   data-target="#source_notes_pane">Source Notes
+                                <span class="glyphicon glyphicon-collapse-down"
+                                      aria-hidden="true"></span>
+                            </label>
+
+                            <div id="source_notes_pane" class="collapse">
+                            <textarea id="source_notes" class="form-control"
+                                      tabindex="0" data-toggle="tooltip"
+                                      title="Description of the source and any
+                                    additional notes"></textarea>
+                            </div>
+                        </div>
+                        <!-- source form buttons -->
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="add_source_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Add a source">
+                                Add Source
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="modify_source_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Modify the selected source">
+                                Modify Source
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="delete_source_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Delete the selected source">
+                                Remove Source
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"
+                                    id="reset_source_form_btn" tabindex="0"
+                                    data-toggle="tooltip"
+                                    title="Reset the source form">Reset Source
+                                Form
+                            </button>
+                        </div>
+                    </fieldset>
                 </div>
+            </div>
+            <div class="col-xs-4">
+                <table class="table table-striped" id="sources_table">
+                    <tr id="table_top_row">
+                        <th>ID</th>
+                        <th>Voyage</th>
+                        <th>Citation</th>
+                    </tr>
+                </table>
+            </div>
         </div>
-</div>
+    </div>
 {% endblock %}

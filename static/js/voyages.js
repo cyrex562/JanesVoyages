@@ -181,3 +181,15 @@ function delete_voyage_btn_click() {
     send_request('voyages/delete', 'POST',
         {voyages_to_delete: voyages_to_delete}, delete_voyage_callback);
 }
+
+function clear_voyage_form() {
+    console.log('clear_voyage_form');
+    $('#voyage_name').val('');
+    $('#voyage_id').text('');
+    $('#voyage_id_form_group').hide();
+    $('#voyage_notes').val('');
+    $('#ship_name').val('');
+    $('#ship_captain').val('');
+    $('#ship_flag').val('');
+    $('#ship_notes').text('');
+}

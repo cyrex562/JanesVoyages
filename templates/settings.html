@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/utils.js') }}">
+    </script>
+    <script type=text/javascript
+            src="{{ url_for('static', filename='js/settings_page.js') }}">
+    </script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+
+            </div>
+            <div class="col-xs-10">
+                <fieldset>
+                    <legend>Export dataset to json</legend>
+                    <button class="btn btn-default" id="export_json_btn">Export Dataset as JSON file</button>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+{% endblock %}

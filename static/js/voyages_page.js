@@ -1,5 +1,3 @@
-
-
 function add_voyage_btn_click() {
     console.log('add_voyage_btn_click()');
     add_voyage();
@@ -69,28 +67,6 @@ function delete_event_btn_click() {
     delete_event();
 }
 
-
-
-function clear_voyage_form() {
-    console.log('clear_voyage_form');
-    $('#voyage_name').val('');
-    $('#voyage_id').text('');
-    $('#voyage_id_form_group').hide();
-    $('#voyage_notes').val('');
-    $('#ship_name').val('');
-    $('#ship_captain').val('');
-    $('#ship_flag').val('');
-    $('#ship_notes').text('');
-}
-
-
-
-
-
-
-
-
-
 function clear_form_btn_click()
 {
     console.log('clear_form_btn_click()');
@@ -104,10 +80,6 @@ function clear_form_btn_click()
     hide_trade_form();
     hide_source_form();
 }
-
-
-
-
 
 $(document).ready(function () {
     console.log('document.ready()');
@@ -134,17 +106,14 @@ $(document).ready(function () {
     $('#clear_form_btn').click(clear_form_btn_click);
     $('#reset_waypoint_form_btn').click(reset_waypoint_form_btn_click);
     $('#reset_trade_form_btn').click(reset_trade_form_btn_click);
-    /* source */
     $('#add_source_btn').click(add_source_btn_click);
     $('#modify_source_btn').click(modify_source_btn_click);
     $('#delete_source_btn').click(delete_source_btn_click);
     $('#sources').change(source_select_change);
     $('#reset_source_form_btn').click(reset_source_form_btn_click);
-    /* event */
     $('#add_event_btn').click(add_event_btn_click);
     $('#modify_event_btn').click(modify_event_btn_click);
     $('#delete_event_btn').click(delete_event_btn_click);
     $('#reset_event_form_btn').click(reset_event_form_btn_click);
     $('#events').change(event_select_change);
-    /* handler for status bar close */
 });

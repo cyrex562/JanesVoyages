@@ -49,3 +49,12 @@ function reset_event_form_btn_click() {
     console.log('reset event form btn click');
     clear_event_form(false);
 }
+
+function null_or_empty(v)
+{
+    if (v === undefined || v.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
