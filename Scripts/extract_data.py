@@ -1,13 +1,14 @@
-import openpyxl
 import argparse
-import os
 import logging
-
+import openpyxl
+import os
 from openpyxl.worksheet import Worksheet
 
 INPUT_FILE_ERR = 1
 SUCCESS = 0
-def parse_cmd_line() -> str:
+
+
+def parse_cmd_line() ->str:
     parser = argparse.ArgumentParser(description='Parse excel data file')
     parser.add_argument('--input_file', '-i')
     args = parser.parse_args()
@@ -31,7 +32,7 @@ def parse_sheet(sheet: Worksheet) -> (list, list):
     return headings, rows
 
 
-def run() -> int:
+def run() ->int:
     input_file = parse_cmd_line()
 
     if os.path.exists(input_file) is False:
