@@ -1,0 +1,3 @@
+pyexcel
+awscli
+boto3
